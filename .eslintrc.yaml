@@ -13,7 +13,7 @@ plugins:
     - "vue"
 
 rules:
-    no-unused-vars: 1
-    no-console: 1
+    no-unused-vars: 0
+    no-console: 0
     no-case-declarations: 0
     semi: 2
