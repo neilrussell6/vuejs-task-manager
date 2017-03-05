@@ -1,0 +1,38 @@
+// palette: blue
+$blue-dark:     #353b40;
+$blue-light:    #98a4b8;
+
+// palette: green
+$green-dark:    #3d403e;
+$green-light:   #cf9;
+$green-lighter: lighten($green-light, 10%);
+
+// palette: yellow
+$yellow-light:  #f4ffc1;
+$yellow:        #c7e344;
+
+// palette: red
+$red:           #e34444;
+
+// palette: black & grey
+$black:         #000;
+$grey-light:    #bbb;
+$grey-med:      darken($grey-light, 20%);
+
+// colors
+$primary-bg-color:      $blue-dark;
+$primary-text-color:    lighten($blue-light, 10%);
+$secondary-bg-color:    adjust-hue(lighten($blue-dark, 2%), -5%); // $green-dark;
+$secondary-text-color:  $blue-light;
+
+// text
+$font-family:   'Courier New', Serif;
+$font-size:     20px;
+
+// structure: spacing
+$v-pad:         40px;
+$h-pad-big:     100px;
+
+// structure: breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-lg: 1040px;

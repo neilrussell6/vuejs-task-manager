@@ -1,0 +1,19 @@
+extends: "eslint:recommended"
+
+env:
+    node:       false
+    browser:    true
+    mocha:      true
+
+parserOptions:
+    ecmaVersion: 6
+    sourceType: "module"
+
+plugins:
+    - "vue"
+
+rules:
+    no-unused-vars: 1
+    no-console: 1
+    no-case-declarations: 0
+    semi: 2

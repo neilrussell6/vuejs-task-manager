@@ -1,0 +1,14 @@
+language:       "node_js"
+node_js:        "6.9"
+sudo:           false
+before_install: null
+install:
+    - "npm install"
+before_script:  null
+script:
+    - "make build"
+after_script:   null
+after_success:  "make report-coverage"
+group:          "stable"
+dist:           "precise"
+os:             "linux"

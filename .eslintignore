@@ -1,0 +1,8 @@
+/dist/**
+/coverage/**
+/tmp/**
+_ignore
+webpack-config.dev.js
+webpack-config.prod.js
+ignore-import.js
+postcss.config.js
