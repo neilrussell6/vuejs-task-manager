@@ -90,38 +90,5 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../styles/app.vars.scss';
-
-    .common-message {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: $big-v-pad $big-h-pad;
-
-        div {
-
-        }
-
-        .label {
-            font-size: 16px;
-        }
-
-        .icon {
-            &.icon-before-label {
-                padding-right: $med-h-pad;
-            }
-
-            &.icon-after-label {
-                padding-left: $med-h-pad;
-            }
-
-            i {
-                color: #000;
-            }
-        }
-
-        .button {
-            padding-left: $med-h-pad;
-        }
-    }
+    @import '../../../styles/view/common/common-message/common-message.scss';
 </style>

@@ -51,8 +51,7 @@
             <template v-if="has_tasks">
 
                 <template v-if="status_filter === STATUS_FILTER_TYPE.TRASH">
-                    <!--<common-table :table-data="tasks | text text_filter | complete status_filter"-->
-                    <common-table :table-data="tasks"
+                    <common-table :data="filtered_tasks"
                                   :cell-configs="tasks_trash_table_cell_configs"
                                   :use-default-headings.once="false"
                                   :data-keys.once="tasks_trash_table_keys"
@@ -60,7 +59,7 @@
                 </template>
 
                 <template v-else>
-                    <common-table :data="tasks | text text_filter | complete status_filter"
+                    <common-table :data="filtered_tasks"
                                   :cell-configs="tasks_table_cell_configs"
                                   :use-default-headings.once="false"
                                   :data-keys.once="tasks_table_keys"
@@ -91,11 +90,15 @@
     import TextFilter from './text-filter/TextFilter.dumb';
 
     // store
-    import { Store } from 'state/store';
+    import { store } from 'state/store';
 
     // settings
     import { TASK_STATUS } from 'data/models/basic/task.model';
     import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
+
+    // utils
+    import * as StatusFilterUtils from 'utils/status-filter/status-filter.utils';
+    import * as TextFilterUtils from 'utils/text-filter/text-filter.utils';
 
     let _vm;
 
@@ -106,6 +109,15 @@
             CommonList,
             StatusFilter,
             TextFilter
+        },
+
+        computed: {
+            filtered_tasks() {
+                let result = this.tasks;
+                result = StatusFilterUtils.filterTasks(result, this.status_filter);
+                result = TextFilterUtils.filterTasks(result, this.text_filter);
+                return result;
+            }
         },
 
         data: function () {
@@ -174,11 +186,11 @@
             // ------------------------------------
 
             _onNewTask: function () {
-                Store.store.dispatch(TaskActions.makeTask());
+                store.dispatch(TaskActions.makeTask());
             },
 
             _onRefreshTasks: function () {
-                Store.store.dispatch(TaskActions.refreshTasks());
+                store.dispatch(TaskActions.refreshTasks(this.selected_project));
             },
 
             _onToggleView: function () {
@@ -190,15 +202,15 @@
             // ------------------------------------
 
             _onUpdateTask: function (task) {
-                Store.store.dispatch(TaskActions.updateTask(task.unique_id, task));
+                store.dispatch(TaskActions.updateTask(task.unique_id, task));
             },
 
             _onTrashTask: function (task) {
-                Store.store.dispatch(TaskActions.trashTask(task.unique_id));
+                store.dispatch(TaskActions.trashTask(task.unique_id));
             },
 
             _onToggleTaskComplete: function (task) {
-                Store.store.dispatch(TaskActions.toggleTaskComplete(task.unique_id));
+                store.dispatch(TaskActions.toggleTaskComplete(task.unique_id));
             },
 
             // ------------------------------------
@@ -206,11 +218,11 @@
             // ------------------------------------
 
             _onDeleteTask: function (task) {
-                Store.store.dispatch(MessageActions.requestDeleteConfirmation(task));
+                store.dispatch(MessageActions.requestDeleteConfirmation(task));
             },
 
             _onUndoTrashTask: function (task) {
-                Store.store.dispatch(TaskActions.undoTrashTask(task.unique_id));
+                store.dispatch(TaskActions.undoTrashTask(task.unique_id));
             },
 
             // ------------------------------------
@@ -218,7 +230,7 @@
             // ------------------------------------
 
             _onTextFilterUpdate: function (term) {
-                Store.store.dispatch(TaskActions.setTextFilter(term));
+                store.dispatch(TaskActions.setTextFilter(term));
             },
 
             // ------------------------------------
@@ -226,7 +238,7 @@
             // ------------------------------------
 
             _onStatusFilterSelection: function (filter_type) {
-                Store.store.dispatch(TaskActions.setStatusFilter(filter_type));
+                store.dispatch(TaskActions.setStatusFilter(filter_type));
             },
 
             // ----------------------
@@ -235,7 +247,7 @@
 
             _updateView: function () {
 
-                const _state            = Store.store.getState();
+                const _state            = store.getState();
 
                 // actions
                 let _should_fetch_tasks = _state.selected_project !== null && (this.selected_project === null || _state.selected_project.unique_id !== this.selected_project.unique_id);
@@ -253,14 +265,14 @@
                 this.has_tasks              = _state.tasks.length > 0;
 
                 if (_should_fetch_tasks) {
-                    Store.store.dispatch(TaskActions.fetchTasks(this.selected_project));
+                    store.dispatch(TaskActions.fetchTasks(this.selected_project));
                 }
             }
         },
 
-        ready: function () {
+        created: function () {
             _vm = this;
-            Store.store.subscribe(this._updateView.bind(this));
+            store.subscribe(this._updateView.bind(this));
             this._updateView();
         }
     };

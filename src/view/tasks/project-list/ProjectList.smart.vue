@@ -24,7 +24,7 @@
     import * as Actions from 'state/projects/project.actions';
 
     // store
-    import { Store } from 'state/store';
+    import { store } from 'state/store';
 
     // comps
     import CommonList from 'view/common/common-list/CommonList.dumb';
@@ -49,7 +49,7 @@
             // ------------------------------------
 
             _onProjectSelection: function (project) {
-                Store.store.dispatch(Actions.selectProject(project));
+                store.dispatch(Actions.selectProject(project));
             },
 
             // ----------------------
@@ -58,7 +58,7 @@
 
             _updateView: function () {
 
-                const _state            = Store.store.getState();
+                const _state            = store.getState();
 
                 // state data
                 this.projects           = _state.projects;
@@ -70,8 +70,8 @@
             }
         },
 
-        ready: function () {
-            Store.store.subscribe(this._updateView.bind(this));
+        created: function () {
+            store.subscribe(this._updateView.bind(this));
             this._updateView();
         }
     };

@@ -65,7 +65,7 @@
             }
         },
 
-        ready: function () {
+        created: function () {
             _vm = this;
         }
     };
@@ -73,30 +73,5 @@
 </script>
 
 <style scoped lang='scss'>
-    @import '../../../styles/app.vars.scss';
-
-    .common-list li {
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-
-        &.selected span {
-            padding-left: $big-h-pad + $med-h-pad;
-        }
-
-        span {
-            flex: 1 0 auto;
-            padding-top: $med-v-pad;
-            padding-bottom: $med-v-pad;
-            padding-left: $big-h-pad;
-        }
-
-        i {
-            padding-right: $small-h-pad;
-        }
-
-        button {
-            padding: $med-v-pad $big-h-pad;
-        }
-    }
+    @import '../../../styles/view/common/common-list/common-list.scss';
 </style>

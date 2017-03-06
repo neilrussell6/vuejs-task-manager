@@ -37,7 +37,7 @@
     import TaskList from './task-list/TaskList.smart';
 
     // store
-    import { Store } from 'state/store';
+    import { store } from 'state/store';
 
     let _vm;
 
@@ -68,9 +68,9 @@
 
                 if (action.type === ACTION_REQUEST_DELETE_CONFIRMATION) {
                     if (button.value) {
-                        Store.store.dispatch(MessageActions.confirmDelete(action.data.unique_id));
+                        store.dispatch(MessageActions.confirmDelete(action.data.unique_id));
                     } else {
-                        Store.store.dispatch(MessageActions.cancelDelete());
+                        store.dispatch(MessageActions.cancelDelete());
                     }
                 }
             },
@@ -81,15 +81,15 @@
 
             _onEditorAddOrUpdate: function () {
                 if (this.editing_task.local_id === null) {
-                    Store.store.dispatch(TaskActions.addTask(this.tasks, this.editing_task));
+                    store.dispatch(TaskActions.addTask(this.tasks, this.editing_task));
                 } else {
-                    Store.store.dispatch(TaskActions.updateTask(this.editing_task.unique_id, this.editing_task));
+                    store.dispatch(TaskActions.updateTask(this.editing_task.unique_id, this.editing_task));
                 }
-                Store.store.dispatch(TaskActions.unsetEditingTask());
+                store.dispatch(TaskActions.unsetEditingTask());
             },
 
             _onEditorCancel: function () {
-                Store.store.dispatch(TaskActions.unsetEditingTask());
+                store.dispatch(TaskActions.unsetEditingTask());
             },
 
             // ----------------------
@@ -97,7 +97,7 @@
             // ----------------------
 
             _updateView: function () {
-                const _state            = Store.store.getState();
+                const _state            = store.getState();
 
                 // if unset message
                 if (_state.message === null) {
@@ -125,10 +125,10 @@
             }
         },
 
-        ready: function () {
+        created: function () {
             _vm = this;
-            Store.store.subscribe(this._updateView.bind(this));
-            Store.store.dispatch(ProjectsActions.refreshProjects());
+            store.subscribe(this._updateView.bind(this));
+            store.dispatch(ProjectsActions.refreshProjects());
         }
     };
 </script>

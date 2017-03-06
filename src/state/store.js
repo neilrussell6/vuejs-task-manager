@@ -1,6 +1,6 @@
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
-// import { reducer as api } from 'redux-json-api';
+import { reducer as api } from 'redux-json-api';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
 // reducers
@@ -13,7 +13,7 @@ import { tasks_text_filter } from 'state/tasks/reducers/tasks-text-filter.reduce
 import { delayFetchMiddleware } from './delay-fetch/delay-fetch.middleware';
 
 const reducer = combineReducers({
-    // api,
+    api,
     projects,
     message,
     selected_project,

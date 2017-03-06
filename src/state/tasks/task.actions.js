@@ -1,4 +1,4 @@
-// import { readEndpoint } from 'redux-json-api';
+import { readEndpoint } from 'redux-json-api';
 
 // local
 import {
@@ -93,16 +93,14 @@ export function updateTask (unique_id, data) {
 // tasks
 // --------------------------
 
-// export function refreshTasks (project) {
-export function refreshTasks () {
-    return fetchTasks();
+export function refreshTasks (project) {
+    return fetchTasks(project);
 }
 
 export function fetchTasks (project) {
     return function (dispatch) {
         let _id = project.server_id;
         let _endpoint = `projects/${_id}/tasks`;
-        console.log("FETCH TASKS");
-        // dispatch(readEndpoint(_endpoint));
+        dispatch(readEndpoint(_endpoint));
     };
 }

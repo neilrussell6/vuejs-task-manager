@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="row in tableData">
+            <tr v-for="row in data">
                 <template v-for="key in dataKeys">
 
                     <!-- cell templates -->
@@ -120,7 +120,7 @@
             cellConfigs: { type: Object, default: null },
             headings: { type: Object, default: null },
             dataKeys: { type: Array, default: [] },
-            tableData: { type: Array, default: [] }
+            data: { type: Array, default: [] }
         },
 
         methods: {
@@ -213,10 +213,12 @@
             }
         },
 
-        ready: function () {
+        created: function () {
             _vm = this;
         }
     };
 </script>
 
-<style scoped lang='scss'></style>
+<style scoped lang='scss'>
+    @import '../../../styles/view/common/common-table/common-table.scss';
+</style>

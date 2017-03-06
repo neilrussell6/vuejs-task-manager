@@ -1,10 +1,23 @@
 @import '../../app.vars.scss';
 
-.project-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.project-list .common-list button {
-    width: 100%;
+.project-list {
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .common-list {
+
+        li.selected button {
+            background-color: red;
+            padding-left: $big-h-pad + $med-h-pad;
+        }
+
+        button {
+            background-color: green;
+            width: 100%;
+        }
+    }
 }

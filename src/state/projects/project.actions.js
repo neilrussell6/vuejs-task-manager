@@ -1,4 +1,4 @@
-// import { readEndpoint } from 'redux-json-api';
+import { readEndpoint } from 'redux-json-api';
 
 // local
 import { ACTION_SELECT_PROJECT } from './project.settings';
@@ -24,8 +24,7 @@ export function refreshProjects () {
 
 export function fetchProjects () {
     return function (dispatch) {
-        console.log("FETCH PROJECTS");
-        // dispatch(readEndpoint('users/1/projects'));
+        dispatch(readEndpoint('users/1/projects'));
     };
 }
 

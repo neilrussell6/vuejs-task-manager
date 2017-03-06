@@ -12,7 +12,8 @@
 // html
 // ----------------------------------
 
-html, app {
+html,
+.app {
     padding: 0;
     margin: 0;
     height: 100%;
@@ -28,7 +29,12 @@ body {
     user-select: none;
 }
 
-body,div,table,p,input,button {
+body,
+div,
+table,
+p,
+input,
+button {
     font-family: 'Source Code Pro', sans-serif;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
@@ -41,9 +47,10 @@ body,div,table,p,input,button {
 a {
     color: $link-color;
     cursor: pointer;
-}
-a:hover {
-    color: $link-color-hover;
+
+    &:hover {
+        color: $link-color-hover;
+    }
 }
 
 // ----------------------------------
@@ -61,18 +68,21 @@ button {
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
+
+    &:hover {
+        background-color: $link-color-hover;
+        color: $text-color-dark;
+    }
+
+    &disabled {
+        /*background-color: rgba(60,61,64,0.4);*/
+        /*color: rgba(156,193,219,0.4);*/
+        background-color: transparent;
+        color: $text-color-dark;
+        cursor: default;
+    }
 }
-button:hover {
-    background-color: $link-color-hover;
-    color: $text-color-dark;
-}
-button:disabled {
-    /*background-color: rgba(60,61,64,0.4);*/
-    /*color: rgba(156,193,219,0.4);*/
-    background-color: transparent;
-    color: $text-color-dark;
-    cursor: default;
-}
+
 input[type="text"] {
     background-color: $input-bg-color;
     color: $input-text-color;
@@ -109,19 +119,19 @@ header {
     transform: translateY(-50%);
     width: 100%;
     text-align: center;
-}
 
-.loader-container .label {
-    height: 50px;
-    font-size: 24px;
-    font-weight: normal;
-    color: #ccff99;
-}
+    .label {
+        height: 50px;
+        font-size: 24px;
+        font-weight: normal;
+        color: #ccff99;
+    }
 
-.loader-container .icon {
-    height: 50px;
-    font-size: 40px;
-    color: #000;
+    .icon {
+        height: 50px;
+        font-size: 40px;
+        color: #000;
+    }
 }
 
 // ----------------------------------
@@ -134,6 +144,7 @@ header {
     overflow: auto;
     box-shadow: 0 0 75px -6px rgba(0,0,0,0.39);
 }
+
 .app-column-left {
     clear: both;
     float: left;
@@ -142,10 +153,12 @@ header {
     align-items: stretch;
     flex: 1
 }
+
 .app-column-right {
     float: right;
     box-sizing: border-box;
 }
+
 .app-columns {
     display: flex;
     box-sizing: border-box;
@@ -154,16 +167,19 @@ header {
 // > 1201
 
 @media screen and (min-width: 1201px) {
+
     .app-container {
         width: 1200px;
         margin: $big-h-pad auto;
     }
+
     .app-column-left {
         width: 340px;
         padding-top: $xbig-v-pad;
         padding-bottom: $xbig-v-pad;
         //padding: $xbig-v-pad $xbig-h-pad;
     }
+
     .app-column-right {
         width: calc(100% - 340px    );
         padding: $xbig-v-pad $xbig-h-pad;
@@ -173,15 +189,18 @@ header {
 // < 1201
 
 @media screen and (max-width: 1200px) {
+
     .app-container {
         width: 100%;
     }
+
     .app-column-left {
         width: 260px;
         padding-top: $big-v-pad;
         padding-bottom: $big-v-pad;
         //padding: $big-v-pad $big-h-pad;
     }
+
     .app-column-right {
         width: calc(100% - 260px);
         padding: $big-v-pad $big-h-pad;
@@ -200,27 +219,36 @@ header {
         background-color: darken($med-grey2, 2%);
         color: $light-grey;
     }
-    table, th, td {
+
+    table,
+    th,
+    td {
         border-bottom: 1px solid $dark-grey;
     }
-    th, td {
+
+    th,
+    td {
         padding: $med-v-pad $med-h-pad;
         text-align: left;
     }
+
     .cell-button {
         width: 20px;
         padding-left: 5px;
         padding-right: 5px;
     }
+
     .cell-inline-edit {
         input {
             width: 100%;
         }
     }
+
     .cell-inline-edit.complete {
         text-decoration: line-through;
         color: $med-grey;
     }
+
     .cell-inline-edit.editing {
         padding-left: 10px;
     }
@@ -238,11 +266,11 @@ header {
         padding-left: 0;
 
         &.selected {
-            box-sizing: border-box;
+            //box-sizing: border-box;
             background-color: darken($bg-color-dark, 2%);
             color: $text-color-med;
-            text-transform: none;
-            overflow: auto;
+            //text-transform: none;
+            //overflow: auto;
         }
 
         button {

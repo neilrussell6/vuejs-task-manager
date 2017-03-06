@@ -16,13 +16,6 @@
     // models
     import { STATUS_FILTER_TYPE, StatusFilter } from 'data/models/basic/status-filter.model';
 
-    // utils
-    import * as Utils from 'utils/status-filter/status-filter.utils';
-
-    Vue.filter('complete', function (value, input) {
-        return Utils.filterTasks(value, input);
-    });
-
     export default {
         data: function () {
             return {

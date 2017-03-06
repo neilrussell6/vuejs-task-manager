@@ -9,13 +9,6 @@
 
     import Vue from 'vue';
 
-    // utils
-    import * as Utils from 'utils/text-filter/text-filter.utils';
-
-    Vue.filter('text', function (value, input) {
-        return Utils.filterTasks(value, input);
-    });
-
     export default {
         data: function () {
             return {
