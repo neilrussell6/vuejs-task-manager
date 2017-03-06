@@ -25,7 +25,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     import { MESSAGE_STYLE } from 'data/models/basic/message.model';
 
     export default {

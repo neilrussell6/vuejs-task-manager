@@ -17,7 +17,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/babel">
     // smart component (this means it interacts with application state)
 
     // actions

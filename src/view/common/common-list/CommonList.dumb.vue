@@ -19,7 +19,7 @@
 
 </template>
 
-<script>
+<script type="text/babel">
     let _vm;
 
     export default {

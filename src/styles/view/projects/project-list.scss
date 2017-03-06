@@ -2,6 +2,13 @@
 
 .project-list {
 
+    .no-results {
+        width: 100%;
+        padding-top: $med-v-pad;
+        padding-bottom: $med-v-pad;
+        padding-left: $big-h-pad;
+    }
+
     ul {
         list-style: none;
         padding: 0;

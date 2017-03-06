@@ -8,7 +8,7 @@
     </ul>
 </template>
 
-<script>
+<script type="text/babel">
     // dumb component (this means it does not interact with application state, it only emit events and fires callbacks so parent components can interact with state)
 
     import Vue from 'vue';

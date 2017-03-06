@@ -95,7 +95,7 @@
 
 </template>
 
-<script>
+<script type="text/babel">
     import Vue from 'vue';
     import { focus } from 'vue-focus';
     import { clickOutside } from 'view/common/click-outside/click-outside.directive';
