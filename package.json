@@ -21,8 +21,14 @@
   "dependencies": {
     "babel-polyfill": "^6.0.16",
     "font-awesome": "^4.7.0",
+    "pluralize": "^4.0.0",
     "redux": "^3.6.0",
-    "vue": "^2.1.10"
+    "redux-json-api": "^1.7.0",
+    "redux-thunk": "^2.2.0",
+    "vue": "^2.1.10",
+    "vue-clickaway": "^2.1.0",
+    "vue-focus": "^2.1.0",
+    "vue-router": "^2.3.0"
   },
   "devDependencies": {
     "autoprefixer": "github:postcss/autoprefixer",
@@ -45,7 +51,7 @@
     "mocha": "^3.2.0",
     "node-sass": "^4.3.0",
     "postcss-loader": "^1.2.2",
-    "redux-logger": "^2.7.4",
+    "redux-logger": "^2.6.1",
     "sass-lint": "^1.10.2",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.12.3",

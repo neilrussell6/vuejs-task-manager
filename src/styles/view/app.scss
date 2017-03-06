@@ -1,0 +1,293 @@
+@import '../app.vars.scss';
+
+// ----------------------------------
+// misc
+// ----------------------------------
+
+.hidden {
+    display: none;
+}
+
+// ----------------------------------
+// html
+// ----------------------------------
+
+html, app {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: block;
+}
+
+body {
+    background-color: $bg-color-dark;
+    color: #D8DCE3;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    user-select: none;
+}
+
+body,div,table,p,input,button {
+    font-family: 'Source Code Pro', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+}
+
+// ----------------------------------
+// links
+// ----------------------------------
+
+a {
+    color: $link-color;
+    cursor: pointer;
+}
+a:hover {
+    color: $link-color-hover;
+}
+
+// ----------------------------------
+// forms
+// ----------------------------------
+
+button {
+    //background-color: $bg-color-dark;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    color: $link-color;
+    padding: $small-v-pad $small-h-pad;
+    min-width: 40px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+button:hover {
+    background-color: $link-color-hover;
+    color: $text-color-dark;
+}
+button:disabled {
+    /*background-color: rgba(60,61,64,0.4);*/
+    /*color: rgba(156,193,219,0.4);*/
+    background-color: transparent;
+    color: $text-color-dark;
+    cursor: default;
+}
+input[type="text"] {
+    background-color: $input-bg-color;
+    color: $input-text-color;
+    padding: $small-v-pad $small-h-pad;
+    border: none;
+}
+input[type="text"]:focus {
+    color: $input-text-color-focus;
+}
+
+// ----------------------------------
+// structure
+// ----------------------------------
+
+header {
+    padding: $big-v-pad $med-h-pad;
+}
+
+@media screen and (max-width: 640px) {
+    header {
+        padding: $big-v-pad $big-h-pad;
+    }
+}
+
+// ----------------------------------
+// container
+// ----------------------------------
+
+.loader-container {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+}
+
+.loader-container .label {
+    height: 50px;
+    font-size: 24px;
+    font-weight: normal;
+    color: #ccff99;
+}
+
+.loader-container .icon {
+    height: 50px;
+    font-size: 40px;
+    color: #000;
+}
+
+// ----------------------------------
+// app-container
+// ----------------------------------
+
+.app-container {
+    background-color: $bg-color-med;
+    box-sizing: border-box;
+    overflow: auto;
+    box-shadow: 0 0 75px -6px rgba(0,0,0,0.39);
+}
+.app-column-left {
+    clear: both;
+    float: left;
+    background-color: $bg-color-dark;
+    box-sizing: border-box;
+    align-items: stretch;
+    flex: 1
+}
+.app-column-right {
+    float: right;
+    box-sizing: border-box;
+}
+.app-columns {
+    display: flex;
+    box-sizing: border-box;
+}
+
+// > 1201
+
+@media screen and (min-width: 1201px) {
+    .app-container {
+        width: 1200px;
+        margin: $big-h-pad auto;
+    }
+    .app-column-left {
+        width: 340px;
+        padding-top: $xbig-v-pad;
+        padding-bottom: $xbig-v-pad;
+        //padding: $xbig-v-pad $xbig-h-pad;
+    }
+    .app-column-right {
+        width: calc(100% - 340px    );
+        padding: $xbig-v-pad $xbig-h-pad;
+    }
+}
+
+// < 1201
+
+@media screen and (max-width: 1200px) {
+    .app-container {
+        width: 100%;
+    }
+    .app-column-left {
+        width: 260px;
+        padding-top: $big-v-pad;
+        padding-bottom: $big-v-pad;
+        //padding: $big-v-pad $big-h-pad;
+    }
+    .app-column-right {
+        width: calc(100% - 260px);
+        padding: $big-v-pad $big-h-pad;
+    }
+}
+
+// ----------------------------------
+// common table
+// ----------------------------------
+
+.common-table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th {
+        background-color: darken($med-grey2, 2%);
+        color: $light-grey;
+    }
+    table, th, td {
+        border-bottom: 1px solid $dark-grey;
+    }
+    th, td {
+        padding: $med-v-pad $med-h-pad;
+        text-align: left;
+    }
+    .cell-button {
+        width: 20px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .cell-inline-edit {
+        input {
+            width: 100%;
+        }
+    }
+    .cell-inline-edit.complete {
+        text-decoration: line-through;
+        color: $med-grey;
+    }
+    .cell-inline-edit.editing {
+        padding-left: 10px;
+    }
+}
+
+// ----------------------------------
+// common list
+// ----------------------------------
+
+.common-list {
+    width: 100%;
+
+    li {
+        width: 100%;
+        padding-left: 0;
+
+        &.selected {
+            box-sizing: border-box;
+            background-color: darken($bg-color-dark, 2%);
+            color: $text-color-med;
+            text-transform: none;
+            overflow: auto;
+        }
+
+        button {
+            width: 100%;
+            text-align: left;
+            text-transform: none;
+        }
+    }
+}
+
+// ----------------------------------
+// common message
+// ----------------------------------
+
+.common-message {
+    width: 100%;
+    box-sizing: border-box;
+    padding: $med-v-pad $big-h-pad;
+    text-align: center;
+    border-bottom: 1px solid lighten($bg-color-med, 5%);
+    height: 60px;
+
+    background-color: $bg-color-dark;
+    transition: background-color 0.2s;
+
+    &.has-message {
+        background-color: darken($bg-color-dark, 5%);
+        transition: background-color 0.2s;
+    }
+
+    color: $light-grey;
+
+    &.info {
+        color: $light-blue;
+    }
+
+    &.success {
+        color: $light-green;
+    }
+
+    &.warning {
+        color: $light-yellow;
+    }
+
+    &.danger {
+        color: $light-red;
+    }
+}

@@ -1,0 +1,39 @@
+@import '../../../app.vars.scss';
+
+.status-filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.status-filter-list-item {
+
+    display: inline-block;
+    padding: $small-v-pad $small-h-pad;
+    border-right: 1px solid $bdr-color-dark;
+    text-align: center;
+
+    &:first-child {
+        text-align: left;
+    }
+
+    &:last-child {
+        padding-right: 0;
+        border-right: none;
+        text-align: right;
+    }
+
+    span {
+        text-transform: uppercase;
+        padding: $small-v-pad $small-h-pad;
+    }
+
+    button {
+        background: transparent;
+    }
+
+    button:hover {
+        color: $link-color-hover;
+        text-decoration: underline;
+    }
+}

@@ -1,0 +1,8 @@
+$fa-font-path: '~font-awesome/fonts';
+@import '~font-awesome/scss/font-awesome';
+
+// theme
+@import './app-dark-colors.vars.scss';
+
+// structure
+@import './app-default-structure.vars.scss';

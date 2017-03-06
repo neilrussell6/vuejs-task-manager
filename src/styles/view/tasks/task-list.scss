@@ -1,0 +1,51 @@
+@import '../../app.vars.scss';
+
+.task-controls {
+    overflow: auto;
+    border-bottom: 1px solid $bdr-color-light;
+    margin-bottom: $big-v-pad;
+}
+
+.task-control-group {
+
+    overflow: auto;
+    padding-bottom: $med-v-pad;
+
+    &:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+}
+
+.task-control {
+
+    float: left;
+    padding: 0 $small-h-pad;
+
+    &:nth-child(3n) {
+        clear: both;
+    }
+
+    &.right {
+        float: right;
+    }
+}
+
+.status-filter {
+    float: left;
+}
+
+.task-list {
+
+    clear: both;
+    list-style: none;
+    padding: 0;
+    border-bottom: 1px solid $bdr-color-light;
+    margin-bottom: $big-v-pad;
+    min-height: 200px;
+
+    .no-results {
+        padding: $small-v-pad $small-h-pad;
+        color: #000;
+    }
+}
