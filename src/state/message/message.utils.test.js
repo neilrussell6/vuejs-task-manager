@@ -10,7 +10,7 @@ describe('Message Utils', () => {
 
     describe('makeMessageLabel', () => {
 
-        describe('INDEX endpoint', () => {
+        describe('PRIMARY endpoint', () => {
 
             it('given no config, should return label "projects"', () => {
 
@@ -18,7 +18,7 @@ describe('Message Utils', () => {
                 let _endpoint_data = {
                     primary: 'projects'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.INDEX;
+                let _endpoint_type = ENDPOINT_TYPES.PRIMARY;
                 let _config = {};
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -27,7 +27,7 @@ describe('Message Utils', () => {
             });
         });
 
-        describe('VIEW endpoint', () => {
+        describe('PRIMARY_ID endpoint', () => {
 
             it('given config.should_hide_ids set to FALSE, should return label "project 123"', () => {
 
@@ -36,7 +36,7 @@ describe('Message Utils', () => {
                     primary: 'projects',
                     primary_id: '123'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.VIEW;
+                let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
                     should_hide_ids: false
                 };
@@ -53,7 +53,7 @@ describe('Message Utils', () => {
                     primary: 'projects',
                     primary_id: '123'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.VIEW;
+                let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
                     should_hide_ids: true
                 };
@@ -70,7 +70,7 @@ describe('Message Utils', () => {
                     primary: 'users',
                     primary_id: '123'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.VIEW;
+                let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
                     should_exclude_user: true
                 };
@@ -87,7 +87,7 @@ describe('Message Utils', () => {
                     primary: 'projects',
                     primary_id: '123'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.VIEW;
+                let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
                     should_replace_ids_with_template: true
                 };
@@ -98,7 +98,7 @@ describe('Message Utils', () => {
             });
         });
 
-        describe('INDEX_RELATED endpoint', () => {
+        describe('RELATED/RELATIONSHIPS endpoint', () => {
 
             it('given config.should_hide_ids set to FALSE, should return label "tasks for project 123"', () => {
 
@@ -108,7 +108,7 @@ describe('Message Utils', () => {
                     primary_id: '123',
                     related: 'tasks'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.INDEX_RELATED;
+                let _endpoint_type = ENDPOINT_TYPES.RELATED;
                 let _config = {
                     should_hide_ids: false
                 };
@@ -126,7 +126,7 @@ describe('Message Utils', () => {
                     primary_id: '123',
                     related: 'tasks'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.INDEX_RELATED;
+                let _endpoint_type = ENDPOINT_TYPES.RELATIONSHIPS;
                 let _config = {
                     should_hide_ids: true
                 };
@@ -144,7 +144,7 @@ describe('Message Utils', () => {
                     primary_id: '123',
                     related: 'tasks'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.INDEX_RELATED;
+                let _endpoint_type = ENDPOINT_TYPES.RELATED;
                 let _config = {
                     should_exclude_user: true
                 };
@@ -162,7 +162,7 @@ describe('Message Utils', () => {
                     primary_id: '123',
                     related: 'tasks'
                 };
-                let _endpoint_type = ENDPOINT_TYPES.INDEX_RELATED;
+                let _endpoint_type = ENDPOINT_TYPES.RELATIONSHIPS;
                 let _config = {
                     should_replace_ids_with_template: true
                 };

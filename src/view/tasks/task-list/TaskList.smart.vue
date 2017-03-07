@@ -93,7 +93,7 @@
     import { store } from 'state/store';
 
     // settings
-    import { TASK_STATUS } from 'data/models/basic/task.model';
+    import { TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
     import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 
     // utils
@@ -206,11 +206,11 @@
             },
 
             _onTrashTask: function (task) {
-                store.dispatch(TaskActions.trashTask(task.unique_id));
+                store.dispatch(TaskActions.trashTask(task.unique_id, task));
             },
 
             _onToggleTaskComplete: function (task) {
-                store.dispatch(TaskActions.toggleTaskComplete(task.unique_id));
+                store.dispatch(TaskActions.toggleTaskComplete(task));
             },
 
             // ------------------------------------
@@ -262,7 +262,7 @@
                 this.text_filter        = _state.tasks_text_filter;
 
                 // computed data
-                this.has_tasks              = _state.tasks.length > 0;
+                this.has_tasks          = _state.tasks.length > 0;
 
                 if (_should_fetch_tasks) {
                     store.dispatch(TaskActions.fetchTasks(this.selected_project));

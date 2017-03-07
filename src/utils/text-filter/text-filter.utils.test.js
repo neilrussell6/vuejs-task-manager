@@ -2,7 +2,7 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
 // models
-import { Task } from 'data/models/basic/task.model';
+import { Task } from 'data/models/crud/jsonapi/task.model';
 
 // SUT
 import * as Utils from './text-filter.utils';

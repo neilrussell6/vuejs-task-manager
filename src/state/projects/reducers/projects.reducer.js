@@ -1,5 +1,5 @@
 // app
-import { Project } from 'data/models/basic/project.model';
+import { Project } from 'data/models/crud/jsonapi/project.model';
 import { API_READ } from 'state/redux-json-api.settings';
 
 // local

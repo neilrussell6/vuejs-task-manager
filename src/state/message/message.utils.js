@@ -7,12 +7,12 @@ export function makeMessageLabel (endpoint_data, endpoint_type, config, singular
 
     switch (endpoint_type) {
 
-        // index (eg. projects)
-        case ENDPOINT_TYPES.INDEX:
+        // primary (eg. projects);
+        case ENDPOINT_TYPES.PRIMARY:
             return `${endpoint_data.primary}`;
 
-        // view (eg. projects/123)
-        case ENDPOINT_TYPES.VIEW:
+        // primary with id (eg. projects/123);
+        case ENDPOINT_TYPES.PRIMARY_ID:
 
             if (config.should_replace_ids_with_template) {
                 return `${_primary_singular} {${endpoint_data.primary} ${endpoint_data.primary_id}}`;
@@ -24,8 +24,10 @@ export function makeMessageLabel (endpoint_data, endpoint_type, config, singular
                 return `${_primary_singular} ${endpoint_data.primary_id}`;
             }
 
-        // index related (eg. projects/123/tasks)
-        case ENDPOINT_TYPES.INDEX_RELATED:
+        // related (eg. projects/123/tasks);
+        case ENDPOINT_TYPES.RELATED:
+        // relationships (eg. projects/123/relationships/owner);
+        case ENDPOINT_TYPES.RELATIONSHIPS:
 
             if (config.should_exclude_user && endpoint_data.primary === 'users') {
                 return `${endpoint_data.related}`;

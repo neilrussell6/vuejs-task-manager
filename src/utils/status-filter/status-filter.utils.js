@@ -1,6 +1,6 @@
 // models
 import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
-import { TASK_STATUS } from 'data/models/basic/task.model';
+import { TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // ---------------------------
 // public

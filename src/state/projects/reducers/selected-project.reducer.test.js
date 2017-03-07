@@ -2,7 +2,7 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
 // app
-import { Project } from 'data/models/basic/project.model';
+import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // local
 import * as Reducer from './selected-project.reducer';

@@ -1,6 +1,6 @@
 // app
-import { API_READ } from 'state/redux-json-api.settings';
-import { Task, TASK_STATUS } from 'data/models/basic/task.model';
+import { API_READ, API_UPDATED, API_WILL_UPDATE, API_UPDATE_FAILED } from 'state/redux-json-api.settings';
+import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // local
 import {
@@ -27,22 +27,6 @@ function task (task, action) {
         //     let local_id = LocalStorageUtils.getUniqueLocalId(action.tasks);
         //
         //     return new Task(Object.assign({}, action.data, { local_id }));
-
-        case ACTION_TOGGLE_TASK_COMPLETE:
-
-            if (task.unique_id !== action.unique_id) {
-                return task;
-            }
-
-            if ([ TASK_STATUS.COMPLETE, TASK_STATUS.INCOMPLETE ].indexOf(parseInt(task.status)) === -1) {
-                return task;
-            }
-
-            data = Object.assign({}, task, {
-                status: task.status === TASK_STATUS.COMPLETE ? TASK_STATUS.INCOMPLETE : TASK_STATUS.COMPLETE
-            });
-
-            return new Task(data);
 
         case ACTION_UNDO_TRASH_TASK:
             if (task.unique_id !== action.unique_id) {
@@ -75,9 +59,13 @@ function task (task, action) {
 
             return new Task(data);
 
+        case API_UPDATED:
+            data = Object.assign({}, task.properties, action.payload.data.attributes);
+            return new Task(data);
+
         case API_READ:
-            let _data = Object.assign({}, { id: task.id }, { local_id: task.local_id }, task.attributes);
-            return new Task(_data);
+            data = Object.assign({}, { id: task.id }, { local_id: task.local_id }, task.attributes);
+            return new Task(data);
     }
 }
 
@@ -103,7 +91,6 @@ export function tasks (list = DEFAULT_TASK_LIST_STATE, action) {
                 ...list.slice(index + 1)
             ];
 
-        case ACTION_TOGGLE_TASK_COMPLETE:
         case ACTION_TRASH_TASK:
         case ACTION_UNDO_TRASH_TASK:
         case ACTION_UPDATE_TASK:
@@ -129,6 +116,29 @@ export function tasks (list = DEFAULT_TASK_LIST_STATE, action) {
 
                 return result;
             }, []);
+
+        case API_UPDATED:
+
+            if (action.payload.data.type !== 'tasks') {
+                return list;
+            }
+
+            // get index
+            const _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.data.id)) ? i : val, null);
+
+            if (_index === null) {
+                return list;
+            }
+
+            // ... and update with given data attributes
+            const _item = task(list[ _index ], action);
+
+            // ... and splice it in at it's original index, but in a new collection
+            return [
+                ...list.slice(0, _index),
+                ...[ _item ],
+                ...list.slice(_index + 1)
+            ];
 
         default:
             return list;

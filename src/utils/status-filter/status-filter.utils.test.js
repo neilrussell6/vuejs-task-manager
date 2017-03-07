@@ -2,11 +2,11 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
 // constants
-import { TASK_STATUS } from 'data/models/basic/task.model';
+import { TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // models
 import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
-import { Task } from 'data/models/basic/task.model';
+import { Task } from 'data/models/crud/jsonapi/task.model';
 
 // SUT
 import * as Utils from './status-filter.utils';

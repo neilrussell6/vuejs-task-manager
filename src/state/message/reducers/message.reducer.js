@@ -1,10 +1,15 @@
 import pluralize from 'pluralize';
-import { API_WILL_READ, API_READ } from 'state/redux-json-api.settings';
+import { API_WILL_READ, API_READ, API_UPDATED, API_WILL_UPDATE, API_UPDATE_FAILED } from 'state/redux-json-api.settings';
 
-// app
-import { ACTION_DELETE_TASK } from 'state/tasks/task.settings';
+// data
 import { Message, MESSAGE_STYLE } from 'data/models/basic/message.model';
+
+// state
+import { ACTION_DELETE_TASK } from 'state/tasks/task.settings';
+
+// utils
 import * as JsonApiUtils from 'utils/json-api/json-api.utils';
+import { ENDPOINT_TYPES } from 'utils/json-api/json-api.settings';
 
 // local
 import * as MessageUtils from '../message.utils';
@@ -34,13 +39,38 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
     // make message label
 
+    let _endpoint_type;
+    let _endpoint_data;
+
     switch (action.type) {
+
+        case API_WILL_UPDATE:
+
+            _endpoint_data = {
+                primary: action.payload.type,
+                primary_id: action.payload.id
+            };
+            _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, MessageConfig, pluralize.singular);
+
+            break;
+
+        case API_UPDATED:
+        case API_UPDATE_FAILED:
+
+            _endpoint_data = {
+                primary: action.payload.data.type,
+                primary_id: action.payload.data.id
+            };
+            _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, MessageConfig, pluralize.singular);
+
+            break;
 
         case API_WILL_READ:
         case API_READ:
 
-            let _endpoint_type = JsonApiUtils.getEndpointType(_endpoint);
-            let _endpoint_data = JsonApiUtils.splitEndpoint(_endpoint, _endpoint_type);
+            _endpoint_type = JsonApiUtils.getEndpointType(_endpoint);
+            _endpoint_data = JsonApiUtils.splitEndpoint(_endpoint, _endpoint_type);
+
             _label = MessageUtils.makeMessageLabel(_endpoint_data, _endpoint_type, MessageConfig, pluralize.singular);
             break;
     }
@@ -48,6 +78,16 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
     // make message data
 
     switch (action.type) {
+
+        case API_WILL_UPDATE:
+            _data = {
+                label: `updating ${_label}`,
+                style: MESSAGE_STYLE.INFO,
+                icon: {
+                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
+                }
+            };
+            break;
 
         case API_WILL_READ:
             _data = {
@@ -62,6 +102,22 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
         case API_READ:
             _data = {
                 label: `successfully fetched ${_label}`,
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: MessageConfig.default_message_expire
+            };
+            break;
+
+        case API_UPDATED:
+            _data = {
+                label: `successfully updated ${_label}`,
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: MessageConfig.default_message_expire
+            };
+            break;
+
+        case API_UPDATE_FAILED:
+            _data = {
+                label: `an errored occurred while updating ${_label}`,
                 style: MESSAGE_STYLE.SUCCESS,
                 expire: MessageConfig.default_message_expire
             };

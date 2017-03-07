@@ -1,4 +1,7 @@
-import { readEndpoint } from 'redux-json-api';
+import { readEndpoint, updateResource } from 'redux-json-api';
+
+// data
+import { JsonApiModel } from 'data/models/jsonapi.model';
 
 // local
 import {
@@ -60,10 +63,16 @@ export function deleteTask (unique_id) {
 //     };
 // }
 
-export function toggleTaskComplete (unique_id) {
-    return {
-        type:         ACTION_TOGGLE_TASK_COMPLETE,
-        unique_id:    unique_id
+export function toggleTaskComplete (task) {
+    return function (dispatch, state) {
+
+        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        const _task = task.toggleCompleteStatus();
+
+        dispatch(updateResource(_task.resource_object));
     };
 }
 
@@ -82,11 +91,17 @@ export function undoTrashTask (unique_id) {
 }
 
 export function updateTask (unique_id, data) {
+    console.log(unique_id, data);
     return {
         type:         ACTION_UPDATE_TASK,
         unique_id:    unique_id,
         data:         data
     };
+    // return function (dispatch) {
+    //     let _id = project.server_id;
+    //     let _endpoint = `projects/${_id}/tasks`;
+    //     dispatch(readEndpoint(_endpoint));
+    // };
 }
 
 // --------------------------
