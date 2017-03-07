@@ -1,11 +1,13 @@
 <template>
-    <div class="app wrapper">
+    <div class="wrapper">
 
-        <div>
+        <header class="header">
             <common-message :message="message"></common-message>
-        </div>
+        </header>
 
-        <tasks></tasks>
+        <section class="main">
+            <tasks></tasks>
+        </section>
 
     </div>
 </template>

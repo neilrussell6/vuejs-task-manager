@@ -1,4 +1,4 @@
-@import '../app.vars.scss';
+@import '../app.vars';
 
 // ----------------------------------
 // misc
@@ -14,18 +14,18 @@
 
 html,
 .app {
-    padding: 0;
-    margin: 0;
-    height: 100%;
     display: block;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     background-color: $bg-color-dark;
-    color: #D8DCE3;
-    padding: 0;
-    margin: 0;
+    color: #d8dce3;
     height: 100%;
+    margin: 0;
+    padding: 0;
     user-select: none;
 }
 
@@ -36,7 +36,6 @@ p,
 input,
 button {
     font-family: 'Source Code Pro', sans-serif;
-    -webkit-font-smoothing: antialiased;
     font-size: 14px;
 }
 
@@ -58,16 +57,15 @@ a {
 // ----------------------------------
 
 button {
-    //background-color: $bg-color-dark;
     background-color: transparent;
+    border: 0;
     border-radius: 0;
-    border: none;
     color: $link-color;
-    padding: $small-v-pad $small-h-pad;
+    cursor: pointer;
     min-width: 40px;
+    padding: $small-v-pad $small-h-pad;
     text-align: center;
     text-transform: uppercase;
-    cursor: pointer;
 
     &:hover {
         background-color: $link-color-hover;
@@ -75,114 +73,102 @@ button {
     }
 
     &disabled {
-        /*background-color: rgba(60,61,64,0.4);*/
-        /*color: rgba(156,193,219,0.4);*/
         background-color: transparent;
         color: $text-color-dark;
         cursor: default;
     }
 }
 
-input[type="text"] {
-    background-color: $input-bg-color;
-    color: $input-text-color;
-    padding: $small-v-pad $small-h-pad;
-    border: none;
-}
-input[type="text"]:focus {
-    color: $input-text-color-focus;
-}
+input {
+    &[type='text'] {
+        background-color: $input-bg-color;
+        border: 0;
+        color: $input-text-color;
+        padding: $small-v-pad $small-h-pad;
 
-// ----------------------------------
-// structure
-// ----------------------------------
-
-header {
-    padding: $big-v-pad $med-h-pad;
-}
-
-@media screen and (max-width: 640px) {
-    header {
-        padding: $big-v-pad $big-h-pad;
+        &:focus {
+            color: $input-text-color-focus;
+        }
     }
 }
 
 // ----------------------------------
-// container
+// loader
 // ----------------------------------
 
 .loader-container {
     position: relative;
+    text-align: center;
     top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     width: 100%;
-    text-align: center;
 
     .label {
-        height: 50px;
+        color: #cf9;
         font-size: 24px;
         font-weight: normal;
-        color: #ccff99;
+        height: 50px;
     }
 
     .icon {
-        height: 50px;
-        font-size: 40px;
         color: #000;
+        font-size: 40px;
+        height: 50px;
     }
 }
 
 // ----------------------------------
-// app-container
+// main
 // ----------------------------------
 
-.app-container {
+.main {
     background-color: $bg-color-med;
+    box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
     box-sizing: border-box;
+    margin: ($big-v-pad * 2) auto $big-v-pad;
     overflow: auto;
-    box-shadow: 0 0 75px -6px rgba(0,0,0,0.39);
-}
 
-.app-column-left {
-    clear: both;
-    float: left;
-    background-color: $bg-color-dark;
-    box-sizing: border-box;
-    align-items: stretch;
-    flex: 1
-}
+    .body {
+        box-sizing: border-box;
+        display: flex;
 
-.app-column-right {
-    float: right;
-    box-sizing: border-box;
-}
+        .column-left {
+            align-items: stretch;
+            background-color: $bg-color-dark;
+            box-sizing: border-box;
+            clear: both;
+            flex: 1;
+            float: left;
+            padding-bottom: $big-v-pad;
+            padding-top: $big-v-pad;
+        }
 
-.app-columns {
-    display: flex;
-    box-sizing: border-box;
+        .column-right {
+            box-sizing: border-box;
+            float: right;
+            padding: $big-v-pad $big-h-pad;
+        }
+    }
 }
 
 // > 1201
 
 @media screen and (min-width: 1201px) {
 
-    .app-container {
+    .main {
+        margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 1200px;
-        margin: $big-h-pad auto;
-    }
 
-    .app-column-left {
-        width: 340px;
-        padding-top: $xbig-v-pad;
-        padding-bottom: $xbig-v-pad;
-        //padding: $xbig-v-pad $xbig-h-pad;
-    }
+        .column-left {
+            padding-bottom: $xbig-v-pad;
+            padding-top: $xbig-v-pad;
+            width: 340px;
+        }
 
-    .app-column-right {
-        width: calc(100% - 340px    );
-        padding: $xbig-v-pad $xbig-h-pad;
+        .column-right {
+            padding: $xbig-v-pad $xbig-h-pad;
+            width: calc(100% - 340px);
+        }
     }
 }
 
@@ -190,20 +176,20 @@ header {
 
 @media screen and (max-width: 1200px) {
 
-    .app-container {
+    .main {
+        margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 100%;
-    }
 
-    .app-column-left {
-        width: 260px;
-        padding-top: $big-v-pad;
-        padding-bottom: $big-v-pad;
-        //padding: $big-v-pad $big-h-pad;
-    }
+        .app-column-left {
+            padding-bottom: $big-v-pad;
+            padding-top: $big-v-pad;
+            width: 260px;
+        }
 
-    .app-column-right {
-        width: calc(100% - 260px);
-        padding: $big-v-pad $big-h-pad;
+        .app-column-right {
+            padding: $big-v-pad $big-h-pad;
+            width: calc(100% - 260px);
+        }
     }
 }
 
@@ -233,9 +219,9 @@ header {
     }
 
     .cell-button {
-        width: 20px;
         padding-left: 5px;
         padding-right: 5px;
+        width: 20px;
     }
 
     .cell-inline-edit {
@@ -245,8 +231,8 @@ header {
     }
 
     .cell-inline-edit.complete {
-        text-decoration: line-through;
         color: $med-grey;
+        text-decoration: line-through;
     }
 
     .cell-inline-edit.editing {
@@ -262,21 +248,18 @@ header {
     width: 100%;
 
     li {
-        width: 100%;
         padding-left: 0;
+        width: 100%;
 
         &.selected {
-            //box-sizing: border-box;
             background-color: darken($bg-color-dark, 2%);
-            color: $text-color-med;
-            //text-transform: none;
-            //overflow: auto;
+            color: $text-color-selected;
         }
 
         button {
-            width: 100%;
             text-align: left;
             text-transform: none;
+            width: 100%;
         }
     }
 }
@@ -286,22 +269,19 @@ header {
 // ----------------------------------
 
 .common-message {
-    width: 100%;
+    background-color: $bg-color-dark;
     box-sizing: border-box;
+    color: $light-grey;
+    height: 60px;
     padding: $med-v-pad $big-h-pad;
     text-align: center;
-    border-bottom: 1px solid lighten($bg-color-med, 5%);
-    height: 60px;
-
-    background-color: $bg-color-dark;
-    transition: background-color 0.2s;
+    transition: background-color .2s;
+    width: 100%;
 
     &.has-message {
         background-color: darken($bg-color-dark, 5%);
-        transition: background-color 0.2s;
+        transition: background-color .2s;
     }
-
-    color: $light-grey;
 
     &.info {
         color: $light-blue;

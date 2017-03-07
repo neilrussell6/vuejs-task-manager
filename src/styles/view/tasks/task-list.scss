@@ -1,24 +1,22 @@
-@import '../../app.vars.scss';
+@import '../../app.vars';
 
 .task-controls {
-    overflow: auto;
     border-bottom: 1px solid $bdr-color-light;
     margin-bottom: $big-v-pad;
+    overflow: auto;
 }
 
 .task-control-group {
-
     overflow: auto;
     padding-bottom: $med-v-pad;
 
     &:last-child {
-        border-bottom: none;
+        border-bottom: 0;
         margin-bottom: 0;
     }
 }
 
 .task-control {
-
     float: left;
     padding: 0 $small-h-pad;
 
@@ -36,16 +34,15 @@
 }
 
 .task-list {
-
+    border-bottom: 1px solid $bdr-color-light;
     clear: both;
     list-style: none;
-    padding: 0;
-    border-bottom: 1px solid $bdr-color-light;
     margin-bottom: $big-v-pad;
     min-height: 200px;
+    padding: 0;
 
     .no-results {
+        color: $text-color-med;
         padding: $small-v-pad $small-h-pad;
-        color: #000;
     }
 }

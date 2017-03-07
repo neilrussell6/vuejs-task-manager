@@ -1,1 +1,1 @@
-export const DELAY_FETCH = 1000;
+export const DELAY_FETCH = 0;

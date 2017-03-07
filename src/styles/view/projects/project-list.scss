@@ -1,30 +1,44 @@
-@import '../../app.vars.scss';
+@import '../../app.vars';
 
 .project-list {
 
     .no-results {
-        width: 100%;
-        padding-top: $med-v-pad;
+        color: $text-color-med;
         padding-bottom: $med-v-pad;
         padding-left: $big-h-pad;
+        padding-top: $med-v-pad;
+        width: 100%;
     }
 
     ul {
         list-style: none;
-        padding: 0;
         margin: 0;
+        padding: 0;
     }
 
     .common-list {
 
-        li.selected button {
-            background-color: red;
-            padding-left: $big-h-pad + $med-h-pad;
+        .selected button {
+            padding-left: $big-h-pad + $small-h-pad;
         }
 
         button {
-            background-color: green;
             width: 100%;
+        }
+    }
+}
+
+// < 1201
+
+@media screen and (max-width: 1200px) {
+
+    .project-list {
+
+        .common-list {
+
+            .selected button {
+                padding-left: $big-h-pad + $small-h-pad;
+            }
         }
     }
 }

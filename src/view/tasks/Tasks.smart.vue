@@ -1,12 +1,12 @@
 <template>
-    <div class="app-container task-app">
+    <div class="wrapper">
 
-        <div class="app-columns">
-            <div class="app-column app-column-left">
+        <div class="body">
+            <div class="column column-left">
                 <project-list></project-list>
             </div>
 
-            <div class="app-column app-column-right">
+            <div class="column column-right">
                 <task-list></task-list>
             </div>
         </div>

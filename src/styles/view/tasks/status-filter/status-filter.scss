@@ -1,16 +1,15 @@
-@import '../../../app.vars.scss';
+@import '../../../app.vars';
 
 .status-filter-list {
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
 .status-filter-list-item {
-
+    border-right: 1px solid $bdr-color-dark;
     display: inline-block;
     padding: $small-v-pad $small-h-pad;
-    border-right: 1px solid $bdr-color-dark;
     text-align: center;
 
     &:first-child {
@@ -18,22 +17,23 @@
     }
 
     &:last-child {
+        border-right: 0;
         padding-right: 0;
-        border-right: none;
         text-align: right;
     }
 
     span {
-        text-transform: uppercase;
+        color: $text-color-selected;
         padding: $small-v-pad $small-h-pad;
+        text-transform: uppercase;
     }
 
     button {
         background: transparent;
-    }
 
-    button:hover {
-        color: $link-color-hover;
-        text-decoration: underline;
+        &:hover {
+            color: $link-color-hover;
+            text-decoration: underline;
+        }
     }
 }
