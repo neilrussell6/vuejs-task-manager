@@ -1,5 +1,5 @@
 import pluralize from 'pluralize';
-import { API_WILL_READ, API_READ, API_UPDATED, API_WILL_UPDATE, API_UPDATE_FAILED } from 'state/redux-json-api.settings';
+import { API_READ, API_READ_FAILED, API_UPDATE_FAILED, API_UPDATED, API_WILL_READ, API_WILL_UPDATE } from 'state/redux-json-api.settings';
 
 // data
 import { Message, MESSAGE_STYLE } from 'data/models/basic/message.model';
@@ -51,11 +51,9 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
                 primary_id: action.payload.id
             };
             _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, MessageConfig, pluralize.singular);
-
             break;
 
         case API_UPDATED:
-        case API_UPDATE_FAILED:
 
             _endpoint_data = {
                 primary: action.payload.data.type,
@@ -79,13 +77,35 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
     switch (action.type) {
 
-        case API_WILL_UPDATE:
+        case API_READ:
             _data = {
-                label: `updating ${_label}`,
-                style: MESSAGE_STYLE.INFO,
-                icon: {
-                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
-                }
+                label: `successfully fetched ${_label}`,
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: MessageConfig.default_message_expire
+            };
+            break;
+
+        case API_READ_FAILED:
+            _data = {
+                label: `could not fetch data`,
+                style: MESSAGE_STYLE.WARNING,
+                expire: MessageConfig.default_message_expire
+            };
+            break;
+
+        case API_UPDATE_FAILED:
+            _data = {
+                label: `could not update data`,
+                style: MESSAGE_STYLE.WARNING,
+                expire: MessageConfig.default_message_expire
+            };
+            break;
+
+        case API_UPDATED:
+            _data = {
+                label: `successfully updated ${_label}`,
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: MessageConfig.default_message_expire
             };
             break;
 
@@ -99,27 +119,13 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
-        case API_READ:
+        case API_WILL_UPDATE:
             _data = {
-                label: `successfully fetched ${_label}`,
-                style: MESSAGE_STYLE.SUCCESS,
-                expire: MessageConfig.default_message_expire
-            };
-            break;
-
-        case API_UPDATED:
-            _data = {
-                label: `successfully updated ${_label}`,
-                style: MESSAGE_STYLE.SUCCESS,
-                expire: MessageConfig.default_message_expire
-            };
-            break;
-
-        case API_UPDATE_FAILED:
-            _data = {
-                label: `an errored occurred while updating ${_label}`,
-                style: MESSAGE_STYLE.SUCCESS,
-                expire: MessageConfig.default_message_expire
+                label: `updating ${_label}`,
+                style: MESSAGE_STYLE.INFO,
+                icon: {
+                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
+                }
             };
             break;
 

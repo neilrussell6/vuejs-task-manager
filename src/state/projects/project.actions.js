@@ -1,4 +1,4 @@
-import { readEndpoint } from 'redux-json-api';
+import { readEndpoint, API_READ_FAILED } from 'redux-json-api';
 
 // local
 import { ACTION_SELECT_PROJECT } from './project.settings';
@@ -24,7 +24,12 @@ export function refreshProjects () {
 
 export function fetchProjects () {
     return function (dispatch) {
-        dispatch(readEndpoint('users/1/projects'));
+        const _endpoint = 'users/1/projects';
+
+        dispatch(readEndpoint(_endpoint))
+            .catch(() => {
+                dispatch(API_READ_FAILED);
+            });
     };
 }
 

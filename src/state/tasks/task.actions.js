@@ -1,4 +1,4 @@
-import { readEndpoint, updateResource } from 'redux-json-api';
+import { readEndpoint, updateResource, API_READ_FAILED, API_UPDATE_FAILED } from 'redux-json-api';
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
@@ -72,7 +72,10 @@ export function toggleTaskComplete (task) {
 
         const _task = task.toggleCompleteStatus();
 
-        dispatch(updateResource(_task.resource_object));
+        dispatch(updateResource(_task.resource_object))
+            .catch(() => {
+                dispatch(API_READ_FAILED);
+            });
     };
 }
 
@@ -91,17 +94,11 @@ export function undoTrashTask (unique_id) {
 }
 
 export function updateTask (unique_id, data) {
-    console.log(unique_id, data);
     return {
         type:         ACTION_UPDATE_TASK,
         unique_id:    unique_id,
         data:         data
     };
-    // return function (dispatch) {
-    //     let _id = project.server_id;
-    //     let _endpoint = `projects/${_id}/tasks`;
-    //     dispatch(readEndpoint(_endpoint));
-    // };
 }
 
 // --------------------------
@@ -116,6 +113,10 @@ export function fetchTasks (project) {
     return function (dispatch) {
         let _id = project.server_id;
         let _endpoint = `projects/${_id}/tasks`;
-        dispatch(readEndpoint(_endpoint));
+
+        dispatch(readEndpoint(_endpoint))
+            .catch(() => {
+                dispatch(API_READ_FAILED);
+            });
     };
 }
