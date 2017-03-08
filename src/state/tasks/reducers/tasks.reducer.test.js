@@ -6,14 +6,7 @@ import { API_READ } from 'state/redux-json-api.settings';
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // local
-import {
-    // ACTION_ADD_TASK,
-    ACTION_DELETE_TASK,
-    ACTION_TOGGLE_TASK_COMPLETE,
-    ACTION_TRASH_TASK,
-    ACTION_UNDO_TRASH_TASK,
-    ACTION_UPDATE_TASK
-} from '../task.settings';
+import * as task_settings from '../task.settings';
 import * as Reducer from './tasks.reducer';
 
 describe('tasks reducer', () => {
@@ -30,13 +23,13 @@ describe('tasks reducer', () => {
         expect(_result).to.equal(_state_before);
     });
 
-    // describe('ACTION_ADD_TASK', () => {
+    // describe('task_settings.ACTION_ADD_TASK', () => {
     //
     //     it('should add a task to the list', () => {
     //
     //         const _state_before = [];
     //         const _action = {
-    //             type: ACTION_ADD_TASK, tasks: [], data: { text: 'AAAA' }
+    //             type: task_settings.ACTION_ADD_TASK, tasks: [], data: { text: 'AAAA' }
     //         };
     //
     //         deepFreeze(_state_before);
@@ -48,7 +41,7 @@ describe('tasks reducer', () => {
     //     });
     // });
 
-    describe('ACTION_DELETE_TASK', () => {
+    describe('task_settings.ACTION_DELETE_TASK', () => {
 
         it('should find task by unique_id and remove it from array', () => {
 
@@ -59,7 +52,7 @@ describe('tasks reducer', () => {
             const _state_before = [ _task1, _task2, _task3 ];
             const _expected = [ _task1, _task3 ];
             const _action = {
-                type: ACTION_DELETE_TASK, unique_id: _task2.unique_id
+                type: task_settings.ACTION_DELETE_TASK, unique_id: _task2.unique_id
             };
 
             deepFreeze(_state_before);
@@ -71,7 +64,7 @@ describe('tasks reducer', () => {
         });
     });
 
-    describe('ACTION_UPDATE_TASK', () => {
+    describe('task_settings.ACTION_UPDATE_TASK', () => {
 
         it('should update task data using provided unique_id and data', () => {
 
@@ -80,7 +73,7 @@ describe('tasks reducer', () => {
 
             const _state_before = [ _task1, _task2 ];
             const _action = {
-                type: ACTION_UPDATE_TASK, unique_id: _task2.unique_id, data: {text: 'XXXX'}
+                type: task_settings.ACTION_UPDATE_TASK, unique_id: _task2.unique_id, data: {text: 'XXXX'}
             };
 
             deepFreeze(_state_before);

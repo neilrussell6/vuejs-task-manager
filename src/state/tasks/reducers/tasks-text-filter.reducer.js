@@ -1,14 +1,11 @@
 // local
-import {
-    ACTION_SET_TEXT_FILTER,
-    DEFAULT_TEXT_FILTER_STATE
-} from '../task.settings';
+import * as task_settings from '../task.settings';
 
-export function tasks_text_filter (state = DEFAULT_TEXT_FILTER_STATE, action) {
+export function tasks_text_filter (state = task_settings.DEFAULT_TEXT_FILTER_STATE, action) {
 
     switch (action.type) {
 
-        case ACTION_SET_TEXT_FILTER:
+        case task_settings.ACTION_SET_TEXT_FILTER:
             return action.value;
 
         default:

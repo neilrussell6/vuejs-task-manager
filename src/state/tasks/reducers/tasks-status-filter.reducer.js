@@ -1,14 +1,11 @@
 // local
-import {
-    ACTION_SET_COMPLETE_FILTER,
-    DEFAULT_COMPLETE_FILTER_STATE
-} from '../task.settings';
+import * as task_settings from '../task.settings';
 
-export function tasks_status_filter (state = DEFAULT_COMPLETE_FILTER_STATE, action) {
+export function tasks_status_filter (state = task_settings.DEFAULT_COMPLETE_FILTER_STATE, action) {
 
     switch (action.type) {
 
-        case ACTION_SET_COMPLETE_FILTER:
+        case task_settings.ACTION_SET_COMPLETE_FILTER:
             return action.value;
 
         default:

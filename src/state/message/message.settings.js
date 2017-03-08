@@ -3,7 +3,6 @@
 // --------------------------
 
 export const ACTION_CANCEL_DELETE = 'ACTION_CANCEL_DELETE';
-export const ACTION_CONFIRM_DELETE = 'ACTION_CONFIRM_DELETE';
 export const ACTION_REQUEST_DELETE_CONFIRMATION = 'ACTION_REQUEST_DELETE_CONFIRMATION';
 
 // --------------------------

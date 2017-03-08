@@ -1,20 +1,19 @@
-import { readEndpoint, updateResource, API_READ_FAILED, API_UPDATE_FAILED } from 'redux-json-api';
+import {
+    API_CREATE_FAILED,
+    API_DELETE_FAILED,
+    API_READ_FAILED,
+    API_UPDATE_FAILED,
+    createResource,
+    deleteResource,
+    readEndpoint,
+    updateResource
+} from 'redux-json-api';
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 
 // local
-import {
-    // ACTION_ADD_TASK,
-    // ACTION_MAKE_TASK,
-    ACTION_DELETE_TASK,
-    ACTION_SET_COMPLETE_FILTER,
-    ACTION_SET_TEXT_FILTER,
-    ACTION_TOGGLE_TASK_COMPLETE,
-    ACTION_TRASH_TASK,
-    ACTION_UNDO_TRASH_TASK,
-    ACTION_UPDATE_TASK
-} from './task.settings';
+import * as task_settings from './task.settings';
 
 // --------------------------
 // text filter
@@ -22,7 +21,7 @@ import {
 
 export function setTextFilter (value) {
     return {
-        type:     ACTION_SET_TEXT_FILTER,
+        type:     task_settings.ACTION_SET_TEXT_FILTER,
         value:    value
     };
 }
@@ -33,7 +32,7 @@ export function setTextFilter (value) {
 
 export function setStatusFilter (value) {
     return {
-        type:     ACTION_SET_COMPLETE_FILTER,
+        type:     task_settings.ACTION_SET_COMPLETE_FILTER,
         value:    value
     };
 }
@@ -44,22 +43,29 @@ export function setStatusFilter (value) {
 
 // export function addTask (tasks, data) {
 //     return {
-//         type:     ACTION_ADD_TASK,
+//         type:     task_settings.ACTION_ADD_TASK,
 //         tasks:    tasks,
 //         data:     data
 //     };
 // }
 
-export function deleteTask (unique_id) {
-    return {
-        type:       ACTION_DELETE_TASK,
-        unique_id:  unique_id
+export function deleteTask (task) {
+    return function (dispatch) {
+
+        if (!(task instanceof JsonApiModel) || task.resource_identifier_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        dispatch(deleteResource(task.resource_identifier_object))
+            .catch(() => {
+                dispatch(API_DELETE_FAILED);
+            });
     };
 }
 
 // export function makeTask () {
 //     return {
-//         type:     ACTION_MAKE_TASK
+//         type:     task_settings.ACTION_MAKE_TASK
 //     };
 // }
 
@@ -113,7 +119,7 @@ export function undoTrashTask (task) {
 
 export function updateTask (unique_id, data) {
     return {
-        type:         ACTION_UPDATE_TASK,
+        type:         task_settings.ACTION_UPDATE_TASK,
         unique_id:    unique_id,
         data:         data
     };

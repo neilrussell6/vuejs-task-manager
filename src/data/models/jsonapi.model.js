@@ -40,6 +40,23 @@ export class JsonApiModel extends CRUDModel {
         return result;
     }
 
+    get resource_identifier_object () {
+
+        if (this.type === null) {
+            return null;
+        }
+
+        let result = {
+            type: this.type
+        };
+
+        if (this.server_id !== null) {
+            Object.assign(result, { id: this.server_id });
+        }
+
+        return result;
+    }
+
     get type () {
         return null;
     }

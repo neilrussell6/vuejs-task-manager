@@ -17,15 +17,10 @@ export function cancelDelete () {
     };
 }
 
-export function confirmDelete (unique_id) {
-    return function (dispatch) {
-        dispatch(TaskActions.deleteTask(unique_id));
-    };
-}
-
-export function requestDeleteConfirmation (data) {
+export function requestDeleteConfirmation (data, callback) {
     return {
-        type:    ACTION_REQUEST_DELETE_CONFIRMATION,
-        data:    data
+        type: ACTION_REQUEST_DELETE_CONFIRMATION,
+        data,
+        callback
     };
 }

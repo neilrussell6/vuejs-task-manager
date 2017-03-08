@@ -57,13 +57,11 @@
 
             _messageButtonClickHandler: function (button, action) {
 
-                if (action.type === ACTION_REQUEST_DELETE_CONFIRMATION) {
-                    if (button.value) {
-                        store.dispatch(MessageActions.confirmDelete(action.data.unique_id));
-                    } else {
-                        store.dispatch(MessageActions.cancelDelete());
-                    }
+                if (!action.hasOwnProperty('callback')) {
+                    return;
                 }
+
+                action.callback(button.value);
             },
 
             // ----------------------

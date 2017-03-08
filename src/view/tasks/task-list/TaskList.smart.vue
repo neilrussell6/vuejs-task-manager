@@ -218,7 +218,13 @@
             // ------------------------------------
 
             _onDeleteTask: function (task) {
-                store.dispatch(MessageActions.requestDeleteConfirmation(task));
+                store.dispatch(MessageActions.requestDeleteConfirmation(task, (is_confirmed) => {
+                    if (is_confirmed) {
+                        store.dispatch(TaskActions.deleteTask(task));
+                    } else {
+                        store.dispatch(MessageActions.cancelDelete());
+                    }
+                }));
             },
 
             _onUndoTrashTask: function (task) {

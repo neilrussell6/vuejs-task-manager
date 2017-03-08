@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 
 // local
-import { ACTION_SET_COMPLETE_FILTER } from '../task.settings';
+import * as task_settings from '../task.settings';
 import * as Reducer from './tasks-status-filter.reducer';
 
 describe('tasks_status_filter reducer', () => {
@@ -27,7 +27,7 @@ describe('tasks_status_filter reducer', () => {
         const _state_before = STATUS_FILTER_TYPE.ALL;
         const _expected = STATUS_FILTER_TYPE.COMPLETE;
         const _action = {
-            type: ACTION_SET_COMPLETE_FILTER,
+            type: task_settings.ACTION_SET_COMPLETE_FILTER,
             value: STATUS_FILTER_TYPE.COMPLETE
         };
 

@@ -2,7 +2,7 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
 // local
-import { ACTION_SET_TEXT_FILTER } from '../task.settings';
+import * as task_settings from '../task.settings';
 import * as Reducer from './tasks-text-filter.reducer';
 
 describe('tasks_text_filter reducer', () => {
@@ -24,7 +24,7 @@ describe('tasks_text_filter reducer', () => {
         const _state_before = '';
         const _expected = 'AAA';
         const _action = {
-            type: ACTION_SET_TEXT_FILTER,
+            type: task_settings.ACTION_SET_TEXT_FILTER,
             value: 'AAA'
         };
 

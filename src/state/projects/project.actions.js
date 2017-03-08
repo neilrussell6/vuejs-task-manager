@@ -1,4 +1,7 @@
-import { readEndpoint, API_READ_FAILED } from 'redux-json-api';
+import {
+    API_READ_FAILED,
+    readEndpoint
+} from 'redux-json-api';
 
 // local
 import { ACTION_SELECT_PROJECT } from './project.settings';

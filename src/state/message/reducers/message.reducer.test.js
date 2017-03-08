@@ -1,15 +1,18 @@
 import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
-import { API_WILL_READ, API_READ } from 'state/redux-json-api.settings';
-
-// app
+// data
 import { MESSAGE_STYLE } from 'data/models/basic/message.model';
-import { ACTION_DELETE_TASK } from 'state/tasks/task.settings';
+
+// state
+import * as api_settings from 'state/redux-json-api.settings';
+import * as task_settings from 'state/tasks/task.settings';
 
 // local
 import * as Reducer from './message.reducer';
-import * as Config from '../message.settings';
+import * as settings from '../message.settings';
+
+// TODO: add more tests
 
 describe('message reducer', () => {
 
@@ -29,7 +32,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: API_WILL_READ, payload: 'users/1'
+                type: api_settings.API_WILL_READ, payload: 'users/1'
             };
 
             deepFreeze(_action);
@@ -47,7 +50,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: API_WILL_READ, payload: 'users/1'
+                type: api_settings.API_WILL_READ, payload: 'users/1'
             };
 
             deepFreeze(_action);
@@ -62,11 +65,11 @@ describe('message reducer', () => {
 
         it('should return SUCCESS Message with no icon, correct expire & label', () => {
 
-            Config.default_message_expire = 123;
+            settings.default_message_expire = 123;
 
             const _state_before = 'AAA';
             const _action = {
-                type: API_READ, payload: {endpoint: 'users/1'}
+                type: api_settings.API_READ, payload: {endpoint: 'users/1'}
             };
 
             deepFreeze(_action);
@@ -83,7 +86,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: API_READ, payload: {endpoint: 'users/1'}
+                type: api_settings.API_READ, payload: {endpoint: 'users/1'}
             };
 
             deepFreeze(_action);
@@ -100,7 +103,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: Config.ACTION_REQUEST_DELETE_CONFIRMATION,
+                type: settings.ACTION_REQUEST_DELETE_CONFIRMATION,
                 data: {name: 'My First Task'}
             };
 
@@ -121,7 +124,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: Config.ACTION_REQUEST_DELETE_CONFIRMATION,
+                type: settings.ACTION_REQUEST_DELETE_CONFIRMATION,
                 data: {name: 'My First Task'}
             };
 
@@ -136,7 +139,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: Config.ACTION_REQUEST_DELETE_CONFIRMATION,
+                type: settings.ACTION_REQUEST_DELETE_CONFIRMATION,
                 data: {name: 'My First Task'}
             };
 
@@ -154,24 +157,7 @@ describe('message reducer', () => {
 
             const _state_before = 'AAA';
             const _action = {
-                type: Config.ACTION_CANCEL_DELETE
-            };
-
-            deepFreeze(_action);
-
-            let _result = Reducer.message(_state_before, _action);
-
-            expect(_result).to.be.null;
-        });
-    });
-
-    describe('ACTION_DELETE_TASK', () => {
-
-        it('should return null', () => {
-
-            const _state_before = 'AAA';
-            const _action = {
-                type: ACTION_DELETE_TASK
+                type: settings.ACTION_CANCEL_DELETE
             };
 
             deepFreeze(_action);

@@ -112,7 +112,6 @@ input {
     }
 
     .icon {
-        color: #000;
         font-size: 40px;
         height: 50px;
     }
@@ -292,17 +291,33 @@ input {
 
     &.info {
         color: $light-blue;
+
+        .icon {
+            color: desaturate(darken($light-blue, 30%), 20%);
+        }
     }
 
     &.success {
         color: $light-green;
+
+        .icon {
+            color: desaturate(darken($light-green, 30%), 20%);
+        }
     }
 
     &.warning {
         color: $light-yellow;
+
+        .icon {
+            color: desaturate(darken($light-yellow, 30%), 20%);
+        }
     }
 
     &.danger {
         color: $light-red;
+
+        .icon {
+            color: desaturate(darken($light-red, 30%), 20%);
+        }
     }
 }
