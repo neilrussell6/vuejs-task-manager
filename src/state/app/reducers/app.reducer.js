@@ -20,7 +20,6 @@ export function app (state = app_settings.DEFAULT_STATE, action) {
             return Object.assign({}, state, { artificial_delay: ARTIFICIAL_DELAY });
 
         case app_settings.ACTION_TOGGLE_MESSAGE_MINIMAL:
-            console.log("XXXXXXXXXX", state.is_message_minimal);
             return Object.assign({}, state, { is_message_minimal: state.is_message_minimal ? false : true });
 
         case api_settings.API_CREATE_FAILED:
