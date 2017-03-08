@@ -1,5 +1,8 @@
+// data
+import { ARTIFICIAL_DELAY } from 'data/app.settings';
+
+// state
 import * as api_settings from 'state/redux-json-api.settings';
-import { ARTIFICIAL_DELAY } from 'state/app.settings';
 
 export const delayFetchMiddleware = store => next => action => {
 

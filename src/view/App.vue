@@ -58,6 +58,9 @@
 
 <script type="text/babel">
 
+    // data
+    import * as app_settings from 'data/app.settings';
+
     // actions
     import * as MessageActions from 'state/message/message.actions';
     import * as ProjectsActions from 'state/projects/project.actions';
@@ -90,9 +93,9 @@
             return {
                 message: null,
                 previous_message: null,
-                is_message_minimal: true,
+                is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
                 is_disabled: false,
-                is_artificially_delayed: true
+                is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT
             };
         },
 
