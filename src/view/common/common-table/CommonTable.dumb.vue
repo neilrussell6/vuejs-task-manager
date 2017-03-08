@@ -22,7 +22,7 @@
                         <template v-if="cellConfigs[key].type === 'button'">
 
                             <td class="cell-button"
-                                v-bind:class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
+                                :class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
 
                                 <button v-on:click="_buttonClickHandler(row, cellConfigs[key])"
                                         :disabled="_isDisabled(row, cellConfigs[key])">
@@ -32,7 +32,7 @@
 
                                         <!-- indexed icon -->
                                         <template v-if="typeof cellConfigs[key].icon_class === 'object'">
-                                            <i v-bind:class="_getIndexedIconClass(row, cellConfigs[key])" aria-hidden="true"></i>
+                                            <i :class="_getIndexedIconClass(row, cellConfigs[key])" aria-hidden="true"></i>
                                         </template>
 
                                         <!-- single icon -->
@@ -58,7 +58,7 @@
 
                             <td class="cell-inline-edit"
                                 v-on:click="_inlineEditClickHandler(row, cellConfigs[key])"
-                                v-bind:class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
+                                :class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
 
                                 <!-- editing -->
                                 <template v-if="editing_item_unique_id === row.unique_id">

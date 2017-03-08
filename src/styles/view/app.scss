@@ -8,6 +8,10 @@
     display: none;
 }
 
+.app > .wrapper {
+    position: relative;
+}
+
 // ----------------------------------
 // html
 // ----------------------------------
@@ -27,6 +31,7 @@ body {
     margin: 0;
     padding: 0;
     user-select: none;
+    font-family: 'Source Code Pro', sans-serif;
 }
 
 body,
@@ -114,6 +119,56 @@ input {
     .icon {
         font-size: 40px;
         height: 50px;
+    }
+}
+
+// ----------------------------------
+// header
+// ----------------------------------
+
+.header {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .title {
+        opacity: 1;
+        transition: opacity .5s linear;
+
+        &.disabled {
+            opacity: .2;
+            transition: opacity .5s linear;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: $text-color-title;
+            font-family: 'TlwgTypewriter', serif;
+            text-shadow: rgba($light-yellow, .2) 0 10px 10px;
+        }
+
+        .sub {
+            font-size: 14px;
+            font-family: 'TlwgTypewriter', serif;
+            text-align: right;
+            margin-top: -14px;
+            margin-right: -$big-h-pad;
+            color: darken($text-color-title, 20%);
+        }
+    }
+
+    .controls {
+        position: absolute;
+        top: $big-v-pad;
+        right: $big-h-pad;
+        opacity: 1;
+        transition: opacity .5s linear;
+
+        &.disabled {
+            opacity: .2;
+            transition: opacity .5s linear;
+        }
     }
 }
 
@@ -295,17 +350,19 @@ input {
 
 .common-message {
     background-color: $bg-color-dark;
-    box-sizing: border-box;
     color: $light-grey;
-    height: 60px;
-    padding: $med-v-pad $big-h-pad;
-    text-align: center;
-    transition: background-color .2s;
+    position: absolute;
     width: 100%;
+    opacity: 0;
+    top: 0;
+    padding-bottom: $med-v-pad;
+    pointer-events: none;
 
     &.has-message {
         background-color: darken($bg-color-dark, 5%);
-        transition: background-color .2s;
+        opacity: 1;
+        transition: background-color .2s linear, opacity .2s linear;
+        pointer-events: all;
     }
 
     &.info {
@@ -314,13 +371,21 @@ input {
         .icon {
             color: desaturate(darken($light-blue, 30%), 20%);
         }
+
+        > .content {
+            border-bottom-color: desaturate(darken($light-blue, 30%), 20%);
+        }
     }
 
     &.success {
         color: $light-green;
 
         .icon {
-            color: desaturate(darken($light-green, 30%), 20%);
+            color: desaturate(darken($light-green, 30%), 80%);
+        }
+
+        > .content {
+            border-bottom-color: desaturate(darken($light-green, 30%), 80%);
         }
     }
 
@@ -330,6 +395,10 @@ input {
         .icon {
             color: desaturate(darken($light-yellow, 30%), 20%);
         }
+
+        > .content {
+            border-bottom-color: desaturate(darken($light-yellow, 30%), 20%);
+        }
     }
 
     &.danger {
@@ -338,5 +407,18 @@ input {
         .icon {
             color: desaturate(darken($light-red, 30%), 20%);
         }
+
+        > .content {
+            border-bottom-color: desaturate(darken($light-red, 30%), 20%);
+        }
+    }
+
+    > .content {
+        box-sizing: border-box;
+        border-bottom: 1px solid desaturate(darken($light-yellow, 30%), 20%);
+        height: 70px;
+        padding: $med-v-pad $big-h-pad;
+        text-align: center;
+        transition: background-color .2s linear, opacity .2s linear;
     }
 }

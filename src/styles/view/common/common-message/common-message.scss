@@ -1,10 +1,13 @@
 @import '../../../app.vars';
 
 .common-message {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    padding: $big-v-pad $big-h-pad;
+
+    > .content {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        padding: $big-v-pad $big-h-pad;
+    }
 
     .label {
         font-size: 16px;

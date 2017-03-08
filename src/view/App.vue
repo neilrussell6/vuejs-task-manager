@@ -2,8 +2,25 @@
     <div class="wrapper">
 
         <header class="header">
-            <common-message :message="message"></common-message>
+
+            <div class="title" :class="{disabled: message !== null}">
+                <h1>VueJS/Laravel Task Manager</h1>
+                <div class="sub">by Neil Russell</div>
+            </div>
+
+            <div class="controls" :class="{disabled: message !== null}">
+                <div class="control">
+                    <button v-on:click="_onToggleArtificialDelay()">
+                        <!--<i class="fa fa-square" aria-hidden="true"></i>-->
+                        <i class="fa fa-check-square" aria-hidden="true"></i>
+                    </button>
+                    artificial delay
+                </div>
+            </div>
+
         </header>
+
+        <common-message :message="message"></common-message>
 
         <section class="main" :class="{disabled: is_disabled}">
 

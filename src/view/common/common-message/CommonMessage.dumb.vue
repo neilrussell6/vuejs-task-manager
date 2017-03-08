@@ -1,27 +1,29 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div class="common-message"
-         v-bind:class="_getClass(message)">
+         :class="_getClass(message)">
 
-        <template v-if="message">
+        <div class="content">
+            <template v-if="message">
 
-            <div class="icon icon-before-label" v-if="message.icon && message.buttons">
-                <i v-bind:class="_getIconClass(message.icon)"></i>
-            </div>
-
-            <div class="label">{{message.label}}</div>
-
-            <div class="icon icon-after-label" v-if="message.icon && !message.buttons">
-                <i v-bind:class="_getIconClass(message.icon)"></i>
-            </div>
-
-            <template v-if="message.buttons" v-for="button in message.buttons">
-                <div class="button">
-                    <button v-on:click="_buttonClickHandler(message, button)">{{button.label}}</button>
+                <div class="icon icon-before-label" v-if="message.icon && message.buttons">
+                    <i :class="_getIconClass(message.icon)"></i>
                 </div>
+
+                <div class="label">{{message.label}}</div>
+
+                <div class="icon icon-after-label" v-if="message.icon && !message.buttons">
+                    <i :class="_getIconClass(message.icon)"></i>
+                </div>
+
+                <template v-if="message.buttons" v-for="button in message.buttons">
+                    <div class="button">
+                        <button v-on:click="_buttonClickHandler(message, button)">{{button.label}}</button>
+                    </div>
+                </template>
+
             </template>
 
-        </template>
-
+        </div>
     </div>
 </template>
 
