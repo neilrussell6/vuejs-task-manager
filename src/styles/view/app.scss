@@ -129,12 +129,13 @@ input {
 .header {
     align-items: center;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: left;
+    transition: justify-content .5s linear;
 
     .title {
         opacity: 1;
         transition: opacity .5s linear;
+        margin-left: $big-h-pad;
 
         &.disabled {
             opacity: .2;
@@ -159,15 +160,15 @@ input {
     }
 
     .controls {
-        background-color: rgba(0, 0, 0, .2);
-        box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+        background-color: $bg-color-dark;
+        box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
         position: absolute;
-        top: 4px;
-        right: 4px;
-        padding: 4px 8px 4px 4px;
+        top: 0;
+        right: 0;
+        padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
         opacity: 1;
         transition: opacity .5s linear;
-        border: 1px solid desaturate(darken($light-yellow, 40%), 30%);
+        border: 1px solid $bg-color-med;
 
         &.disabled {
             opacity: .2;
@@ -175,6 +176,22 @@ input {
         }
     }
 }
+
+
+// > 900
+
+@media screen and (min-width: 900px) {
+
+    .header {
+        justify-content: center;
+        transition: justify-content .5s linear;
+
+        .title {
+            margin-left: 0;
+        }
+    }
+}
+
 
 // ----------------------------------
 // main
