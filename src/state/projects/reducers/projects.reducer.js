@@ -2,10 +2,10 @@
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // state
-import * as api_settings from 'state/redux-json-api.settings';
+import * as api_constants from 'state/redux-json-api.constants';
 
 // local
-import * as project_settings from '../project.settings';
+import * as project_constants from '../project.constants';
 
 // ---------------------------
 // private
@@ -15,7 +15,7 @@ function project (project, action) {
 
     switch (action.type) {
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
             let _data = Object.assign({}, { id: project.id }, { local_id: project.local_id }, project.attributes);
             return new Project(_data);
     }
@@ -25,11 +25,11 @@ function project (project, action) {
 // public
 // ---------------------------
 
-export function projects (list = project_settings.DEFAULT_PROJECT_LIST_STATE, action) {
+export function projects (list = project_constants.DEFAULT_PROJECT_LIST_STATE, action) {
 
     switch (action.type) {
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
 
             let _regex = new RegExp('projects$');
 

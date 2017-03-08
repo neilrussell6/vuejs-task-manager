@@ -9,13 +9,13 @@ import {
 // SUT
 import { CRUDModel } from './crud.model';
 
-describe('CRUD model', () => {
+describe("CRUD model", () => {
 
-    describe('properties (instance)', () => {
+    describe("properties (instance)", () => {
 
-        describe('server_id', () => {
+        describe("server_id", () => {
 
-            it('should set server_id using id on data arg', () => {
+            it("should set server_id using id on data arg", () => {
 
                 class TestModel extends CRUDModel {}
 
@@ -27,7 +27,7 @@ describe('CRUD model', () => {
                 expect(_result).to.equal(id);
             });
 
-            it('should prefer server_id to id on data arg when setting server_id', () => {
+            it("should prefer server_id to id on data arg when setting server_id", () => {
 
                 class TestModel extends CRUDModel {}
 
@@ -41,9 +41,9 @@ describe('CRUD model', () => {
             });
         });
 
-        describe('unique_id', () => {
+        describe("unique_id", () => {
 
-            it('should return a unique id key by combining server and local ids', () => {
+            it("should return a unique id key by combining server and local ids", () => {
 
                 class TestModel extends CRUDModel {
                     static get name_plural() {

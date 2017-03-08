@@ -3,11 +3,11 @@ import deepFreeze from 'deep-freeze';
 
 import { BasicModel } from './basic.model';
 
-describe('basic model', () => {
+describe("basic model", () => {
 
-    describe('constructor: property assignment', () => {
+    describe("constructor: property assignment", () => {
 
-        it('should assign all properties in provided data arg', () => {
+        it("should assign all properties in provided data arg", () => {
 
             class TestModel extends BasicModel {}
 
@@ -40,9 +40,9 @@ describe('basic model', () => {
         });
     });
 
-    describe('defaults', () => {
+    describe("defaults", () => {
 
-        it('should assign properties using defaults (if available) for all properties that are not provided in data arg', () => {
+        it("should assign properties using defaults (if available) for all properties that are not provided in data arg", () => {
 
             class TestModel extends BasicModel {
                 get defaults () {

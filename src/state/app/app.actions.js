@@ -1,5 +1,5 @@
 // local
-import * as settings from './app.settings';
+import * as settings from './app.constants';
 
 // --------------------------
 

@@ -5,12 +5,12 @@ import { expect } from 'chai';
 import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 
 // local
-import * as task_settings from '../task.settings';
+import * as task_constants from '../task.constants';
 import * as Reducer from './tasks-status-filter.reducer';
 
-describe('tasks_status_filter reducer', () => {
+describe("tasks_status_filter reducer", () => {
 
-    it('should return before state by default', () => {
+    it("should return before state by default", () => {
 
         const _state_before = 'AAA';
         const _action = {};
@@ -22,12 +22,12 @@ describe('tasks_status_filter reducer', () => {
         expect(_result).to.equal(_state_before);
     });
 
-    it('should set tasks status filter to provided value', () => {
+    it("should set tasks status filter to provided value", () => {
 
         const _state_before = STATUS_FILTER_TYPE.ALL;
         const _expected = STATUS_FILTER_TYPE.COMPLETE;
         const _action = {
-            type: task_settings.ACTION_SET_COMPLETE_FILTER,
+            type: task_constants.ACTION_SET_COMPLETE_FILTER,
             value: STATUS_FILTER_TYPE.COMPLETE
         };
 

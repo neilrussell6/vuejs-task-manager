@@ -1,5 +1,5 @@
 // local
-import * as settings from './message.settings';
+import * as settings from './message.constants';
 
 // --------------------------
 // delete

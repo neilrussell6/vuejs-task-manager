@@ -3,14 +3,14 @@ import { expect } from 'chai';
 
 // app
 import { Project } from 'data/models/crud/jsonapi/project.model';
-import { API_READ } from 'state/redux-json-api.settings';
+import { API_READ } from 'state/redux-json-api.constants';
 
 // local
 import * as Reducer from './projects.reducer';
 
-describe('projects reducer', () => {
+describe("projects reducer", () => {
 
-    it('should return before state by default', () => {
+    it("should return before state by default", () => {
 
         const _state_before = 'AAA';
         const _action = {};
@@ -22,11 +22,11 @@ describe('projects reducer', () => {
         expect(_result).to.equal(_state_before);
     });
 
-    describe('redux-json-api', () => {
+    describe("redux-json-api", () => {
 
-        describe('API_READ', () => {
+        describe("API_READ", () => {
 
-            it('should return array of Project model instances', () => {
+            it("should return array of Project model instances", () => {
 
                 const _state_before = [];
                 const _action = {
@@ -53,7 +53,7 @@ describe('projects reducer', () => {
                 expect(_result[0] instanceof Project).to.equal(true, 'item should be instance of Project');
             });
 
-            it('should ignore data not of projects type', () => {
+            it("should ignore data not of projects type", () => {
 
                 const _state_before = [];
                 const _action = {

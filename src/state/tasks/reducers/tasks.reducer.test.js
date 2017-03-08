@@ -2,16 +2,16 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 
 // app
-import { API_READ } from 'state/redux-json-api.settings';
+import { API_READ } from 'state/redux-json-api.constants';
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // local
-import * as task_settings from '../task.settings';
+import * as task_constants from '../task.constants';
 import * as Reducer from './tasks.reducer';
 
-describe('tasks reducer', () => {
+describe("tasks reducer", () => {
 
-    it('should return before state by default', () => {
+    it("should return before state by default", () => {
 
         const _state_before = 'AAA';
         const _action = {};
@@ -23,13 +23,13 @@ describe('tasks reducer', () => {
         expect(_result).to.equal(_state_before);
     });
 
-    // describe('task_settings.ACTION_ADD_TASK', () => {
+    // describe("task_constants.ACTION_ADD_TASK", () => {
     //
-    //     it('should add a task to the list', () => {
+    //     it("should add a task to the list", () => {
     //
     //         const _state_before = [];
     //         const _action = {
-    //             type: task_settings.ACTION_ADD_TASK, tasks: [], data: { text: 'AAAA' }
+    //             type: task_constants.ACTION_ADD_TASK, tasks: [], data: { text: 'AAAA' }
     //         };
     //
     //         deepFreeze(_state_before);
@@ -41,9 +41,9 @@ describe('tasks reducer', () => {
     //     });
     // });
 
-    describe('task_settings.ACTION_DELETE_TASK', () => {
+    describe("task_constants.ACTION_DELETE_TASK", () => {
 
-        it('should find task by unique_id and remove it from array', () => {
+        it("should find task by unique_id and remove it from array", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.INCOMPLETE });
@@ -52,7 +52,7 @@ describe('tasks reducer', () => {
             const _state_before = [ _task1, _task2, _task3 ];
             const _expected = [ _task1, _task3 ];
             const _action = {
-                type: task_settings.ACTION_DELETE_TASK, unique_id: _task2.unique_id
+                type: task_constants.ACTION_DELETE_TASK, unique_id: _task2.unique_id
             };
 
             deepFreeze(_state_before);
@@ -64,16 +64,16 @@ describe('tasks reducer', () => {
         });
     });
 
-    describe('task_settings.ACTION_UPDATE_TASK', () => {
+    describe("task_constants.ACTION_UPDATE_TASK", () => {
 
-        it('should update task data using provided unique_id and data', () => {
+        it("should update task data using provided unique_id and data", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.INCOMPLETE });
 
             const _state_before = [ _task1, _task2 ];
             const _action = {
-                type: task_settings.ACTION_UPDATE_TASK, unique_id: _task2.unique_id, data: {text: 'XXXX'}
+                type: task_constants.ACTION_UPDATE_TASK, unique_id: _task2.unique_id, data: {text: 'XXXX'}
             };
 
             deepFreeze(_state_before);
@@ -86,11 +86,11 @@ describe('tasks reducer', () => {
         });
     });
 
-    describe('redux-json-api', () => {
+    describe("redux-json-api", () => {
 
-        describe('API_READ', () => {
+        describe("API_READ", () => {
 
-            it('should return array of Task model instances', () => {
+            it("should return array of Task model instances", () => {
 
                 const _state_before = [];
                 const _action = {
@@ -117,7 +117,7 @@ describe('tasks reducer', () => {
                 expect(_result[0] instanceof Task).to.equal(true, 'item should be instance of Task');
             });
 
-            it('should ignore data not of tasks type', () => {
+            it("should ignore data not of tasks type", () => {
 
                 const _state_before = [];
                 const _action = {

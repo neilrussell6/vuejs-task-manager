@@ -1,18 +1,18 @@
 import { expect } from 'chai';
 
 // app
-import { ENDPOINT_TYPES } from 'utils/json-api/json-api.settings';
+import { ENDPOINT_TYPES } from 'utils/json-api/json-api.constants';
 
 // local
 import * as Utils from './message.utils';
 
-describe('Message Utils', () => {
+describe("Message Utils", () => {
 
-    describe('makeMessageLabel', () => {
+    describe("makeMessageLabel", () => {
 
-        describe('PRIMARY endpoint', () => {
+        describe("PRIMARY endpoint", () => {
 
-            it('given no config, should return label "projects"', () => {
+            it("given no config, should return label 'projects'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -27,9 +27,9 @@ describe('Message Utils', () => {
             });
         });
 
-        describe('PRIMARY_ID endpoint', () => {
+        describe("PRIMARY_ID endpoint", () => {
 
-            it('given config.should_hide_ids set to FALSE, should return label "project 123"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'id', should return label 'project 123'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -38,7 +38,7 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
-                    should_hide_ids: false
+                    MESSAGE_IDENTIFIER: 'id'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -46,7 +46,7 @@ describe('Message Utils', () => {
                 expect(_result).to.equal('project 123');
             });
 
-            it('given config.should_hide_ids set to TRUE, should return label "project"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'none', should return label 'project'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -55,7 +55,7 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
-                    should_hide_ids: true
+                    MESSAGE_IDENTIFIER: 'none'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -63,7 +63,7 @@ describe('Message Utils', () => {
                 expect(_result).to.equal('project');
             });
 
-            it('given config.should_exclude_user set to TRUE, should ignore config and still return label "user 123"', () => {
+            it("given config.MESSAGE_EXCLUDE_USER set to TRUE, should ignore config and still return label 'user 123'", () => {
 
                 let _singularize = () => 'user';
                 let _endpoint_data = {
@@ -72,7 +72,8 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
-                    should_exclude_user: true
+                    MESSAGE_IDENTIFIER: 'id',
+                    MESSAGE_EXCLUDE_USER: true
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -80,7 +81,7 @@ describe('Message Utils', () => {
                 expect(_result).to.equal('user 123');
             });
 
-            it('given config.should_replace_ids_with_template set to TRUE, should return label "project {project 123}"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'template', should return label 'project {project 123}'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -89,7 +90,7 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.PRIMARY_ID;
                 let _config = {
-                    should_replace_ids_with_template: true
+                    MESSAGE_IDENTIFIER: 'template'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -98,9 +99,9 @@ describe('Message Utils', () => {
             });
         });
 
-        describe('RELATED/RELATIONSHIPS endpoint', () => {
+        describe("RELATED/RELATIONSHIPS endpoint", () => {
 
-            it('given config.should_hide_ids set to FALSE, should return label "tasks for project 123"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'id', should return label 'tasks for project 123'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -110,7 +111,7 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.RELATED;
                 let _config = {
-                    should_hide_ids: false
+                    MESSAGE_IDENTIFIER: 'id'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -118,7 +119,7 @@ describe('Message Utils', () => {
                 expect(_result).to.equal('tasks for project 123');
             });
 
-            it('given config.should_hide_ids set to TRUE, should return label "tasks for project"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'none', should return label 'tasks for project'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -128,15 +129,15 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.RELATIONSHIPS;
                 let _config = {
-                    should_hide_ids: true
+                    MESSAGE_IDENTIFIER: 'none'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
-                expect(_result).to.equal('tasks for project');
+                expect(_result).to.equal('tasks');
             });
 
-            it('given config.should_exclude_user set to TRUE, should return label "tasks"', () => {
+            it("given config.MESSAGE_EXCLUDE_USER set to TRUE, should return label 'tasks'", () => {
 
                 let _singularize = () => 'user';
                 let _endpoint_data = {
@@ -146,7 +147,8 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.RELATED;
                 let _config = {
-                    should_exclude_user: true
+                    MESSAGE_IDENTIFIER: 'id',
+                    MESSAGE_EXCLUDE_USER: true
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -154,7 +156,7 @@ describe('Message Utils', () => {
                 expect(_result).to.equal('tasks');
             });
 
-            it('given config.should_replace_ids_with_template set to TRUE, should return label "tasks for project {project 123}"', () => {
+            it("given config.MESSAGE_IDENTIFIER set to 'template', should return label 'tasks for project {project 123}'", () => {
 
                 let _singularize = () => 'project';
                 let _endpoint_data = {
@@ -164,7 +166,7 @@ describe('Message Utils', () => {
                 };
                 let _endpoint_type = ENDPOINT_TYPES.RELATIONSHIPS;
                 let _config = {
-                    should_replace_ids_with_template: true
+                    MESSAGE_IDENTIFIER: 'template'
                 };
 
                 let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
@@ -174,9 +176,9 @@ describe('Message Utils', () => {
         });
     });
 
-    describe('populateMessageLabelVars', () => {
+    describe("populateMessageLabelVars", () => {
 
-        it('given label containing no valid vars should return label as is', () => {
+        it("given label containing no valid vars should return label as is", () => {
 
             let _message_label = 'fetching tasks for project';
             let _data = {
@@ -192,7 +194,7 @@ describe('Message Utils', () => {
             expect(_result).to.equal('fetching tasks for project');
         });
 
-        it('given label containing 1 valid vars, but no matching data, should remove var and should return updated label', () => {
+        it("given label containing 1 valid vars, but no matching data, should remove var and should return updated label", () => {
 
             let _message_label = 'fetching tasks for project {projects 33}';
             let _data = {
@@ -208,7 +210,7 @@ describe('Message Utils', () => {
             expect(_result).to.equal('fetching tasks for project');
         });
 
-        it('given label containing 1 valid var, with data & property, should populate var using data & property return updated label', () => {
+        it("given label containing 1 valid var, with data & property, should populate var using data & property return updated label", () => {
 
             let _message_label = 'fetching tasks for project {projects 22}';
             let _data = {
@@ -224,7 +226,7 @@ describe('Message Utils', () => {
             expect(_result).to.equal('fetching tasks for project "My Project Twenty Two"');
         });
 
-        it('given label containing 2 valid vars, with data & property, should populate both vars using data & property return updated label', () => {
+        it("given label containing 2 valid vars, with data & property, should populate both vars using data & property return updated label", () => {
 
             let _message_label = 'welcome {users 44}, fetching tasks for project {projects 11}';
             let _data = {

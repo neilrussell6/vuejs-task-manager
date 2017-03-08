@@ -3,13 +3,13 @@ import { expect } from 'chai';
 // data
 import { JsonApiModel } from './jsonapi.model';
 
-describe('JsonApi model', () => {
+describe("JsonApi model", () => {
 
-    describe('properties (instance)', () => {
+    describe("properties (instance)", () => {
 
-        describe('attributes', () => {
+        describe("attributes", () => {
 
-            it('should return all keys, excluding server_id and local_id by default', () => {
+            it("should return all keys, excluding server_id and local_id by default", () => {
 
                 class TestModel extends JsonApiModel {}
 
@@ -32,7 +32,7 @@ describe('JsonApi model', () => {
                 expect(_result).to.have.property('c', "C");
             });
 
-            it('should return all keys, excluding only those defined', () => {
+            it("should return all keys, excluding only those defined", () => {
 
                 class TestModel extends JsonApiModel {
                     get exclude_attributes() {
@@ -60,9 +60,9 @@ describe('JsonApi model', () => {
             });
         });
 
-        describe('resource_object', () => {
+        describe("resource_object", () => {
 
-            it('should return null, if model does not define type', () => {
+            it("should return null, if model does not define type", () => {
 
                 class TestModel extends JsonApiModel {}
 
@@ -76,7 +76,7 @@ describe('JsonApi model', () => {
                 expect(_result).to.be.null;
             });
 
-            it('should return a valid resource object including type, id and attributes', () => {
+            it("should return a valid resource object including type, id and attributes", () => {
 
                 class TestModel extends JsonApiModel {
                     get type () {
@@ -104,7 +104,7 @@ describe('JsonApi model', () => {
                 expect(_result.attributes).to.have.property('c', "C");
             });
 
-            it('should return a valid resource object including type and attributes, but excluding id if server_id is null', () => {
+            it("should return a valid resource object including type and attributes, but excluding id if server_id is null", () => {
 
                 class TestModel extends JsonApiModel {
                     get type () {
@@ -133,9 +133,9 @@ describe('JsonApi model', () => {
             });
         });
 
-        describe('resource_identifier_object', () => {
+        describe("resource_identifier_object", () => {
 
-            it('should return null, if model does not define type', () => {
+            it("should return null, if model does not define type", () => {
 
                 class TestModel extends JsonApiModel {}
 
@@ -149,7 +149,7 @@ describe('JsonApi model', () => {
                 expect(_result).to.be.null;
             });
 
-            it('should return a valid resource identifier object including type, id', () => {
+            it("should return a valid resource identifier object including type, id", () => {
 
                 class TestModel extends JsonApiModel {
                     get type () {
@@ -172,7 +172,7 @@ describe('JsonApi model', () => {
                 expect(_result).to.not.have.property('attributes');
             });
 
-            it('should return a valid resource identifier object including type, but excluding id if server_id is null', () => {
+            it("should return a valid resource identifier object including type, but excluding id if server_id is null", () => {
 
                 class TestModel extends JsonApiModel {
                     get type () {

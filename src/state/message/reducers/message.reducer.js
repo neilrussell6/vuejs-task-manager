@@ -2,19 +2,18 @@ import pluralize from 'pluralize';
 
 // data
 import { Message, MESSAGE_STYLE } from 'data/models/basic/message.model';
+import * as message_settings from 'data/message.settings';
 
 // state
-import * as api_settings from 'state/redux-json-api.settings';
+import * as api_constants from 'state/redux-json-api.constants';
 
 // utils
 import * as JsonApiUtils from 'utils/json-api/json-api.utils';
-import { ENDPOINT_TYPES } from 'utils/json-api/json-api.settings';
+import { ENDPOINT_TYPES } from 'utils/json-api/json-api.constants';
+import * as MessageUtils from 'utils/message/message.utils';
 
 // local
-import * as MessageUtils from '../message.utils';
-import * as message_settings from '../message.settings';
-
-// file
+import * as message_constants from '../message.constants';
 const DEFAULT_MESSAGE_STATE = null;
 
 export function message (state = DEFAULT_MESSAGE_STATE, action) {
@@ -27,11 +26,11 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
     switch (action.type) {
 
-        case api_settings.API_WILL_READ:
+        case api_constants.API_WILL_READ:
             _endpoint = action.payload;
             break;
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
             _endpoint = action.payload.endpoint;
             break;
     }
@@ -43,11 +42,11 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
     switch (action.type) {
 
-        case api_settings.API_CREATED:
-        case api_settings.API_DELETED:
-        case api_settings.API_WILL_CREATE:
-        case api_settings.API_WILL_DELETE:
-        case api_settings.API_WILL_UPDATE:
+        case api_constants.API_CREATED:
+        case api_constants.API_DELETED:
+        case api_constants.API_WILL_CREATE:
+        case api_constants.API_WILL_DELETE:
+        case api_constants.API_WILL_UPDATE:
 
             _endpoint_data = {
                 primary: action.payload.type,
@@ -56,7 +55,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, message_settings, pluralize.singular);
             break;
 
-        case api_settings.API_UPDATED:
+        case api_constants.API_UPDATED:
 
             _endpoint_data = {
                 primary: action.payload.data.type,
@@ -66,8 +65,8 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
             break;
 
-        case api_settings.API_READ:
-        case api_settings.API_WILL_READ:
+        case api_constants.API_READ:
+        case api_constants.API_WILL_READ:
 
             _endpoint_type = JsonApiUtils.getEndpointType(_endpoint);
             _endpoint_data = JsonApiUtils.splitEndpoint(_endpoint, _endpoint_type);
@@ -75,7 +74,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             _label = MessageUtils.makeMessageLabel(_endpoint_data, _endpoint_type, message_settings, pluralize.singular);
             break;
 
-        case message_settings.ACTION_REQUEST_DELETE_CONFIRMATION:
+        case message_constants.ACTION_REQUEST_DELETE_CONFIRMATION:
             _label = action.data.hasOwnProperty('name') ? action.data.name : "this record";
             break;
     }
@@ -84,55 +83,55 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
     switch (action.type) {
 
-        case api_settings.API_DELETE_FAILED:
+        case api_constants.API_DELETE_FAILED:
             _data = {
                 label: `could not delete data`,
                 style: MESSAGE_STYLE.DANGER,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_DELETED:
+        case api_constants.API_DELETED:
             _data = {
                 label: `successfully deleted ${_label}`,
                 style: MESSAGE_STYLE.SUCCESS,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
             _data = {
                 label: `successfully fetched ${_label}`,
                 style: MESSAGE_STYLE.SUCCESS,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_READ_FAILED:
+        case api_constants.API_READ_FAILED:
             _data = {
                 label: `could not fetch data`,
                 style: MESSAGE_STYLE.DANGER,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_UPDATE_FAILED:
+        case api_constants.API_UPDATE_FAILED:
             _data = {
                 label: `could not update data`,
                 style: MESSAGE_STYLE.DANGER,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_UPDATED:
+        case api_constants.API_UPDATED:
             _data = {
                 label: `successfully updated ${_label}`,
                 style: MESSAGE_STYLE.SUCCESS,
-                expire: message_settings.default_message_expire
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
-        case api_settings.API_WILL_READ:
+        case api_constants.API_WILL_READ:
             _data = {
                 label: `fetching ${_label}`,
                 style: MESSAGE_STYLE.INFO,
@@ -142,7 +141,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
-        case api_settings.API_WILL_UPDATE:
+        case api_constants.API_WILL_UPDATE:
             _data = {
                 label: `updating ${_label}`,
                 style: MESSAGE_STYLE.INFO,
@@ -152,7 +151,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
-        case api_settings.API_WILL_DELETE:
+        case api_constants.API_WILL_DELETE:
             _data = {
                 label: `deleting ${_label}`,
                 style: MESSAGE_STYLE.INFO,
@@ -162,7 +161,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
-        case message_settings.ACTION_REQUEST_DELETE_CONFIRMATION:
+        case message_constants.ACTION_REQUEST_DELETE_CONFIRMATION:
             _data = {
                 action: action,
                 label: `are you sure you want to delete "${_label}"?`,
@@ -177,7 +176,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
-        case message_settings.ACTION_CANCEL_DELETE:
+        case message_constants.ACTION_CANCEL_DELETE:
             return null;
     }
 

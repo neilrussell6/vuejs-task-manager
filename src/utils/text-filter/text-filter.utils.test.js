@@ -7,11 +7,11 @@ import { Task } from 'data/models/crud/jsonapi/task.model';
 // SUT
 import * as Utils from './text-filter.utils';
 
-describe('text filter utils', () => {
+describe("text filter utils", () => {
 
-    describe('filterTasks', () => {
+    describe("filterTasks", () => {
 
-        it('should return tasks whose text contain text term', () => {
+        it("should return tasks whose text contain text term", () => {
 
             const _tasks = [
                 new Task({ server_id: 11, name: 'aaa' }),
@@ -31,7 +31,7 @@ describe('text filter utils', () => {
             expect(_ids).to.include(33);
         });
 
-        it('should be case insensitive', () => {
+        it("should be case insensitive", () => {
 
             const _tasks = [
                 new Task({ server_id: 11, name: 'AAA' }),

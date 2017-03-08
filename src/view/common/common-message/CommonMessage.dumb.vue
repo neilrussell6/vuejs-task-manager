@@ -95,7 +95,7 @@
                     return {};
                 }
 
-                return config.class.split(' ').reduce(function (result, item) {
+                return config.class.split(" ").reduce(function (result, item) {
                     result[ item ] = true;
                     return result;
                 }, {});

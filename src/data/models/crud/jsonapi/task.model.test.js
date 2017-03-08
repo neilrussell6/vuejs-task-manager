@@ -4,11 +4,11 @@ import { expect } from 'chai';
 // data
 import { Task, TASK_STATUS } from './task.model';
 
-describe('Task model', () => {
+describe("Task model", () => {
 
-    describe('toggleStatusComplete', () => {
+    describe("toggleStatusComplete", () => {
 
-        it('should return a new Task instance with status set to complete, if the task is currently incomplete', () => {
+        it("should return a new Task instance with status set to complete, if the task is currently incomplete", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.INCOMPLETE });
@@ -23,7 +23,7 @@ describe('Task model', () => {
             expect(_result.status).to.equal(TASK_STATUS.COMPLETE);
         });
 
-        it('should return a new Task instance with status set to incomplete, if the task is currently complete', () => {
+        it("should return a new Task instance with status set to incomplete, if the task is currently complete", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.COMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.COMPLETE });
@@ -38,7 +38,7 @@ describe('Task model', () => {
             expect(_result.status).to.equal(TASK_STATUS.INCOMPLETE);
         });
 
-        it('should return unchanged task if the task is currently trashed', () => {
+        it("should return unchanged task if the task is currently trashed", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.TRASH });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.TRASH });
@@ -53,9 +53,9 @@ describe('Task model', () => {
         });
     });
 
-    describe('undoTrash', () => {
+    describe("undoTrash", () => {
 
-        it('should return a new Task instance with status set to incomplete, if the task is currently trashed', () => {
+        it("should return a new Task instance with status set to incomplete, if the task is currently trashed", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.TRASH });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.TRASH });
@@ -69,9 +69,9 @@ describe('Task model', () => {
         });
     });
 
-    describe('trash', () => {
+    describe("trash", () => {
 
-        it('should return a new Task instance with status set to trashed, if the task is currently complete', () => {
+        it("should return a new Task instance with status set to trashed, if the task is currently complete", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.COMPLETE });
@@ -83,7 +83,7 @@ describe('Task model', () => {
             expect(_result.status).to.equal(TASK_STATUS.TRASH);
         });
 
-        it('should return a new Task instance with status set to trashed, if the task is currently incomplete', () => {
+        it("should return a new Task instance with status set to trashed, if the task is currently incomplete", () => {
 
             let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
             let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.COMPLETE });

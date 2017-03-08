@@ -2,18 +2,18 @@
 import { ARTIFICIAL_DELAY } from 'data/app.settings';
 
 // state
-import * as api_settings from 'state/redux-json-api.settings';
+import * as api_constants from 'state/redux-json-api.constants';
 
 export const delayFetchMiddleware = store => next => action => {
 
     switch (action.type) {
 
-        case api_settings.API_DELETE_FAILED:
-        case api_settings.API_DELETED:
-        case api_settings.API_READ_FAILED:
-        case api_settings.API_READ:
-        case api_settings.API_UPDATE_FAILED:
-        case api_settings.API_UPDATED:
+        case api_constants.API_DELETE_FAILED:
+        case api_constants.API_DELETED:
+        case api_constants.API_READ_FAILED:
+        case api_constants.API_READ:
+        case api_constants.API_UPDATE_FAILED:
+        case api_constants.API_UPDATED:
 
             const _state = store.getState();
             const _delay = _state.app.artificial_delay;

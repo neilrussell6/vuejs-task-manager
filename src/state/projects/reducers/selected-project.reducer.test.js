@@ -6,11 +6,11 @@ import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // local
 import * as Reducer from './selected-project.reducer';
-import { ACTION_SELECT_PROJECT } from '../project.settings';
+import { ACTION_SELECT_PROJECT } from '../project.constants';
 
-describe('selected_project reducer', () => {
+describe("selected_project reducer", () => {
 
-    it('should return before state by default', () => {
+    it("should return before state by default", () => {
 
         const _state_before = 'AAA';
         const _action = {};
@@ -22,9 +22,9 @@ describe('selected_project reducer', () => {
         expect(_result).to.equal(_state_before);
     });
 
-    describe('ACTION_SELECT_PROJECT', () => {
+    describe("ACTION_SELECT_PROJECT", () => {
 
-        it('should return single Project model instance', () => {
+        it("should return single Project model instance", () => {
 
             const _state_before = {};
             const _action = {

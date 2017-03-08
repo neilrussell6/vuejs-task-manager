@@ -75,10 +75,10 @@
     import { setEndpointHost, setEndpointPath, setAccessToken, setHeaders } from 'redux-json-api';
 
     // settings
-    import { ACTION_REQUEST_DELETE_CONFIRMATION } from 'state/message/message.settings';
+    import { ACTION_REQUEST_DELETE_CONFIRMATION } from 'state/message/message.constants';
 
     // utils
-    import * as MessageUtils from 'state/message/message.utils';
+    import * as MessageUtils from 'utils/message/message.utils';
 
     let _vm;
 

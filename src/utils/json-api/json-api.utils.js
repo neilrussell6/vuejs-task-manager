@@ -1,5 +1,5 @@
 // local
-import { ENDPOINT_TYPES } from './json-api.settings';
+import { ENDPOINT_TYPES } from './json-api.constants';
 
 export function getEndpointType (endpoint) {
 

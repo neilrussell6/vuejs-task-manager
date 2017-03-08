@@ -4,7 +4,7 @@ import {
 } from 'redux-json-api';
 
 // local
-import { ACTION_SELECT_PROJECT } from './project.settings';
+import { ACTION_SELECT_PROJECT } from './project.constants';
 
 // --------------------------
 // tasks : list

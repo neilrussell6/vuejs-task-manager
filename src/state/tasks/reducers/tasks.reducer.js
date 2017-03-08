@@ -2,10 +2,10 @@
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // state
-import * as api_settings from 'state/redux-json-api.settings';
+import * as api_constants from 'state/redux-json-api.constants';
 
 // local
-import * as task_settings from '../task.settings';
+import * as task_constants from '../task.constants';
 
 // ---------------------------
 // private
@@ -17,12 +17,12 @@ function task (task, action) {
 
     switch (action.type) {
 
-        // case task_settings.ACTION_ADD_TASK:
+        // case task_constants.ACTION_ADD_TASK:
         //     let local_id = LocalStorageUtils.getUniqueLocalId(action.tasks);
         //
         //     return new Task(Object.assign({}, action.data, { local_id }));
 
-        case task_settings.ACTION_UPDATE_TASK:
+        case task_constants.ACTION_UPDATE_TASK:
             if (task.unique_id !== action.unique_id) {
                 return task;
             }
@@ -31,11 +31,11 @@ function task (task, action) {
 
             return new Task(data);
 
-        case api_settings.API_UPDATED:
+        case api_constants.API_UPDATED:
             data = Object.assign({}, task.properties, action.payload.data.attributes);
             return new Task(data);
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
             data = Object.assign({}, { id: task.id }, { local_id: task.local_id }, task.attributes);
             return new Task(data);
     }
@@ -45,19 +45,19 @@ function task (task, action) {
 // public
 // ---------------------------
 
-export function tasks (list = task_settings.DEFAULT_TASK_LIST_STATE, action) {
+export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
     let _index;
 
     switch (action.type) {
 
-        // case task_settings.ACTION_ADD_TASK:
+        // case task_constants.ACTION_ADD_TASK:
         //     return [
         //         ...list,
         //         task({}, action)
         //     ]
 
-        case task_settings.ACTION_DELETE_TASK:
+        case task_constants.ACTION_DELETE_TASK:
             let index = list.reduce((val, item, i) => (item.unique_id === action.unique_id) ? i : val, 0);
 
             return [
@@ -65,12 +65,12 @@ export function tasks (list = task_settings.DEFAULT_TASK_LIST_STATE, action) {
                 ...list.slice(index + 1)
             ];
 
-        case task_settings.ACTION_TRASH_TASK:
-        case task_settings.ACTION_UNDO_TRASH_TASK:
-        case task_settings.ACTION_UPDATE_TASK:
+        case task_constants.ACTION_TRASH_TASK:
+        case task_constants.ACTION_UNDO_TRASH_TASK:
+        case task_constants.ACTION_UPDATE_TASK:
             return list.map((item) => task(item, action));
 
-        case api_settings.API_READ:
+        case api_constants.API_READ:
             let _regex = new RegExp('tasks$');
 
             if (!_regex.test(action.payload.endpoint)) {
@@ -91,7 +91,7 @@ export function tasks (list = task_settings.DEFAULT_TASK_LIST_STATE, action) {
                 return result;
             }, []);
 
-        case api_settings.API_DELETED:
+        case api_constants.API_DELETED:
 
             if (action.payload.type !== 'tasks') {
                 return list;
@@ -110,7 +110,7 @@ export function tasks (list = task_settings.DEFAULT_TASK_LIST_STATE, action) {
                 ...list.slice(_index + 1)
             ];
 
-        case api_settings.API_UPDATED:
+        case api_constants.API_UPDATED:
 
             if (action.payload.data.type !== 'tasks') {
                 return list;

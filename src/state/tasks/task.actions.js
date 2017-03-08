@@ -13,7 +13,7 @@ import {
 import { JsonApiModel } from 'data/models/jsonapi.model';
 
 // local
-import * as task_settings from './task.settings';
+import * as task_constants from './task.constants';
 
 // --------------------------
 // text filter
@@ -21,7 +21,7 @@ import * as task_settings from './task.settings';
 
 export function setTextFilter (value) {
     return {
-        type:     task_settings.ACTION_SET_TEXT_FILTER,
+        type:     task_constants.ACTION_SET_TEXT_FILTER,
         value:    value
     };
 }
@@ -32,7 +32,7 @@ export function setTextFilter (value) {
 
 export function setStatusFilter (value) {
     return {
-        type:     task_settings.ACTION_SET_COMPLETE_FILTER,
+        type:     task_constants.ACTION_SET_COMPLETE_FILTER,
         value:    value
     };
 }
@@ -43,7 +43,7 @@ export function setStatusFilter (value) {
 
 // export function addTask (tasks, data) {
 //     return {
-//         type:     task_settings.ACTION_ADD_TASK,
+//         type:     task_constants.ACTION_ADD_TASK,
 //         tasks:    tasks,
 //         data:     data
 //     };
@@ -65,7 +65,7 @@ export function deleteTask (task) {
 
 // export function makeTask () {
 //     return {
-//         type:     task_settings.ACTION_MAKE_TASK
+//         type:     task_constants.ACTION_MAKE_TASK
 //     };
 // }
 
@@ -119,7 +119,7 @@ export function undoTrashTask (task) {
 
 export function updateTask (unique_id, data) {
     return {
-        type:         task_settings.ACTION_UPDATE_TASK,
+        type:         task_constants.ACTION_UPDATE_TASK,
         unique_id:    unique_id,
         data:         data
     };
