@@ -64,13 +64,13 @@ export function deleteTask (unique_id) {
 // }
 
 export function toggleTaskComplete (task) {
-    return function (dispatch, state) {
+    return function (dispatch) {
 
         if (!(task instanceof JsonApiModel) || task.resource_object === null) {
             throw new Error("Invalid model");
         }
 
-        const _task = task.toggleCompleteStatus();
+        const _task = task.toggleStatusComplete();
 
         dispatch(updateResource(_task.resource_object))
             .catch(() => {
@@ -79,18 +79,36 @@ export function toggleTaskComplete (task) {
     };
 }
 
-export function trashTask (unique_id) {
-    return {
-        type:         ACTION_TRASH_TASK,
-        unique_id:    unique_id
+export function trashTask (task) {
+    return function (dispatch) {
+
+        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        const _task = task.trash();
+
+        dispatch(updateResource(_task.resource_object))
+            .catch(() => {
+                dispatch(API_UPDATE_FAILED);
+            });
     };
 }
 
-export function undoTrashTask (unique_id) {
-    return {
-        type:       ACTION_UNDO_TRASH_TASK,
-        unique_id:  unique_id
-    };
+export function undoTrashTask (task) {
+    return function (dispatch) {
+
+        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        const _task = task.undoTrash();
+
+        dispatch(updateResource(_task.resource_object))
+            .catch(() => {
+                dispatch(API_UPDATE_FAILED);
+            });
+    }
 }
 
 export function updateTask (unique_id, data) {

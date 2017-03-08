@@ -3,8 +3,7 @@ import { expect } from 'chai';
 
 // app
 import { API_READ } from 'state/redux-json-api.settings';
-import { TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
-import { Task } from 'data/models/crud/jsonapi/task.model';
+import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // local
 import {
@@ -69,66 +68,6 @@ describe('tasks reducer', () => {
             let _result = Reducer.tasks(_state_before, _action);
 
             expect(_result).to.deep.equal(_expected);
-        });
-    });
-
-    describe('ACTION_UNDO_TRASH_TASK', () => {
-
-        it('should find task by unique_id and set status to incomplete, if the task is currently trashed', () => {
-
-            let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.TRASH });
-            let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.TRASH });
-
-            const _state_before = [ _task1, _task2 ];
-            const _action = {
-                type: ACTION_UNDO_TRASH_TASK, unique_id: _task2.unique_id
-            };
-
-            deepFreeze(_state_before);
-            deepFreeze(_action);
-
-            let _result = Reducer.tasks(_state_before, _action);
-
-            expect(_result[1].status).to.equal(TASK_STATUS.INCOMPLETE);
-        });
-    });
-
-    describe('ACTION_TRASH_TASK', () => {
-
-        it('should find task by unique_id and set status to trashed, if the task is currently complete', () => {
-
-            let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
-            let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.COMPLETE });
-
-            const _state_before = [ _task1, _task2 ];
-            const _action = {
-                type: ACTION_TRASH_TASK, unique_id: _task2.unique_id
-            };
-
-            deepFreeze(_state_before);
-            deepFreeze(_action);
-
-            let _result = Reducer.tasks(_state_before, _action);
-
-            expect(_result[1].status).to.equal(TASK_STATUS.TRASH);
-        });
-
-        it('should find task by unique_id and set status to trashed, if the task is currently incomplete', () => {
-
-            let _task1 = new Task({ server_id: 1, local_id: 1, text: 'AAAA', status: TASK_STATUS.INCOMPLETE });
-            let _task2 = new Task({ server_id: 2, local_id: 2, text: 'BBBB', status: TASK_STATUS.COMPLETE });
-
-            const _state_before = [ _task1, _task2 ];
-            const _action = {
-                type: ACTION_TRASH_TASK, unique_id: _task1.unique_id
-            };
-
-            deepFreeze(_state_before);
-            deepFreeze(_action);
-
-            let _result = Reducer.tasks(_state_before, _action);
-
-            expect(_result[0].status).to.equal(TASK_STATUS.TRASH);
         });
     });
 

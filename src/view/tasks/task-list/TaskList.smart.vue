@@ -206,7 +206,7 @@
             },
 
             _onTrashTask: function (task) {
-                store.dispatch(TaskActions.trashTask(task.unique_id, task));
+                store.dispatch(TaskActions.trashTask(task));
             },
 
             _onToggleTaskComplete: function (task) {
@@ -222,7 +222,7 @@
             },
 
             _onUndoTrashTask: function (task) {
-                store.dispatch(TaskActions.undoTrashTask(task.unique_id));
+                store.dispatch(TaskActions.undoTrashTask(task));
             },
 
             // ------------------------------------

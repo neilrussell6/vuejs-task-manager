@@ -28,28 +28,6 @@ function task (task, action) {
         //
         //     return new Task(Object.assign({}, action.data, { local_id }));
 
-        case ACTION_UNDO_TRASH_TASK:
-            if (task.unique_id !== action.unique_id) {
-                return task;
-            }
-
-            data = Object.assign({}, task, {
-                status: TASK_STATUS.INCOMPLETE
-            });
-
-            return new Task(data);
-
-        case ACTION_TRASH_TASK:
-            if (task.unique_id !== action.unique_id) {
-                return task;
-            }
-
-            data = Object.assign({}, task, {
-                status: TASK_STATUS.TRASH
-            });
-
-            return new Task(data);
-
         case ACTION_UPDATE_TASK:
             if (task.unique_id !== action.unique_id) {
                 return task;
