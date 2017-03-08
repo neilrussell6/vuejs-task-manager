@@ -127,16 +127,35 @@ input {
     box-sizing: border-box;
     margin: ($big-v-pad * 2) auto $big-v-pad;
     overflow: auto;
+    position: relative;
+
+    .overlay {
+        align-items: center;
+        background-color: rgba(0, 0, 0, .3);
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        transition: opacity .5s linear;
+        width: 100%;
+    }
 
     &.disabled {
-        color: $text-color-dark;
         cursor: default;
         pointer-events: none;
+
+        .overlay {
+            opacity: 1;
+            transition: opacity .5s linear;
+        }
     }
 
     .body {
         box-sizing: border-box;
         display: flex;
+        min-height: 600px;
 
         .column-left {
             align-items: stretch;

@@ -6,7 +6,11 @@
         </header>
 
         <section class="main" :class="{disabled: is_disabled}">
+
+            <div class="overlay"></div>
+
             <tasks></tasks>
+
         </section>
 
     </div>

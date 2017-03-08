@@ -26,20 +26,8 @@
                 </div>
                 <div class="task-control right">
 
-                    <button v-on:click="_onRefreshTasks()">
+                    <button v-on:click="_onRefreshTasks()" :disabled="selected_project === null">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
-                    </button>
-
-                    <button v-on:click="_onToggleView()">
-
-                        <template v-if="is_list_view">
-                            <i class="fa fa-align-justify" aria-hidden="true"></i>
-                        </template>
-
-                        <template v-else>
-                            <i class="fa fa-th" aria-hidden="true"></i>
-                        </template>
-
                     </button>
 
                 </div>
@@ -125,7 +113,6 @@
                 status_filter: '',
                 selected_project: null,
                 has_tasks: false,
-                is_list_view: false,
                 tasks: [],
                 tasks_table_cell_configs: {
                     name: {
@@ -190,11 +177,12 @@
             },
 
             _onRefreshTasks: function () {
-                store.dispatch(TaskActions.refreshTasks(this.selected_project));
-            },
 
-            _onToggleView: function () {
-                this.is_list_view = !this.is_list_view;
+                if (this.selected_project === null) {
+                    return;
+                }
+
+                store.dispatch(TaskActions.refreshTasks(this.selected_project));
             },
 
             // ------------------------------------
