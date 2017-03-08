@@ -1,5 +1,5 @@
 import * as api_settings from 'state/redux-json-api.settings';
-import { DELAY_HTTP_CALLS } from 'state/app.settings';
+import { ARTIFICIAL_DELAY } from 'state/app.settings';
 
 export const delayFetchMiddleware = store => next => action => {
 
@@ -11,9 +11,17 @@ export const delayFetchMiddleware = store => next => action => {
         case api_settings.API_READ:
         case api_settings.API_UPDATE_FAILED:
         case api_settings.API_UPDATED:
+
+            const _state = store.getState();
+            const _delay = _state.app.artificial_delay;
+
+            if (!_delay) {
+                next(action);
+            }
+
             let _timeout_id = window.setTimeout(() => {
                 next(action);
-            }, DELAY_HTTP_CALLS);
+            }, _delay);
 
             return function cancel () {
                 clearTimeout(_timeout_id);

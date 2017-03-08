@@ -1,7 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <div class="common-message"
-         :class="_getClass(message)">
+    <div class="common-message" :class="_getClass(message)">
 
+        <!--<div class="content" :class="{minimal: is_minimal}">-->
         <div class="content">
             <template v-if="message">
 
@@ -38,10 +38,23 @@
             };
         },
 
+        computed: {
+//            is_minimal: function (value) {
+//                if (this.message === null) {
+//                    return false;
+//                }
+//                return (this.minimal && this.message.style !== 'message-type-warning' && this.message.style !== 'message-type-danger');
+//            }
+        },
+
         props: {
             message: {
                 type: Object,
                 default: null
+            },
+            minimal: {
+                type: Boolean,
+                default: true
             }
         },
 

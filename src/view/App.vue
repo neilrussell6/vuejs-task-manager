@@ -10,17 +10,40 @@
 
             <div class="controls" :class="{disabled: message !== null}">
                 <div class="control">
+
                     <button v-on:click="_onToggleArtificialDelay()">
-                        <!--<i class="fa fa-square" aria-hidden="true"></i>-->
-                        <i class="fa fa-check-square" aria-hidden="true"></i>
+
+                        <template v-if="is_artificially_delayed">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                        </template>
+
+                        <template v-else>
+                            <i class="fa fa-square" aria-hidden="true"></i>
+                        </template>
+
                     </button>
                     artificial delay
+                </div>
+                <div class="control">
+
+                    <button v-on:click="_onToggleMinimalMessage()">
+
+                        <template v-if="is_message_minimal">
+                            <i class="fa fa-check-square" aria-hidden="true"></i>
+                        </template>
+
+                        <template v-else>
+                            <i class="fa fa-square" aria-hidden="true"></i>
+                        </template>
+
+                    </button>
+                    minimal message
                 </div>
             </div>
 
         </header>
 
-        <common-message :message="message"></common-message>
+        <common-message :message="message" :minimal="is_message_minimal"></common-message>
 
         <section class="main" :class="{disabled: is_disabled}">
 
@@ -38,6 +61,7 @@
     // actions
     import * as MessageActions from 'state/message/message.actions';
     import * as ProjectsActions from 'state/projects/project.actions';
+    import * as AppActions from 'state/app/app.actions';
 
     // components
     import CommonMessage from 'view/common/common-message/CommonMessage.dumb';
@@ -66,7 +90,9 @@
             return {
                 message: null,
                 previous_message: null,
-                is_disabled: false
+                is_message_minimal: true,
+                is_disabled: false,
+                is_artificially_delayed: true
             };
         },
 
@@ -76,7 +102,7 @@
             // handlers: message
             // ------------------------------------
 
-            _messageButtonClickHandler: function (button, action) {
+            _onMessageButtonClick: function (button, action) {
 
                 if (!action.hasOwnProperty('callback')) {
                     return;
@@ -85,16 +111,26 @@
                 action.callback(button.value);
             },
 
+            _onToggleArtificialDelay: function () {
+                store.dispatch(AppActions.toggleArtificialDelay());
+            },
+
+            _onToggleMinimalMessage: function () {
+                store.dispatch(AppActions.toggleMinimalMessage());
+            },
+
             // ----------------------
             // utils
             // ----------------------
 
             _updateView: function () {
-                const _state            = store.getState();
+                const _state = store.getState();
 
-                // app disabled
+                // app
 
                 this.is_disabled = _state.app.is_disabled;
+                this.is_artificially_delayed = _state.app.artificial_delay > 0;
+                this.is_message_minimal = _state.app.is_message_minimal;
 
                 // message
 
@@ -118,7 +154,7 @@
                     }
 
                     if (this.message.hasOwnProperty('buttons')) {
-                        this.message.clickHandler = this._messageButtonClickHandler.bind(this);
+                        this.message.clickHandler = this._onMessageButtonClick.bind(this);
                     }
                 }
             }

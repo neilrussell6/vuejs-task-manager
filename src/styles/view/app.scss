@@ -142,7 +142,7 @@ input {
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 22px;
             color: $text-color-title;
             font-family: 'TlwgTypewriter', serif;
             text-shadow: rgba($light-yellow, .2) 0 10px 10px;
@@ -159,11 +159,15 @@ input {
     }
 
     .controls {
+        background-color: rgba(0, 0, 0, .2);
+        box-shadow: 0 0 20px rgba(0, 0, 0, .2);
         position: absolute;
-        top: $big-v-pad;
-        right: $big-h-pad;
+        top: 4px;
+        right: 4px;
+        padding: 4px 8px 4px 4px;
         opacity: 1;
         transition: opacity .5s linear;
+        border: 1px solid desaturate(darken($light-yellow, 40%), 30%);
 
         &.disabled {
             opacity: .2;
@@ -355,8 +359,8 @@ input {
     width: 100%;
     opacity: 0;
     top: 0;
-    padding-bottom: $med-v-pad;
     pointer-events: none;
+    transition: opacity .8s linear, background-color .8s linear;
 
     &.has-message {
         background-color: darken($bg-color-dark, 5%);
@@ -415,10 +419,20 @@ input {
 
     > .content {
         box-sizing: border-box;
-        border-bottom: 1px solid desaturate(darken($light-yellow, 30%), 20%);
+        border-bottom-style: solid;
+        border-bottom-color: desaturate(darken($light-yellow, 30%), 20%);
+        border-bottom-width: 1px;
         height: 70px;
         padding: $med-v-pad $big-h-pad;
         text-align: center;
-        transition: background-color .2s linear, opacity .2s linear;
+        margin-bottom: $med-v-pad;
+        //transition: margin .2s ease-in;
+
+        &.minimal {
+            margin-top: -69px;
+            margin-bottom: 0;
+            border-bottom-width: 1px;
+            //transition: margin .2s ease-in;
+        }
     }
 }

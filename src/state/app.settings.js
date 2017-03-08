@@ -1,1 +1,1 @@
-export const DELAY_HTTP_CALLS = 500;
+export const ARTIFICIAL_DELAY = 1000;

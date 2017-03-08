@@ -5,7 +5,6 @@ import { Message, MESSAGE_STYLE } from 'data/models/basic/message.model';
 
 // state
 import * as api_settings from 'state/redux-json-api.settings';
-import * as task_settings from 'state/tasks/task.settings';
 
 // utils
 import * as JsonApiUtils from 'utils/json-api/json-api.utils';
