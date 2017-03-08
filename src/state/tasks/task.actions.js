@@ -108,7 +108,7 @@ export function undoTrashTask (task) {
             .catch(() => {
                 dispatch(API_UPDATE_FAILED);
             });
-    }
+    };
 }
 
 export function updateTask (unique_id, data) {

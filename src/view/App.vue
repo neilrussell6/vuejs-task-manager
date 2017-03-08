@@ -5,7 +5,7 @@
             <common-message :message="message"></common-message>
         </header>
 
-        <section class="main">
+        <section class="main" :class="{disabled: is_disabled}">
             <tasks></tasks>
         </section>
 
@@ -44,7 +44,8 @@
         data: function () {
             return {
                 message: null,
-                previous_message: null
+                previous_message: null,
+                is_disabled: false
             };
         },
 
@@ -71,6 +72,12 @@
 
             _updateView: function () {
                 const _state            = store.getState();
+
+                // app disabled
+
+                this.is_disabled = _state.app.is_disabled;
+
+                // message
 
                 // if unset message
                 if (_state.message === null) {

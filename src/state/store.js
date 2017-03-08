@@ -4,6 +4,7 @@ import { reducer as api } from 'redux-json-api';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 
 // reducers
+import { app } from 'state/app/reducers/app.reducer';
 import { projects } from 'state/projects/reducers/projects.reducer';
 import { selected_project } from 'state/projects/reducers/selected-project.reducer';
 import { tasks } from 'state/tasks/reducers/tasks.reducer';
@@ -13,6 +14,7 @@ import { tasks_text_filter } from 'state/tasks/reducers/tasks-text-filter.reduce
 import { delayFetchMiddleware } from './delay-fetch/delay-fetch.middleware';
 
 const reducer = combineReducers({
+    app,
     api,
     projects,
     message,

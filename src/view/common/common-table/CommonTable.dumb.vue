@@ -209,7 +209,6 @@
                 if (!config.hasOwnProperty('isDisabled')) {
                     return;
                 }
-                console.log(data.name, config.isDisabled(data));
 
                 return config.isDisabled(data);
             }

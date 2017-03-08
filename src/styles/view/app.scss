@@ -73,10 +73,10 @@ button {
     }
 
     &:disabled {
-        pointer-events: none;
         background-color: transparent;
         color: $text-color-dark;
         cursor: default;
+        pointer-events: none;
     }
 }
 
@@ -128,6 +128,12 @@ input {
     box-sizing: border-box;
     margin: ($big-v-pad * 2) auto $big-v-pad;
     overflow: auto;
+
+    &.disabled {
+        color: $text-color-dark;
+        cursor: default;
+        pointer-events: none;
+    }
 
     .body {
         box-sizing: border-box;
