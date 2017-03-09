@@ -190,7 +190,8 @@
             // ------------------------------------
 
             _onUpdateTask: function (task) {
-                store.dispatch(TaskActions.updateTask(task.unique_id, task));
+                console.log("_onUpdateTask");
+                store.dispatch(TaskActions.updateTask(task));
             },
 
             _onTrashTask: function (task) {

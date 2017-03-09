@@ -22,17 +22,17 @@
                         <template v-if="cellConfigs[key].type === 'button'">
 
                             <td class="cell-button"
-                                :class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
+                                :class="_getCellClass(row, key)">
 
-                                <button v-on:click="_buttonClickHandler(row, cellConfigs[key])"
-                                        :disabled="_isDisabled(row, cellConfigs[key])">
+                                <button v-on:click="_buttonClickHandler(row, key)"
+                                        :disabled="_isDisabled(row, key)">
 
                                     <!-- icon -->
                                     <template v-if="cellConfigs[key].icon_class">
 
                                         <!-- indexed icon -->
                                         <template v-if="typeof cellConfigs[key].icon_class === 'object'">
-                                            <i :class="_getIndexedIconClass(row, cellConfigs[key])" aria-hidden="true"></i>
+                                            <i :class="_getIndexedIconClass(row, key)" aria-hidden="true"></i>
                                         </template>
 
                                         <!-- single icon -->
@@ -57,8 +57,8 @@
                         <template v-if="cellConfigs[key].type === 'inline-edit'">
 
                             <td class="cell-inline-edit"
-                                v-on:click="_inlineEditClickHandler(row, cellConfigs[key])"
-                                :class="_getCellClass(row, cellConfigs[key], key, editing_item_unique_id)">
+                                v-on:click="_inlineEditClickHandler(row, key)"
+                                :class="_getCellClass(row, key)">
 
                                 <!-- editing -->
                                 <template v-if="editing_item_unique_id === row.unique_id">
@@ -67,8 +67,8 @@
                                            placeholder="task name"
                                            v-focus="editing_item_unique_id === row.unique_id"
                                            v-model="row[ key ]"
-                                           v-on:keyup.enter="_inlineEditInputEnterHandler(row.unique_id, cellConfigs[key])"
-                                           v-click-outside="_inlineEditInputClickOutsideHandler(row.unique_id, cellConfigs[key])"
+                                           v-on:keyup.enter="_inlineEditInputEnterHandler()"
+                                           v-on-clickaway="_inlineEditInputClickOutsideHandler"
                                     />
                                 </template>
 
@@ -98,7 +98,10 @@
 <script type="text/babel">
     import Vue from 'vue';
     import { focus } from 'vue-focus';
-    import { clickOutside } from 'view/common/click-outside/click-outside.directive';
+    import { mixin as clickaway } from 'vue-clickaway';
+
+    // utils
+    import * as CollectionUtils from 'utils/collection.utils';
 
     let _vm;
 
@@ -106,14 +109,19 @@
 
         data: function () {
             return {
-                editing_item_unique_id: null
+                editing_item: null,
+                editing_item_unique_id: null,
+                editing_column_key: null
             };
         },
 
         directives: {
-            focus: focus,
-            clickOutside: clickOutside
+            focus: focus
         },
+
+        mixins: [
+            clickaway
+        ],
 
         props: {
             useDefaultHeadings: true,
@@ -129,88 +137,94 @@
             // handlers
             // ------------------------------------
 
-            _buttonClickHandler: function (data, config) {
-                if (!config.hasOwnProperty('clickHandler')) {
+            _buttonClickHandler: function (data, column_key) {
+
+                if (!this.cellConfigs[ column_key ].hasOwnProperty('clickHandler')) {
                     return;
                 }
 
-                config.clickHandler(data);
+                this.cellConfigs[ column_key ].clickHandler(data);
             },
 
-            _inlineEditClickHandler: function (data, config) {
-                if (config.hasOwnProperty('canEdit') && !config.canEdit(data)) {
+            _inlineEditClickHandler: function (data, column_key) {
+
+                console.log(this.cellConfigs[ column_key ]);
+                console.log(data);
+                console.log(this.cellConfigs[ column_key ].canEdit(data));
+                if (this.cellConfigs[ column_key ].hasOwnProperty('canEdit') && !this.cellConfigs[ column_key ].canEdit(data)) {
                     return;
                 }
 
+                console.log("XXXXXX");
+
+                _vm.editing_item = data;
                 _vm.editing_item_unique_id = data.unique_id;
+                _vm.editing_column_key = column_key;
             },
 
-            _inlineEditInputEnterHandler: function (unique_id, config) {
+            _inlineEditInputEnterHandler: function () {
 
-                let _data = this._getItemByUniqueId(unique_id);
-
-                _vm.editing_item_unique_id = null;
-
-                if (config.hasOwnProperty('blurHandler')) {
-                    config.blurHandler(_data);
-                }
-            },
-
-            _inlineEditInputClickOutsideHandler: function (unique_id, config) {
-
-                if (_vm.editing_item_unique_id === null) {
+                if (_vm.editing_item === null) {
                     return;
                 }
 
-                let _data = this._getItemByUniqueId(unique_id);
-
-                _vm.editing_item_unique_id = null;
-
-                if (config.hasOwnProperty('blurHandler')) {
-                    config.blurHandler(_data);
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
+                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item);
                 }
+
+                // reset editing
+                _vm.editing_item = null;
+                _vm.editing_item_unique_id = null;
+                _vm.editing_column_key = null;
+            },
+
+            _inlineEditInputClickOutsideHandler: function () {
+
+                if (_vm.editing_item === null) {
+                    return;
+                }
+
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
+                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item);
+                }
+
+                // reset editing
+                _vm.editing_item = null;
+                _vm.editing_item_unique_id = null;
+                _vm.editing_column_key = null;
             },
 
             // ------------------------------------
             // utils
             // ------------------------------------
 
-            _getCellClass: function (data, config, key, editing_item_unique_id) {
-                let _conditional_class = config.hasOwnProperty('conditionalClass') ? config.conditionalClass(data, editing_item_unique_id) : {};
-                let _key_class = `cell-${key}`;
+            _getCellClass: function (data, column_key) {
+                let _conditional_class = this.cellConfigs[ column_key ].hasOwnProperty('conditionalClass') ? this.cellConfigs[ column_key ].conditionalClass(data, _vm.editing_item_unique_id) : {};
+                let _key_class = `cell-${column_key}`;
                 return Object.assign({}, _conditional_class, _key_class);
             },
 
-            _getIndexedIconClass: function (data, config) {
-                if (!config.hasOwnProperty('iconClassIndex')) {
+            _getIndexedIconClass: function (data, column_key) {
+
+                if (!this.cellConfigs[ column_key ].hasOwnProperty('iconClassIndex')) {
                     return;
                 }
 
-                let _index = config.iconClassIndex(data);
+                let _index = this.cellConfigs[ column_key ].iconClassIndex(data);
 
                 let _result = {};
-                _result[ config.icon_class[ _index ] ] = true;
+                _result[ this.cellConfigs[ column_key ].icon_class[ _index ] ] = true;
 
                 return _result;
             },
 
-            _getItemByUniqueId: function (unique_id) {
-                return _vm.data.reduce(function (result, item) {
-                    if (unique_id === item.unique_id) {
-                        result = item;
-                    }
+            _isDisabled: function (data, column_key) {
 
-                    return result;
-                }, null);
-            },
-
-            _isDisabled: function (data, config) {
-
-                if (!config.hasOwnProperty('isDisabled')) {
+                if (!this.cellConfigs[ column_key ].hasOwnProperty('isDisabled')) {
                     return;
                 }
 
-                return config.isDisabled(data);
+                return this.cellConfigs[ column_key ].isDisabled(data);
             }
         },
 

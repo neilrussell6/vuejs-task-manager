@@ -117,11 +117,20 @@ export function undoTrashTask (task) {
     };
 }
 
-export function updateTask (unique_id, data) {
-    return {
-        type:         task_constants.ACTION_UPDATE_TASK,
-        unique_id:    unique_id,
-        data:         data
+export function updateTask (task) {
+    console.log("updateTask");
+    return function (dispatch) {
+
+        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        const _task = task.undoTrash();
+
+        dispatch(updateResource(_task.resource_object))
+            .catch(() => {
+                dispatch(API_UPDATE_FAILED);
+            });
     };
 }
 
