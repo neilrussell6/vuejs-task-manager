@@ -129,7 +129,27 @@
             cellConfigs: { type: Object, default: null },
             headings: { type: Object, default: null },
             dataKeys: { type: Array, default: [] },
-            data: { type: Array, default: [] }
+            data: { type: Array, default: [] },
+            editingItemUniqueId: { type: String, default: null },
+            editingItemColumnKey: { type: String, default: 'name' }
+        },
+
+        watch: {
+            editingItemUniqueId: function (value) {
+
+                const _index = CollectionUtils.indexOfKeyValue(this.data, 'unique_id', value);
+
+                if (_index < 0) {
+                    return;
+                }
+
+                const _data = this.data[ _index ];
+
+                _vm.editing_item = _data;
+                _vm.editing_item_before_value = _data[ this.editingItemColumnKey ];
+                _vm.editing_item_unique_id = _data.unique_id;
+                _vm.editing_column_key = this.editingItemColumnKey;
+            }
         },
 
         methods: {
@@ -165,15 +185,11 @@
                     return;
                 }
 
-                const _value_is_changed = _vm.editing_item_before_value !== _vm.editing_item[ _vm.editing_column_key ];
-                if (_value_is_changed && this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
-                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item);
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
+                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
                 }
 
-                // reset editing
-                _vm.editing_item = null;
-                _vm.editing_item_unique_id = null;
-                _vm.editing_column_key = null;
+                this._resetEditing();
             },
 
             _inlineEditInputClickOutsideHandler: function () {
@@ -182,15 +198,11 @@
                     return;
                 }
 
-                const _value_is_changed = _vm.editing_item_before_value !== _vm.editing_item[ _vm.editing_column_key ];
-                if (_value_is_changed && this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
-                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item);
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
+                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
                 }
 
-                // reset editing
-                _vm.editing_item = null;
-                _vm.editing_item_unique_id = null;
-                _vm.editing_column_key = null;
+                this._resetEditing();
             },
 
             // ------------------------------------
@@ -226,6 +238,12 @@
                 }
 
                 return this.cellConfigs[ column_key ].isDisabled(data);
+            },
+
+            _resetEditing: function () {
+                _vm.editing_item = null;
+                _vm.editing_item_unique_id = null;
+                _vm.editing_column_key = null;
             }
         },
 

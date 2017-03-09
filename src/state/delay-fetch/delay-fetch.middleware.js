@@ -8,6 +8,8 @@ export const delayFetchMiddleware = store => next => action => {
 
     switch (action.type) {
 
+        case api_constants.API_CREATE_FAILED:
+        case api_constants.API_CREATED:
         case api_constants.API_DELETE_FAILED:
         case api_constants.API_DELETED:
         case api_constants.API_READ_FAILED:

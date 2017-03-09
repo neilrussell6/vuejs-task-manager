@@ -41,7 +41,7 @@ describe("tasks reducer", () => {
     //     });
     // });
 
-    describe("task_constants.ACTION_DELETE_TASK", () => {
+    describe("task_constants.ACTION_REMOVE_TASK", () => {
 
         it("should find task by unique_id and remove it from array", () => {
 
@@ -52,7 +52,7 @@ describe("tasks reducer", () => {
             const _state_before = [ _task1, _task2, _task3 ];
             const _expected = [ _task1, _task3 ];
             const _action = {
-                type: task_constants.ACTION_DELETE_TASK, unique_id: _task2.unique_id
+                type: task_constants.ACTION_REMOVE_TASK, task: _task2
             };
 
             deepFreeze(_state_before);
@@ -64,7 +64,7 @@ describe("tasks reducer", () => {
         });
     });
 
-    describe("task_constants.ACTION_UPDATE_TASK", () => {
+    describe("task_constants.ACTION_UPDATE_TASK_LOCALLY", () => {
 
         it("should update task data using provided unique_id and data", () => {
 
@@ -73,7 +73,7 @@ describe("tasks reducer", () => {
 
             const _state_before = [ _task1, _task2 ];
             const _action = {
-                type: task_constants.ACTION_UPDATE_TASK, unique_id: _task2.unique_id, data: {text: 'XXXX'}
+                type: task_constants.ACTION_UPDATE_TASK_LOCALLY, task: _task2, data: {text: 'XXXX'}
             };
 
             deepFreeze(_state_before);

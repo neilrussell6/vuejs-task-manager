@@ -41,10 +41,12 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
     let _endpoint_data;
 
     switch (action.type) {
-
-        case api_constants.API_CREATED:
-        case api_constants.API_DELETED:
         case api_constants.API_WILL_CREATE:
+            const _singular_type = pluralize.singular(action.payload.type);
+            _label = `new ${_singular_type}`;
+            break;
+
+        case api_constants.API_DELETED:
         case api_constants.API_WILL_DELETE:
         case api_constants.API_WILL_UPDATE:
 
@@ -55,6 +57,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, message_settings, pluralize.singular);
             break;
 
+        case api_constants.API_CREATED:
         case api_constants.API_UPDATED:
 
             _endpoint_data = {
@@ -88,6 +91,22 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
     // make message data
 
     switch (action.type) {
+
+        case api_constants.API_CREATED:
+            _data = {
+                label: `successfully created ${_label}`,
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
+            };
+            break;
+
+        case api_constants.API_CREATE_FAILED:
+            _data = {
+                label: `could not create data`,
+                style: MESSAGE_STYLE.DANGER,
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
+            };
+            break;
 
         case api_constants.API_DELETE_FAILED:
             _data = {
@@ -134,6 +153,16 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
                 label: `successfully updated ${_label}`,
                 style: MESSAGE_STYLE.SUCCESS,
                 expire: message_settings.MESSAGE_DEFAULT_EXPIRE
+            };
+            break;
+
+        case api_constants.API_WILL_CREATE:
+            _data = {
+                label: `creating ${_label}`,
+                style: MESSAGE_STYLE.INFO,
+                icon: {
+                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
+                }
             };
             break;
 

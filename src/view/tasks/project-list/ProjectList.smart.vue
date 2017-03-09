@@ -21,7 +21,8 @@
     // smart component (this means it interacts with application state)
 
     // actions
-    import * as Actions from 'state/projects/project.actions';
+    import * as ProjectActions from 'state/projects/project.actions';
+    import * as TaskActions from 'state/tasks/task.actions';
 
     // store
     import { store } from 'state/store';
@@ -49,7 +50,8 @@
             // ------------------------------------
 
             _onProjectSelection: function (project) {
-                store.dispatch(Actions.selectProject(project));
+                store.dispatch(ProjectActions.selectProject(project));
+                store.dispatch(TaskActions.fetchTasks(this.selected_project));
             },
 
             // ----------------------

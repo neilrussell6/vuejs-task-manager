@@ -51,6 +51,7 @@
                                   :cell-configs="tasks_table_cell_configs"
                                   :use-default-headings.once="false"
                                   :data-keys.once="tasks_table_keys"
+                                  :editing-item-unique-id="new_task_unique_id"
                     ></common-table>
                 </template>
 
@@ -117,7 +118,10 @@
                 tasks_table_cell_configs: {
                     name: {
                         type: 'inline-edit',
-                        blurHandler: this._onUpdateTask,
+                        blurHandler: this._onCellEdit,
+                        canEdit: function (data) {
+                            return data.status === 1;
+                        },
                         conditionalClasses: function (data, editing_item_unique_id) {
                             let _classes = [];
 
@@ -168,7 +172,8 @@
                     }
                 },
                 tasks_trash_table_keys: ['name', 'undo', 'delete'],
-                text_filter: ''
+                text_filter: '',
+                new_task_unique_id: null
             };
         },
 
@@ -195,8 +200,36 @@
             // handlers : common-table : tasks
             // ------------------------------------
 
-            _onUpdateTask: function (task) {
-                store.dispatch(TaskActions.updateTask(task));
+            _onCellEdit: function (task, key, value, prev_value) {
+
+                // if edited value is now invalid
+                if (value === "") {
+
+                    // ... and no valid previous value is available remove item before it is stored
+                    if (prev_value === "") {
+                        return store.dispatch(TaskActions.removeTask(task));
+                    }
+                    // ... but a valid previous value is available, then revert to previous value
+                    else {
+                        return store.dispatch(TaskActions.updateTaskLocally(task, { [ key ]: prev_value }));
+                    }
+                }
+
+                // if edited value is unchanged
+                // ... do nothing
+                if (value === prev_value) {
+                    return;
+                }
+
+                // edited value is valid
+                // ... and already has a server id
+                if (task.hasOwnProperty('server_id')) {
+                    store.dispatch(TaskActions.updateTask(task));
+                }
+                // ... but has no server id
+                else {
+                    store.dispatch(TaskActions.createTask(task, this.selected_project));
+                }
             },
 
             _onTrashTask: function (task) {
@@ -249,9 +282,6 @@
 
                 const _state            = store.getState();
 
-                // actions
-                let _should_fetch_tasks = _state.selected_project !== null && (this.selected_project === null || _state.selected_project.unique_id !== this.selected_project.unique_id);
-
                 // settings
                 this.STATUS_FILTER_TYPE = STATUS_FILTER_TYPE;
 
@@ -261,12 +291,13 @@
                 this.tasks              = _state.tasks;
                 this.text_filter        = _state.tasks_text_filter;
 
+                // setting this will focus the inline-edit column in common-table
+                this.new_task_unique_id = this.tasks.reduce((result, task) => {
+                    return !task.hasOwnProperty('server_id') ? task.unique_id : result;
+                }, null);
+
                 // computed data
                 this.has_tasks          = _state.tasks.length > 0;
-
-                if (_should_fetch_tasks) {
-                    store.dispatch(TaskActions.fetchTasks(this.selected_project));
-                }
             }
         },
 

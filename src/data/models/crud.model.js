@@ -24,7 +24,8 @@ export class CRUDModel extends BasicModel {
     }
 
     get unique_id () {
-        return `${UNIQUE_ID_SERVER_KEY}${this.server_id}${UNIQUE_ID_LOCAL_KEY}${this.local_id}`;
+        let _server_id = typeof this.server_id !== 'undefined' ? this.server_id : '0';
+        return `${UNIQUE_ID_SERVER_KEY}${_server_id}${UNIQUE_ID_LOCAL_KEY}${this.local_id}`;
     }
 }
 
