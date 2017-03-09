@@ -19,7 +19,7 @@
             <div class="task-control-group">
                 <div class="task-control">
 
-                    <button class="add-task-button" v-on:click="_onNewTask">
+                    <button class="add-task-button" v-on:click="_onNewTask" :disabled="selected_project === null">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </button>
 
