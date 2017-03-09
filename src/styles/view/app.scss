@@ -205,27 +205,28 @@ input {
     margin: ($big-v-pad * 2) auto $big-v-pad;
     overflow: auto;
     position: relative;
+    transition: filter .2s ease-out;
 
     .overlay {
-        align-items: center;
-        background-color: rgba(0, 0, 0, .3);
-        display: flex;
+        //background-color: rgba(0, 0, 0, .3);
+        background-color: rgba(desaturate(darken($dark-blue, 15%), 35%), .3);
         height: 100%;
-        justify-content: center;
         opacity: 0;
         pointer-events: none;
         position: absolute;
-        transition: opacity .5s linear;
         width: 100%;
+        transition: opacity .5s ease-out;
     }
 
     &.disabled {
         cursor: default;
         pointer-events: none;
+        filter: blur(2px);
+        transition: filter .2s ease-in;
 
         .overlay {
             opacity: 1;
-            transition: opacity .5s linear;
+            transition: opacity .5s ease-in;
         }
     }
 
@@ -407,14 +408,16 @@ input {
     pointer-events: none;
     position: absolute;
     top: 0;
-    transition: opacity .8s linear, background-color .8s linear;
+    transition: opacity .8s linear, background-color .8s linear, filter .8s ease-out;
     width: 100%;
+    filter: blur(2px);
 
     &.has-message {
         background-color: darken($bg-color-dark, 5%);
         opacity: 1;
         pointer-events: all;
-        transition: background-color .2s linear, opacity .2s linear;
+        transition: background-color .2s linear, opacity .2s linear, filter .2s ease-in;
+        filter: blur(0);
     }
 
     &.info {
