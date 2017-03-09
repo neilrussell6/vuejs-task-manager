@@ -118,14 +118,20 @@
                     name: {
                         type: 'inline-edit',
                         blurHandler: this._onUpdateTask,
-                        canEdit: function (data) {
-                            return data.status === 1;
-                        },
-                        conditionalClass: function (data, editing_item_unique_id) {
-                            return {
-                                'complete': data.status === TASK_STATUS.COMPLETE,
-                                'editing': data.unique_id === editing_item_unique_id
-                            };
+                        conditionalClasses: function (data, editing_item_unique_id) {
+                            let _classes = [];
+
+                            if (data.status === TASK_STATUS.INCOMPLETE) {
+                                _classes.push('editable');
+                            } else if (data.status === TASK_STATUS.COMPLETE) {
+                                _classes.push('complete');
+                            }
+
+                            if (data.unique_id === editing_item_unique_id) {
+                                _classes.push('editing');
+                            }
+
+                            return _classes;
                         }
                     },
                     complete: {

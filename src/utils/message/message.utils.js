@@ -17,7 +17,6 @@ export function makeMessageLabel (endpoint_data, endpoint_type, settings, singul
 
         // primary with id (eg. projects/123);
         case ENDPOINT_TYPES.PRIMARY_ID:
-
             switch (settings.MESSAGE_IDENTIFIER) {
 
                 default:

@@ -71,10 +71,12 @@ button {
     padding: $small-v-pad $small-h-pad;
     text-align: center;
     text-transform: uppercase;
+    transition: background-color .1s ease-out, color .1s ease-out;
 
     &:hover {
         background-color: $link-color-hover;
         color: $text-color-dark;
+        transition: background-color 0s linear, color 0s linear;
     }
 
     &:disabled {
@@ -332,11 +334,23 @@ input {
 
     .cell-inline-edit.complete {
         color: $med-grey;
+        pointer-events: none;
         text-decoration: line-through;
     }
 
     .cell-inline-edit.editing {
         padding-left: 10px;
+    }
+
+    .cell-inline-edit.editable {
+        cursor: pointer;
+        pointer-events: all;
+        transition: color .3s ease-out;
+
+        &:hover {
+            color: $light-blue;
+            transition: color 0s linear;
+        }
     }
 }
 
@@ -434,7 +448,7 @@ input {
     }
 
     > .content {
-        border-bottom-color: desaturate(darken($light-yellow, 30%), 20%);
+        border-bottom-color: transparent;
         border-bottom-style: solid;
         border-bottom-width: 1px;
         box-sizing: border-box;

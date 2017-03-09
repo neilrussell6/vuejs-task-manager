@@ -198,9 +198,11 @@
             // ------------------------------------
 
             _getCellClass: function (data, column_key) {
-                let _conditional_class = this.cellConfigs[ column_key ].hasOwnProperty('conditionalClass') ? this.cellConfigs[ column_key ].conditionalClass(data, _vm.editing_item_unique_id) : {};
+                let _conditional_classes = this.cellConfigs[ column_key ].hasOwnProperty('conditionalClasses') ? this.cellConfigs[ column_key ].conditionalClasses(data, _vm.editing_item_unique_id) : {};
                 let _key_class = `cell-${column_key}`;
-                return Object.assign({}, _conditional_class, _key_class);
+                let _classes = [ ...[ _key_class ], ..._conditional_classes ];
+
+                return _classes.join(" ");
             },
 
             _getIndexedIconClass: function (data, column_key) {
@@ -235,4 +237,7 @@
 
 <style scoped lang='scss'>
     @import '../../../styles/view/common/common-table/common-table.scss';
+    .poes {
+        border: 1px solid red;
+    }
 </style>

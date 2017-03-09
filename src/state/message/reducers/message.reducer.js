@@ -75,7 +75,13 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             break;
 
         case message_constants.ACTION_REQUEST_DELETE_CONFIRMATION:
-            _label = action.data.hasOwnProperty('name') ? action.data.name : "this record";
+
+            _endpoint_data = {
+                primary: action.data.type,
+                primary_id: action.data.server_id
+            };
+
+            _label = MessageUtils.makeMessageLabel(_endpoint_data, ENDPOINT_TYPES.PRIMARY_ID, message_settings, pluralize.singular);
             break;
     }
 
