@@ -148,14 +148,9 @@
 
             _inlineEditClickHandler: function (data, column_key) {
 
-                console.log(this.cellConfigs[ column_key ]);
-                console.log(data);
-                console.log(this.cellConfigs[ column_key ].canEdit(data));
                 if (this.cellConfigs[ column_key ].hasOwnProperty('canEdit') && !this.cellConfigs[ column_key ].canEdit(data)) {
                     return;
                 }
-
-                console.log("XXXXXX");
 
                 _vm.editing_item = data;
                 _vm.editing_item_unique_id = data.unique_id;

@@ -190,7 +190,6 @@
             // ------------------------------------
 
             _onUpdateTask: function (task) {
-                console.log("_onUpdateTask");
                 store.dispatch(TaskActions.updateTask(task));
             },
 

@@ -118,7 +118,6 @@ export function undoTrashTask (task) {
 }
 
 export function updateTask (task) {
-    console.log("updateTask");
     return function (dispatch) {
 
         if (!(task instanceof JsonApiModel) || task.resource_object === null) {
