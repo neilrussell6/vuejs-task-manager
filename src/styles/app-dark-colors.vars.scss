@@ -20,7 +20,9 @@ $bg-color-dark: $dark-grey;
 $bg-color-med: $med-grey2;
 
 // bdr
-$bdr-color-dark: $dark-grey;
+$bdr-color-darker: $dark-grey;
+$bdr-color-dark: darken($med-grey, 10%);
+$bdr-color-med: darken($med-grey, 5%);;
 $bdr-color-light: $light-grey;
 
 // text

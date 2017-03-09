@@ -163,7 +163,7 @@ input {
 
     .controls {
         background-color: $bg-color-dark;
-        border: 1px solid $bg-color-med;
+        border: 1px solid $bdr-color-dark;
         box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
         opacity: 1;
         padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
@@ -235,6 +235,8 @@ input {
         min-height: 600px;
 
         .column-left {
+            border: 1px solid $bdr-color-med;
+            border-right-style: none;
             align-items: stretch;
             background-color: $bg-color-dark;
             box-sizing: border-box;
@@ -246,6 +248,7 @@ input {
         }
 
         .column-right {
+            border: 1px solid $bdr-color-med;
             box-sizing: border-box;
             float: right;
             padding: $big-v-pad $big-h-pad;
@@ -274,7 +277,7 @@ input {
     }
 }
 
-// < 1201
+// < 1200
 
 @media screen and (max-width: 1200px) {
 
@@ -282,15 +285,30 @@ input {
         margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 100%;
 
-        .app-column-left {
+        .column-left {
             padding-bottom: $big-v-pad;
             padding-top: $big-v-pad;
             width: 260px;
         }
 
-        .app-column-right {
+        .column-right {
             padding: $big-v-pad $big-h-pad;
             width: calc(100% - 260px);
+        }
+    }
+}
+
+// < 900
+
+@media screen and (max-width: 900px) {
+
+    .main {
+        .column-left {
+            width: 200px;
+        }
+
+        .column-right {
+            width: calc(100% - 200px);
         }
     }
 }
