@@ -1,4 +1,6 @@
 @import '../app.vars';
+@import './global/controls';
+@import './global/inline-edit';
 
 // ----------------------------------
 // misc
@@ -344,30 +346,25 @@ input {
         width: 20px;
     }
 
-    .cell-inline-edit {
-        input {
-            width: 100%;
+    .status-1 { // incomplete
+
+        .inline-edit {
+            cursor: pointer;
+            pointer-events: all;
+            transition: color .3s ease-out;
+
+            &:hover {
+                color: $light-blue;
+                transition: color 0s linear;
+            }
         }
     }
 
-    .cell-inline-edit.complete {
-        color: $med-grey;
-        pointer-events: none;
-        text-decoration: line-through;
-    }
-
-    .cell-inline-edit.editing {
-        padding-left: 10px;
-    }
-
-    .cell-inline-edit.editable {
-        cursor: pointer;
-        pointer-events: all;
-        transition: color .3s ease-out;
-
-        &:hover {
-            color: $light-blue;
-            transition: color 0s linear;
+    .status-2 { // complete
+        .inline-edit {
+            color: $med-grey;
+            pointer-events: none;
+            text-decoration: line-through;
         }
     }
 }
@@ -386,6 +383,38 @@ input {
         &.selected {
             background-color: darken($bg-color-dark, 2%);
             color: $text-color-selected;
+        }
+
+        .inline-edit {
+
+            input {
+                width: 100%;
+                //background-color: transparent;
+            }
+
+            &.editing {
+                cursor: default;
+                margin-right: $small-h-pad;
+                padding: ($med-v-pad - $small-v-pad - 1px) 0 ($med-v-pad - $small-v-pad - 1px) ($big-h-pad - $small-h-pad);
+            }
+
+            &.status-1 { // incomplete
+                cursor: pointer;
+                pointer-events: all;
+
+                span {
+                    transition: color .3s ease-out;
+                }
+
+                &:hover {
+                    color: $text-color-selected;
+
+                    span {
+                        color: $light-blue;
+                        transition: color 0s linear;
+                    }
+                }
+            }
         }
 
         button {

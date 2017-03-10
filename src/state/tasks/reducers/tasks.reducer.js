@@ -37,7 +37,8 @@ function task (task, action) {
             return new Task(_data);
 
         case api_constants.API_READ:
-            _data = Object.assign({}, { id: task.id }, { local_id: task.local_id }, task.attributes);
+            const local_id = LocalStorageUtils.getUniqueLocalId();
+            _data = Object.assign({}, { id: task.id }, { local_id }, task.attributes);
             return new Task(_data);
     }
 }
@@ -54,10 +55,9 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
     switch (action.type) {
 
         case task_constants.ACTION_MAKE_TASK:
-            const _local_id = LocalStorageUtils.getUniqueLocalId(list);
             const _new_task = task({}, Object.assign({}, action, {
                 data: {
-                    local_id: _local_id
+                    local_id: LocalStorageUtils.getUniqueLocalId()
                 }
             }));
 
@@ -67,7 +67,7 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
             ];
 
         case task_constants.ACTION_REMOVE_TASK:
-            _index = list.reduce((val, item, i) => (item.unique_id === action.task.unique_id) ? i : val, 0);
+            _index = list.reduce((val, item, i) => (item.local_id === action.task.local_id) ? i : val, 0);
 
             return [
                 ...list.slice(0, _index),
@@ -75,7 +75,7 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
             ];
 
         case task_constants.ACTION_UPDATE_TASK_LOCALLY:
-            _index = list.reduce((val, item, i) => (item.unique_id === action.task.unique_id) ? i : val, 0);
+            _index = list.reduce((val, item, i) => (item.local_id === action.task.local_id) ? i : val, 0);
 
             if (_index === null) {
                 return list;
@@ -140,16 +140,13 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
                 return list;
             }
 
-            return action.payload.data.reduce((result, item, i) => {
+            return action.payload.data.reduce((result, item) => {
 
                 if (item.type !== 'tasks') {
                     return result;
                 }
 
-                let local_id = i + 1;
-                let _item = Object.assign({}, item, { local_id });
-
-                result = [ ...result, task(_item, action) ];
+                result = [ ...result, task(item, action) ];
 
                 return result;
             }, []);

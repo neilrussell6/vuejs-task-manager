@@ -37,4 +37,19 @@ describe("tasks_status_filter reducer", () => {
 
         expect(_result).to.equal(_expected);
     });
+
+    it("should reset tasks status filter to default value", () => {
+
+        const _state_before = STATUS_FILTER_TYPE.COMPLETE;
+        const _expected = task_constants.DEFAULT_COMPLETE_FILTER_STATE;
+        const _action = {
+            type: task_constants.ACTION_RESET_COMPLETE_FILTER
+        };
+
+        deepFreeze(_action);
+
+        let _result = Reducer.tasks_status_filter(_state_before, _action);
+
+        expect(_result).to.equal(_expected);
+    });
 });

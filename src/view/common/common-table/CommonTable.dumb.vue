@@ -1,6 +1,7 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml">
 
     <table class="common-table">
+
         <thead v-if="headings || useDefaultHeadings">
             <tr>
                 <th v-for="key in dataKeys">
@@ -12,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="row in data">
+            <tr v-for="row in data" :class="[{ editing: row.local_id === editing_item_local_id}, _rowClass(row)]">
                 <template v-for="key in dataKeys">
 
                     <!-- cell templates -->
@@ -21,8 +22,7 @@
                         <!-- button -->
                         <template v-if="cellConfigs[key].type === 'button'">
 
-                            <td class="cell-button"
-                                :class="_getCellClass(row, key)">
+                            <td class="cell-button" :class="'cell-'+key">
 
                                 <button v-on:click="_onButtonClick(row, key)"
                                         :disabled="_isDisabled(row, key)">
@@ -56,16 +56,16 @@
                         <!-- inline edit -->
                         <template v-if="cellConfigs[key].type === 'inline-edit'">
 
-                            <td class="cell-inline-edit"
+                            <td class="inline-edit"
                                 v-on:click="_onInlineEditClick(row, key)"
-                                :class="_getCellClass(row, key)">
+                                :class="'cell-'+key">
 
                                 <!-- editing -->
-                                <template v-if="editing_item_unique_id === row.unique_id">
+                                <template v-if="editing_item_local_id === row.local_id">
                                     <input type="text"
-                                           :id="row.unique_id"
+                                           :id="row.local_id"
                                            placeholder="task name"
-                                           v-focus="editing_item_unique_id === row.unique_id"
+                                           v-focus="editing_item_local_id === row.local_id"
                                            v-model="row[ key ]"
                                            v-on:keyup.enter="_onInlineEditEnter()"
                                            v-on-clickaway="_onInlineEditClickOutside"
@@ -96,7 +96,6 @@
 </template>
 
 <script type="text/babel">
-    import Vue from 'vue';
     import { focus } from 'vue-focus';
     import { mixin as clickaway } from 'vue-clickaway';
 
@@ -111,7 +110,7 @@
             return {
                 editing_item: null,
                 editing_item_before_value: null,
-                editing_item_unique_id: null,
+                editing_item_local_id: null,
                 editing_column_key: null
             };
         },
@@ -125,30 +124,48 @@
         ],
 
         props: {
-            useDefaultHeadings: true,
             cellConfigs: { type: Object, default: null },
-            headings: { type: Object, default: null },
-            dataKeys: { type: Array, default: [] },
+            config: { type: Object, default: {} },
             data: { type: Array, default: [] },
-            editingItemUniqueId: { type: String, default: null },
-            editingItemColumnKey: { type: String, default: 'name' }
+            dataKeys: { type: Array, default: [] },
+            defaultEditingColumnKey: { type: String, default: 'name' },
+            focusNewItem: { type: Boolean, default: true },
+            headings: { type: Object, default: null },
+            useDefaultHeadings: { type: Boolean, default: true }
         },
 
         watch: {
-            editingItemUniqueId: function (value) {
+            data: function (value, prev_value) {
 
-                const _index = CollectionUtils.indexOfKeyValue(this.data, 'unique_id', value);
-
-                if (_index < 0) {
+                // if empty or no new items
+                // ... then exit
+                if (value.length === 0 || value.length === prev_value.length) {
                     return;
                 }
 
-                const _data = this.data[ _index ];
+                // there are new items
+                // ... focus last new item
+                if (this.focusNewItem) {
 
-                _vm.editing_item = _data;
-                _vm.editing_item_before_value = _data[ this.editingItemColumnKey ];
-                _vm.editing_item_unique_id = _data.unique_id;
-                _vm.editing_column_key = this.editingItemColumnKey;
+                    const _new_item_index = value.length - 1;
+                    const _new_item = value[ _new_item_index ];
+
+                    // item is invalid
+                    if (!_new_item.hasOwnProperty(this.defaultEditingColumnKey)) {
+                        return;
+                    }
+
+                    // item already has a server id, so is not new
+                    if (_new_item.hasOwnProperty('server_id')) {
+                        return;
+                    }
+
+                    // focus item for editing
+                    this.editing_item = _new_item;
+                    this.editing_item_before_value = _new_item[ this.defaultEditingColumnKey ];
+                    this.editing_item_local_id = _new_item.local_id;
+                    this.editing_column_key = this.defaultEditingColumnKey;
+                }
             }
         },
 
@@ -160,11 +177,11 @@
 
             _onButtonClick: function (data, column_key) {
 
-                if (!this.cellConfigs[ column_key ].hasOwnProperty('onClick')) {
+                if (!_vm.cellConfigs[ column_key ].hasOwnProperty('onClick')) {
                     return;
                 }
 
-                this.cellConfigs[ column_key ].onClick(data);
+                _vm.cellConfigs[ column_key ].onClick(data);
             },
 
             _onInlineEditClick: function (data, column_key) {
@@ -173,20 +190,20 @@
                     return;
                 }
 
-                _vm.editing_item = data;
-                _vm.editing_item_before_value = data[ column_key ];
-                _vm.editing_item_unique_id = data.unique_id;
-                _vm.editing_column_key = column_key;
+                this.editing_item = data;
+                this.editing_item_before_value = data[ column_key ];
+                this.editing_item_local_id = data.local_id;
+                this.editing_column_key = column_key;
             },
 
             _onInlineEditEnter: function () {
 
-                if (_vm.editing_item === null) {
+                if (this.editing_item === null) {
                     return;
                 }
 
-                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('onBlur')) {
-                    this.cellConfigs[ _vm.editing_column_key ].onBlur(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
+                if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onBlur')) {
+                    this.cellConfigs[ this.editing_column_key ].onBlur(this.editing_item, this.editing_column_key, this.editing_item[ this.editing_column_key ], this.editing_item_before_value);
                 }
 
                 this._resetEditing();
@@ -194,12 +211,12 @@
 
             _onInlineEditClickOutside: function () {
 
-                if (_vm.editing_item === null) {
+                if (this.editing_item === null) {
                     return;
                 }
 
-                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('onBlur')) {
-                    this.cellConfigs[ _vm.editing_column_key ].onBlur(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
+                if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onBlur')) {
+                    this.cellConfigs[ this.editing_column_key ].onBlur(this.editing_item, this.editing_column_key, this.editing_item[ this.editing_column_key ], this.editing_item_before_value);
                 }
 
                 this._resetEditing();
@@ -208,14 +225,6 @@
             // ------------------------------------
             // utils
             // ------------------------------------
-
-            _getCellClass: function (data, column_key) {
-                let _conditional_classes = this.cellConfigs[ column_key ].hasOwnProperty('conditionalClasses') ? this.cellConfigs[ column_key ].conditionalClasses(data, _vm.editing_item_unique_id) : {};
-                let _key_class = `cell-${column_key}`;
-                let _classes = [ ...[ _key_class ], ..._conditional_classes ];
-
-                return _classes.join(" ");
-            },
 
             _getIndexedIconClass: function (data, column_key) {
 
@@ -242,8 +251,16 @@
 
             _resetEditing: function () {
                 _vm.editing_item = null;
-                _vm.editing_item_unique_id = null;
+                _vm.editing_item_local_id = null;
                 _vm.editing_column_key = null;
+            },
+
+            _rowClass: function (row) {
+                const _classes = this.config.row_class_properties.reduce((result, property) => {
+                    return row.hasOwnProperty(property) ? [ ...result, ...[ `${property}-${row[ property ]}` ]] : result;
+                }, []);
+
+                return _classes.join(" ");
             }
         },
 
@@ -255,7 +272,4 @@
 
 <style scoped lang='scss'>
     @import '../../../styles/view/common/common-table/common-table.scss';
-    .poes {
-        border: 1px solid red;
-    }
 </style>

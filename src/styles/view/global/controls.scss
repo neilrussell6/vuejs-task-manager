@@ -1,0 +1,30 @@
+@import '../../app.vars';
+
+.controls {
+    margin-bottom: $big-v-pad;
+    overflow: auto;
+
+    &.bordered {
+        border-bottom: 1px solid $bdr-color-light;
+    }
+
+    .control-group {
+        display: flex;
+        justify-content: space-between;
+        overflow: auto;
+        padding-bottom: $med-v-pad;
+
+        &:last-child {
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .control {
+            padding: 0 $small-h-pad;
+
+            &:nth-child(3n) {
+                clear: both;
+            }
+        }
+    }
+}

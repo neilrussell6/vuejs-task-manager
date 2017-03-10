@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 // local
 import {
-    UNIQUE_ID_SERVER_KEY,
-    UNIQUE_ID_LOCAL_KEY
+    local_id_SERVER_KEY,
+    local_id_LOCAL_KEY
 } from './crud.model';
 
 // SUT
@@ -38,26 +38,6 @@ describe("CRUD model", () => {
                 let _result = _test_model.server_id;
 
                 expect(_result).to.equal(server_id);
-            });
-        });
-
-        describe("unique_id", () => {
-
-            it("should return a unique id key by combining server and local ids", () => {
-
-                class TestModel extends CRUDModel {
-                    static get name_plural() {
-                        return 'AAA';
-                    }
-                }
-
-                let server_id = 111;
-                let local_id = 222;
-                let _test_model = new TestModel({ server_id, local_id });
-
-                let _result = _test_model.unique_id;
-
-                expect(_result).to.equal(`${UNIQUE_ID_SERVER_KEY}${server_id}${UNIQUE_ID_LOCAL_KEY}${local_id}`);
             });
         });
     });

@@ -1,34 +1,5 @@
 @import '../../app.vars';
 
-.task-controls {
-    border-bottom: 1px solid $bdr-color-light;
-    margin-bottom: $big-v-pad;
-    overflow: auto;
-}
-
-.task-control-group {
-    overflow: auto;
-    padding-bottom: $med-v-pad;
-
-    &:last-child {
-        border-bottom: 0;
-        margin-bottom: 0;
-    }
-}
-
-.task-control {
-    float: left;
-    padding: 0 $small-h-pad;
-
-    &:nth-child(3n) {
-        clear: both;
-    }
-
-    &.right {
-        float: right;
-    }
-}
-
 .status-filter {
     float: left;
 }

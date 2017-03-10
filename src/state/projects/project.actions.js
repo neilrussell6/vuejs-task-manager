@@ -1,24 +1,100 @@
 import {
+    API_CREATE_FAILED,
+    API_DELETE_FAILED,
     API_READ_FAILED,
-    readEndpoint
+    API_UPDATE_FAILED,
+    createResource,
+    deleteResource,
+    readEndpoint,
+    updateResource
 } from 'redux-json-api';
 
+// actions
+import * as TaskActions from 'state/tasks/task.actions';
+
+// data
+import { JsonApiModel } from 'data/models/jsonapi.model';
+import { Project } from 'data/models/crud/jsonapi/project.model';
+
+// utils
+import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
+
 // local
-import { ACTION_SELECT_PROJECT } from './project.constants';
+import * as project_constants from './project.constants';
 
 // --------------------------
-// tasks : list
+// project
 // --------------------------
+
+export function createProject (project, project_local_id) {
+    return function (dispatch) {
+
+        if (!(project instanceof JsonApiModel) || project.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        dispatch(createResource(project.resource_object))
+            .then((response) => {
+                let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
+                dispatch(selectProject(_data));
+                dispatch(TaskActions.fetchTasks(response.data.id));
+            })
+            .catch(() => {
+                dispatch(API_CREATE_FAILED);
+            });
+    };
+}
+
+export function deleteProject (project) {
+    return function (dispatch) {
+
+        if (!(project instanceof JsonApiModel) || project.resource_identifier_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        dispatch(deleteResource(project.resource_identifier_object))
+            .catch(() => {
+                dispatch(API_DELETE_FAILED);
+            });
+    };
+}
+
+export function makeProject () {
+    return {
+        type: project_constants.ACTION_MAKE_PROJECT
+    };
+}
+
+export function removeProject (project) {
+    return {
+        type: project_constants.ACTION_REMOVE_PROJECT,
+        project
+    };
+}
 
 export function selectProject (data) {
     return {
-        type:    ACTION_SELECT_PROJECT,
+        type:    project_constants.ACTION_SELECT_PROJECT,
         data:    data
     };
 }
 
+export function updateProject (project) {
+    return function (dispatch) {
+
+        if (!(project instanceof JsonApiModel) || project.resource_object === null) {
+            throw new Error("Invalid model");
+        }
+
+        dispatch(updateResource(project.resource_object))
+            .catch(() => {
+                dispatch(API_UPDATE_FAILED);
+            });
+    };
+}
+
 // --------------------------
-// projects : fetch
+// projects
 // --------------------------
 
 export function refreshProjects () {
@@ -35,4 +111,3 @@ export function fetchProjects () {
             });
     };
 }
-

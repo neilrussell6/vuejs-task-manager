@@ -6,13 +6,12 @@
     display: flex;
 
     span {
-        padding-bottom: $med-v-pad;
-        padding-left: $big-h-pad;
-        padding-top: $med-v-pad;
+        padding: $med-v-pad 0 $med-v-pad $big-h-pad;
         width: 100%;
     }
 
     i {
+        padding-left: $small-h-pad;
         padding-right: $small-h-pad;
     }
 

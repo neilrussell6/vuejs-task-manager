@@ -2,8 +2,8 @@
 import { BasicModel } from './basic.model';
 
 // class
-export const UNIQUE_ID_SERVER_KEY = 's';
-export const UNIQUE_ID_LOCAL_KEY = 'l';
+export const local_id_SERVER_KEY = 's';
+export const local_id_LOCAL_KEY = 'l';
 
 export class CRUDModel extends BasicModel {
 
@@ -21,11 +21,6 @@ export class CRUDModel extends BasicModel {
                 this.server_id = data.id;
             }
         }
-    }
-
-    get unique_id () {
-        let _server_id = typeof this.server_id !== 'undefined' ? this.server_id : '0';
-        return `${UNIQUE_ID_SERVER_KEY}${_server_id}${UNIQUE_ID_LOCAL_KEY}${this.local_id}`;
     }
 }
 

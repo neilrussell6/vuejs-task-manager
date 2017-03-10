@@ -34,4 +34,19 @@ describe("tasks_text_filter reducer", () => {
 
         expect(_result).to.equal(_expected);
     });
+
+    it("should reset text filter to default value", () => {
+
+        const _state_before = '';
+        const _expected = task_constants.DEFAULT_TEXT_FILTER_STATE;
+        const _action = {
+            type: task_constants.ACTION_RESET_TEXT_FILTER
+        };
+
+        deepFreeze(_action);
+
+        let _result = Reducer.tasks_text_filter(_state_before, _action);
+
+        expect(_result).to.equal(_expected);
+    });
 });

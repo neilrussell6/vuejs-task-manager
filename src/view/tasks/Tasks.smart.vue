@@ -32,26 +32,6 @@
         components: {
             ProjectList,
             TaskList
-        },
-
-        methods: {
-
-            // ------------------------------------
-            // handlers: task-editor
-            // ------------------------------------
-
-            _onEditorAddOrUpdate: function () {
-                if (this.editing_task.local_id === null) {
-                    store.dispatch(TaskActions.addTask(this.tasks, this.editing_task));
-                } else {
-                    store.dispatch(TaskActions.updateTask(this.editing_task.unique_id, this.editing_task));
-                }
-                store.dispatch(TaskActions.unsetEditingTask());
-            },
-
-            _onEditorCancel: function () {
-                store.dispatch(TaskActions.unsetEditingTask());
-            }
         }
     };
 </script>

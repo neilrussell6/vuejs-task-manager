@@ -19,6 +19,12 @@ import * as task_constants from './task.constants';
 // text filter
 // --------------------------
 
+export function resetTextFilter () {
+    return {
+        type:     task_constants.ACTION_RESET_TEXT_FILTER
+    };
+}
+
 export function setTextFilter (value) {
     return {
         type:     task_constants.ACTION_SET_TEXT_FILTER,
@@ -29,6 +35,12 @@ export function setTextFilter (value) {
 // --------------------------
 // complete filter
 // --------------------------
+
+export function resetStatusFilter () {
+    return {
+        type:     task_constants.ACTION_RESET_COMPLETE_FILTER
+    };
+}
 
 export function setStatusFilter (value) {
     return {
@@ -148,9 +160,7 @@ export function updateTask (task) {
             throw new Error("Invalid model");
         }
 
-        const _task = task.undoTrash();
-
-        dispatch(updateResource(_task.resource_object))
+        dispatch(updateResource(task.resource_object))
             .catch(() => {
                 dispatch(API_UPDATE_FAILED);
             });
@@ -169,14 +179,13 @@ export function updateTaskLocally (task, data) {
 // tasks
 // --------------------------
 
-export function refreshTasks (project) {
-    return fetchTasks(project);
+export function refreshTasks (project_server_id) {
+    return fetchTasks(project_server_id);
 }
 
-export function fetchTasks (project) {
+export function fetchTasks (project_server_id) {
     return function (dispatch) {
-        let _id = project.server_id;
-        let _endpoint = `projects/${_id}/tasks`;
+        let _endpoint = `projects/${project_server_id}/tasks`;
 
         dispatch(readEndpoint(_endpoint))
             .catch(() => {

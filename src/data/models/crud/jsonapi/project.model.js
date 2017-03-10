@@ -9,6 +9,6 @@ export class Project extends JsonApiModel {
     }
 
     get type () {
-        return 'tasks';
+        return 'projects';
     }
 }

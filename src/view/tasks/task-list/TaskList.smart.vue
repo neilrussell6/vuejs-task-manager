@@ -1,13 +1,13 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
-        <div class="task-controls">
-            <div class="task-control-group">
-                <div class="task-control">
+        <div class="controls task-controls bordered">
+            <div class="control-group">
+                <div class="control">
 
-                    <text-filter :on-change="_onTextFilterUpdate"></text-filter>
+                    <text-filter :on-change="_onTextFilterUpdate" :term="text_filter"></text-filter>
 
                 </div>
-                <div class="task-control right">
+                <div class="control right">
 
                     <status-filter class="status-filter"
                                    :selected-status-filter="status_filter"
@@ -16,15 +16,15 @@
 
                 </div>
             </div>
-            <div class="task-control-group">
-                <div class="task-control">
+            <div class="control-group">
+                <div class="control">
 
-                    <button class="add-task-button" v-on:click="_onNewTask" :disabled="selected_project === null">
+                    <button class="add-task-button" v-on:click="_onNewTask()" :disabled="selected_project === null">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </button>
 
                 </div>
-                <div class="task-control right">
+                <div class="control right">
 
                     <button v-on:click="_onRefreshTasks()" :disabled="selected_project === null">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
@@ -36,30 +36,15 @@
 
         <div class="task-list">
 
-            <template v-if="has_tasks">
+            <common-table v-show="has_tasks"
+                          :data="filtered_tasks"
+                          :config="tasks_table_config"
+                          :cell-configs="tasks_table_cell_configs"
+                          :use-default-headings.once="false"
+                          :data-keys.once="tasks_table_keys"
+            ></common-table>
 
-                <template v-if="status_filter === STATUS_FILTER_TYPE.TRASH">
-                    <common-table :data="filtered_tasks"
-                                  :cell-configs="tasks_trash_table_cell_configs"
-                                  :use-default-headings.once="false"
-                                  :data-keys.once="tasks_trash_table_keys"
-                    ></common-table>
-                </template>
-
-                <template v-else>
-                    <common-table :data="filtered_tasks"
-                                  :cell-configs="tasks_table_cell_configs"
-                                  :use-default-headings.once="false"
-                                  :data-keys.once="tasks_table_keys"
-                                  :editing-item-unique-id="new_task_unique_id"
-                    ></common-table>
-                </template>
-
-            </template>
-
-            <template v-else>
-                <div class="no-results">no results</div>
-            </template>
+            <div class="no-results" v-show="!has_tasks">no results</div>
 
         </div>
     </div>
@@ -100,44 +85,14 @@
             TextFilter
         },
 
-        computed: {
-            filtered_tasks() {
-                let result = this.tasks;
-                result = StatusFilterUtils.filterTasks(result, this.status_filter);
-                result = TextFilterUtils.filterTasks(result, this.text_filter);
-                return result;
-            }
-        },
-
         data: function () {
             return {
-                status_filter: '',
-                selected_project: null,
+                filtered_tasks: [],
                 has_tasks: false,
+                selected_project: null,
+                status_filter: '',
                 tasks: [],
-                tasks_table_cell_configs: {
-                    name: {
-                        type: 'inline-edit',
-                        onBlur: this._onCellEdit,
-                        canEdit: function (data) {
-                            return data.status === 1;
-                        },
-                        conditionalClasses: function (data, editing_item_unique_id) {
-                            let _classes = [];
-
-                            if (data.status === TASK_STATUS.INCOMPLETE) {
-                                _classes.push('editable');
-                            } else if (data.status === TASK_STATUS.COMPLETE) {
-                                _classes.push('complete');
-                            }
-
-                            if (data.unique_id === editing_item_unique_id) {
-                                _classes.push('editing');
-                            }
-
-                            return _classes;
-                        }
-                    },
+                tasks_table_cell_configs_default: {
                     complete: {
                         type: 'button',
                         icon_class: [ 'fa fa-check-square', 'fa fa-square' ],
@@ -149,6 +104,13 @@
                             return false;
                         }
                     },
+                    name: {
+                        type: 'inline-edit',
+                        onBlur: this._onTaskEdit,
+                        canEdit: function (data) {
+                            return data.status === 1;
+                        }
+                    },
                     trash: {
                         type: 'button',
                         icon_class: 'fa fa-trash',
@@ -158,22 +120,25 @@
                         }
                     }
                 },
-                tasks_table_keys: ['name', 'complete', 'trash'],
-                tasks_trash_table_cell_configs: {
-                    undo: {
-                        type: 'button',
-                        icon_class: 'fa fa-undo',
-                        onClick: this._onUndoTrashTask
-                    },
+                tasks_table_cell_configs_trash: {
                     delete: {
                         type: 'button',
                         icon_class: 'fa fa-remove',
                         onClick: this._onDeleteTask
+                    },
+                    undo: {
+                        type: 'button',
+                        icon_class: 'fa fa-undo',
+                        onClick: this._onUndoTrashTask
                     }
                 },
-                tasks_trash_table_keys: ['name', 'undo', 'delete'],
-                text_filter: '',
-                new_task_unique_id: null
+                tasks_table_config: {
+                    // will attach the values of these properties to each row eg. <tr class="status-2">
+                    row_class_properties: [ 'status' ]
+                },
+                tasks_table_keys_default: ['name', 'complete', 'trash'],
+                tasks_table_keys_trash: ['name', 'undo', 'delete'],
+                text_filter: ''
             };
         },
 
@@ -184,6 +149,8 @@
             // ------------------------------------
 
             _onNewTask: function () {
+                store.dispatch(TaskActions.resetTextFilter());
+                store.dispatch(TaskActions.resetStatusFilter());
                 store.dispatch(TaskActions.makeTask());
             },
 
@@ -193,14 +160,14 @@
                     return;
                 }
 
-                store.dispatch(TaskActions.refreshTasks(this.selected_project));
+                store.dispatch(TaskActions.refreshTasks(this.selected_project.server_id));
             },
 
             // ------------------------------------
             // handlers : common-table : tasks
             // ------------------------------------
 
-            _onCellEdit: function (task, key, value, prev_value) {
+            _onTaskEdit: function (task, key, value, prev_value) {
 
                 // if edited value is now invalid
                 if (value === "") {
@@ -232,12 +199,12 @@
                 }
             },
 
-            _onTrashTask: function (task) {
-                store.dispatch(TaskActions.trashTask(task));
-            },
-
             _onToggleTaskComplete: function (task) {
                 store.dispatch(TaskActions.toggleTaskComplete(task));
+            },
+
+            _onTrashTask: function (task) {
+                store.dispatch(TaskActions.trashTask(task));
             },
 
             // ------------------------------------
@@ -282,22 +249,17 @@
 
                 const _state            = store.getState();
 
-                // settings
-                this.STATUS_FILTER_TYPE = STATUS_FILTER_TYPE;
-
                 // state data
                 this.selected_project   = _state.selected_project;
                 this.status_filter      = _state.tasks_status_filter;
                 this.tasks              = _state.tasks;
                 this.text_filter        = _state.tasks_text_filter;
 
-                // setting this will focus the inline-edit column in common-table
-                this.new_task_unique_id = this.tasks.reduce((result, task) => {
-                    return !task.hasOwnProperty('server_id') ? task.unique_id : result;
-                }, null);
-
                 // computed data
-                this.has_tasks          = _state.tasks.length > 0;
+                this.tasks_table_cell_configs = this.status_filter === STATUS_FILTER_TYPE.TRASH ? this.tasks_table_cell_configs_trash : this.tasks_table_cell_configs_default;
+                this.tasks_table_keys   = this.status_filter === STATUS_FILTER_TYPE.TRASH ? this.tasks_table_keys_trash : this.tasks_table_keys_default;
+                this.filtered_tasks     = TextFilterUtils.filterTasks(StatusFilterUtils.filterTasks(this.tasks, this.status_filter), this.text_filter);
+                this.has_tasks          = this.filtered_tasks.length > 0;
             }
         },
 

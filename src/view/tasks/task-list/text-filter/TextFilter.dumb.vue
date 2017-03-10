@@ -1,6 +1,6 @@
 <template>
     <div class="text-filter">
-        <input type="text" v-model="term" placeholder="filter..." debounce="500" />
+        <input type="text" v-model="term_value" placeholder="filter..." debounce="500" />
     </div>
 </template>
 
@@ -12,18 +12,20 @@
     export default {
         data: function () {
             return {
-                term: ''
+                term_value: ''
             };
         },
 
         props: {
-            onChange: {
-                type: Function
-            }
+            term: { type: String, default: '' },
+            onChange: { type: Function }
         },
 
         watch: {
             term: function (value) {
+                this.term_value = value;
+            },
+            term_value: function (value) {
                 this.onChange(value);
             }
         }

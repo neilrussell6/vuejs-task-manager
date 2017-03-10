@@ -1,0 +1,12 @@
+@import '../../app.vars';
+
+.inline-edit {
+
+    input {
+        width: 100%;
+    }
+
+    &.editing {
+        padding-left: 10px;
+    }
+}

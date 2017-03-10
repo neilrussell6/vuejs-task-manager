@@ -9,7 +9,7 @@
 .status-filter-list-item {
     border-right: 1px solid $bdr-color-darker;
     display: inline-block;
-    padding: $small-v-pad $small-h-pad;
+    padding: 0 $small-h-pad;
     text-align: center;
 
     &:first-child {

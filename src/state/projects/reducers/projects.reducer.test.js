@@ -1,12 +1,19 @@
 import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
-// app
+// data
 import { Project } from 'data/models/crud/jsonapi/project.model';
+
+// state
 import { API_READ } from 'state/redux-json-api.constants';
+
+// utils
+import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
 
 // local
 import * as Reducer from './projects.reducer';
+import * as project_constants from '../project.constants';
 
 describe("projects reducer", () => {
 
@@ -20,6 +27,69 @@ describe("projects reducer", () => {
         let _result = Reducer.projects(_state_before, _action);
 
         expect(_result).to.equal(_state_before);
+    });
+
+    describe("ACTION_MAKE_PROJECT", () => {
+
+        it("should add a project to the list", () => {
+
+            const _state_before = [];
+            const _action = {
+                type: project_constants.ACTION_MAKE_PROJECT
+            };
+
+            deepFreeze(_state_before);
+            deepFreeze(_action);
+
+            let _result = Reducer.projects(_state_before, _action);
+
+            expect(_result.length).to.equal(1);
+        });
+    });
+
+    describe("ACTION_REMOVE_PROJECT", () => {
+
+        it("should find project by local_id and remove it from array", () => {
+
+            let _project1 = new Project({ server_id: 1, local_id: 1, text: 'AAAA' });
+            let _project2 = new Project({ server_id: 2, local_id: 2, text: 'BBBB' });
+            let _project3 = new Project({ server_id: 3, local_id: 3, text: 'CCCC' });
+
+            const _state_before = [ _project1, _project2, _project3 ];
+            const _expected = [ _project1, _project3 ];
+            const _action = {
+                type: project_constants.ACTION_REMOVE_PROJECT, project: _project2
+            };
+
+            deepFreeze(_state_before);
+            deepFreeze(_action);
+
+            let _result = Reducer.projects(_state_before, _action);
+
+            expect(_result).to.deep.equal(_expected);
+        });
+    });
+
+    describe("ACTION_UPDATE_PROJECT_LOCALLY", () => {
+
+        it("should update project data using provided local_id and data", () => {
+
+            let _project1 = new Project({ server_id: 1, local_id: 1, text: 'AAAA' });
+            let _project2 = new Project({ server_id: 2, local_id: 2, text: 'BBBB' });
+
+            const _state_before = [ _project1, _project2 ];
+            const _action = {
+                type: project_constants.ACTION_UPDATE_PROJECT_LOCALLY, project: _project2, data: {text: 'XXXX'}
+            };
+
+            deepFreeze(_state_before);
+            deepFreeze(_action);
+            deepFreeze(_action.data);
+
+            let _result = Reducer.projects(_state_before, _action);
+
+            expect(_result[1].text).to.equal('XXXX');
+        });
     });
 
     describe("redux-json-api", () => {
