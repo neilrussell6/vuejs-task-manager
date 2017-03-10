@@ -17,7 +17,7 @@
 
                 <template v-if="message.buttons" v-for="button in message.buttons">
                     <div class="button">
-                        <button v-on:click="_buttonClickHandler(message, button)">{{button.label}}</button>
+                        <button v-on:click="_onButtonClick(message, button)">{{button.label}}</button>
                     </div>
                 </template>
 
@@ -64,12 +64,12 @@
             // handlers
             // ------------------------------------
 
-            _buttonClickHandler: function (message, button) {
-                if (!message.hasOwnProperty('clickHandler')) {
+            _onButtonClick: function (message, button) {
+                if (!message.hasOwnProperty('onClick')) {
                     return;
                 }
 
-                message.clickHandler(button, message.action);
+                message.onClick(button, message.action);
             },
 
             // ------------------------------------

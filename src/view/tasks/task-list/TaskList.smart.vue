@@ -118,7 +118,7 @@
                 tasks_table_cell_configs: {
                     name: {
                         type: 'inline-edit',
-                        blurHandler: this._onCellEdit,
+                        onBlur: this._onCellEdit,
                         canEdit: function (data) {
                             return data.status === 1;
                         },
@@ -144,7 +144,7 @@
                         iconClassIndex: function (data) {
                             return data.status === TASK_STATUS.COMPLETE ? 0 : 1;
                         },
-                        clickHandler: this._onToggleTaskComplete,
+                        onClick: this._onToggleTaskComplete,
                         isDisabled: function (data) {
                             return false;
                         }
@@ -152,7 +152,7 @@
                     trash: {
                         type: 'button',
                         icon_class: 'fa fa-trash',
-                        clickHandler: this._onTrashTask,
+                        onClick: this._onTrashTask,
                         isDisabled: function (data) {
                             return data.status === TASK_STATUS.INCOMPLETE;
                         }
@@ -163,12 +163,12 @@
                     undo: {
                         type: 'button',
                         icon_class: 'fa fa-undo',
-                        clickHandler: this._onUndoTrashTask
+                        onClick: this._onUndoTrashTask
                     },
                     delete: {
                         type: 'button',
                         icon_class: 'fa fa-remove',
-                        clickHandler: this._onDeleteTask
+                        onClick: this._onDeleteTask
                     }
                 },
                 tasks_trash_table_keys: ['name', 'undo', 'delete'],

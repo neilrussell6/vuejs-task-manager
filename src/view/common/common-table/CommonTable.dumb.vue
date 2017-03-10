@@ -24,7 +24,7 @@
                             <td class="cell-button"
                                 :class="_getCellClass(row, key)">
 
-                                <button v-on:click="_buttonClickHandler(row, key)"
+                                <button v-on:click="_onButtonClick(row, key)"
                                         :disabled="_isDisabled(row, key)">
 
                                     <!-- icon -->
@@ -57,7 +57,7 @@
                         <template v-if="cellConfigs[key].type === 'inline-edit'">
 
                             <td class="cell-inline-edit"
-                                v-on:click="_inlineEditClickHandler(row, key)"
+                                v-on:click="_onInlineEditClick(row, key)"
                                 :class="_getCellClass(row, key)">
 
                                 <!-- editing -->
@@ -67,8 +67,8 @@
                                            placeholder="task name"
                                            v-focus="editing_item_unique_id === row.unique_id"
                                            v-model="row[ key ]"
-                                           v-on:keyup.enter="_inlineEditInputEnterHandler()"
-                                           v-on-clickaway="_inlineEditInputClickOutsideHandler"
+                                           v-on:keyup.enter="_onInlineEditEnter()"
+                                           v-on-clickaway="_onInlineEditClickOutside"
                                     />
                                 </template>
 
@@ -158,16 +158,16 @@
             // handlers
             // ------------------------------------
 
-            _buttonClickHandler: function (data, column_key) {
+            _onButtonClick: function (data, column_key) {
 
-                if (!this.cellConfigs[ column_key ].hasOwnProperty('clickHandler')) {
+                if (!this.cellConfigs[ column_key ].hasOwnProperty('onClick')) {
                     return;
                 }
 
-                this.cellConfigs[ column_key ].clickHandler(data);
+                this.cellConfigs[ column_key ].onClick(data);
             },
 
-            _inlineEditClickHandler: function (data, column_key) {
+            _onInlineEditClick: function (data, column_key) {
 
                 if (this.cellConfigs[ column_key ].hasOwnProperty('canEdit') && !this.cellConfigs[ column_key ].canEdit(data)) {
                     return;
@@ -179,27 +179,27 @@
                 _vm.editing_column_key = column_key;
             },
 
-            _inlineEditInputEnterHandler: function () {
+            _onInlineEditEnter: function () {
 
                 if (_vm.editing_item === null) {
                     return;
                 }
 
-                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
-                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('onBlur')) {
+                    this.cellConfigs[ _vm.editing_column_key ].onBlur(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
                 }
 
                 this._resetEditing();
             },
 
-            _inlineEditInputClickOutsideHandler: function () {
+            _onInlineEditClickOutside: function () {
 
                 if (_vm.editing_item === null) {
                     return;
                 }
 
-                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('blurHandler')) {
-                    this.cellConfigs[ _vm.editing_column_key ].blurHandler(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
+                if (this.cellConfigs[ _vm.editing_column_key ].hasOwnProperty('onBlur')) {
+                    this.cellConfigs[ _vm.editing_column_key ].onBlur(_vm.editing_item, _vm.editing_column_key, _vm.editing_item[ _vm.editing_column_key ], _vm.editing_item_before_value);
                 }
 
                 this._resetEditing();

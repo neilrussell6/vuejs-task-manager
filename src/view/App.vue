@@ -157,7 +157,7 @@
                     }
 
                     if (this.message.hasOwnProperty('buttons')) {
-                        this.message.clickHandler = this._onMessageButtonClick.bind(this);
+                        this.message.onClick = this._onMessageButtonClick.bind(this);
                     }
                 }
             }
