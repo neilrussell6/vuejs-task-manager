@@ -61,7 +61,8 @@
                 has_projects: false,
                 projects: [],
                 selected_project: null,
-                selected_project_local_id: null
+                selected_project_local_id: null,
+                user: null
             };
         },
 
@@ -113,7 +114,7 @@
             },
 
             _onRefreshProjects: function () {
-                store.dispatch(ProjectActions.refreshProjects());
+                store.dispatch(ProjectActions.refreshProjects(this.user.server_id));
             },
 
             // ----------------------
@@ -127,6 +128,7 @@
                 // state data
                 this.projects           = _state.projects;
                 this.selected_project   = _state.selected_project;
+                this.user               = _state.user;
 
                 // computed data
                 this.selected_project_local_id = this.selected_project !== null ? this.selected_project.local_id : null;

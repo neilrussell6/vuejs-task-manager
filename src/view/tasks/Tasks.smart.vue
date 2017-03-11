@@ -1,16 +1,13 @@
 <template>
-    <div class="wrapper">
+    <div class="body">
 
-        <div class="body">
-            <div class="column column-left">
-                <project-list></project-list>
-            </div>
-
-            <div class="column column-right">
-                <task-list></task-list>
-            </div>
+        <div class="column column-left bordered">
+            <project-list></project-list>
         </div>
 
+        <div class="column column-right bordered">
+            <task-list></task-list>
+        </div>
     </div>
 </template>
 

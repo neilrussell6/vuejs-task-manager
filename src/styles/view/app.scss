@@ -14,6 +14,10 @@
     position: relative;
 }
 
+.highlight {
+    color: $text-color-legend-highlight;
+}
+
 // ----------------------------------
 // html
 // ----------------------------------
@@ -87,10 +91,29 @@ button {
         cursor: default;
         pointer-events: none;
     }
+
+    &.no-bg {
+        background: transparent;
+
+        &:hover {
+            background: transparent;
+            color: $link-color-hover;
+
+            span {
+                text-decoration: underline;
+            }
+        }
+
+        i {
+            padding-left: 10px;
+            font-size: 1.1em;
+        }
+    }
 }
 
 input {
-    &[type='text'] {
+    &[type='text'],
+    &[type='password'] {
         background-color: $input-bg-color;
         border: 0;
         color: $input-text-color;
@@ -201,13 +224,14 @@ input {
 // ----------------------------------
 
 .main {
-    background-color: $bg-color-med;
-    box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
-    box-sizing: border-box;
     margin: ($big-v-pad * 2) auto $big-v-pad;
-    overflow: auto;
+    //overflow: auto;
     position: relative;
     transition: filter .2s ease-out;
+
+    .wrapper {
+        position: relative;
+    }
 
     .overlay {
         background-color: rgba(desaturate(darken($dark-blue, 15%), 35%), .3);
@@ -232,28 +256,60 @@ input {
     }
 
     .body {
+        background-color: $bg-color-med;
+        box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
         box-sizing: border-box;
         display: flex;
         min-height: 600px;
 
+        &.bordered {
+            border: 1px solid $bdr-color-med;
+            box-sizing: border-box;
+        }
+
         .column-left {
             align-items: stretch;
             background-color: $bg-color-dark;
-            border: 1px solid $bdr-color-med;
-            border-right-style: none;
             box-sizing: border-box;
             clear: both;
             flex: 1;
             float: left;
             padding-bottom: $big-v-pad;
             padding-top: $big-v-pad;
+
+            &.bordered {
+                border: 1px solid $bdr-color-med;
+                border-right-style: none;
+            }
         }
 
         .column-right {
-            border: 1px solid $bdr-color-med;
-            box-sizing: border-box;
             float: right;
             padding: $big-v-pad $big-h-pad;
+
+            &.bordered {
+                border: 1px solid $bdr-color-med;
+                box-sizing: border-box;
+            }
+        }
+    }
+
+    .footer {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+        color: $text-color-legend;
+
+        .column {
+            padding: $big-v-pad 0;
+        }
+
+        .column-left {
+            // ...
+        }
+
+        .column-right {
+            // ...
         }
     }
 }
@@ -266,13 +322,13 @@ input {
         margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 1200px;
 
-        .column-left {
+       .body .column-left {
             padding-bottom: $xbig-v-pad;
             padding-top: $xbig-v-pad;
             width: 340px;
         }
 
-        .column-right {
+        .body .column-right {
             padding: $xbig-v-pad $xbig-h-pad;
             width: calc(100% - 340px);
         }
@@ -287,13 +343,13 @@ input {
         margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 100%;
 
-        .column-left {
+        .body .column-left {
             padding-bottom: $big-v-pad;
             padding-top: $big-v-pad;
             width: 260px;
         }
 
-        .column-right {
+        .body .column-right {
             padding: $big-v-pad $big-h-pad;
             width: calc(100% - 260px);
         }
@@ -305,11 +361,11 @@ input {
 @media screen and (max-width: 900px) {
 
     .main {
-        .column-left {
+        .body.column-left {
             width: 200px;
         }
 
-        .column-right {
+        .body.column-right {
             width: calc(100% - 200px);
         }
     }
@@ -385,7 +441,7 @@ input {
             color: $text-color-selected;
         }
 
-        .inline-edit {
+        &.inline-edit {
 
             input {
                 width: 100%;

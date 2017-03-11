@@ -70,6 +70,12 @@ export function makeMessageLabel (endpoint_data, endpoint_type, settings, singul
                 }
             }
 
+        // related no id (eg. access_tokens/owner);
+        // relationships no id (eg. access_tokens/relationships/owner);
+        case ENDPOINT_TYPES.RELATED_NO_ID:
+        case ENDPOINT_TYPES.RELATIONSHIPS_NO_ID:
+            return `${endpoint_data.related}`;
+
         default:
             return null;
     }

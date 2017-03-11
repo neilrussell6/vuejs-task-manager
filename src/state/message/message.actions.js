@@ -1,5 +1,5 @@
 // local
-import * as settings from './message.constants';
+import * as constants from './message.constants';
 
 // --------------------------
 // delete
@@ -7,13 +7,13 @@ import * as settings from './message.constants';
 
 export function cancelDelete () {
     return {
-        type: settings.ACTION_CANCEL_DELETE
+        type: constants.ACTION_CANCEL_DELETE
     };
 }
 
 export function requestDeleteConfirmation (data, callback) {
     return {
-        type: settings.ACTION_REQUEST_DELETE_CONFIRMATION,
+        type: constants.ACTION_REQUEST_DELETE_CONFIRMATION,
         data,
         callback
     };

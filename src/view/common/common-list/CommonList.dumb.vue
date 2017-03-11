@@ -129,7 +129,7 @@
                 this.editing_item_local_id = data.local_id;
             },
 
-            _onInlineEditEnter: function () {
+                _onInlineEditEnter: function () {
 
                 if (this.editing_item === null) {
                     return;

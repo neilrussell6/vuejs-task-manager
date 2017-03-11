@@ -6,7 +6,9 @@ export class User extends JsonApiModel {
         return {
             email: null,
             first_name: null,
-            last_name: null
+            last_name: null,
+            is_authenticated: false,
+            access_token: null
         };
     }
 

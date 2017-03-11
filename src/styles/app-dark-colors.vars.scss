@@ -27,10 +27,12 @@ $bdr-color-med: darken($med-grey, 5%);;
 $bdr-color-light: $light-grey;
 
 // text
-$text-color-title: desaturate(darken($light-yellow, 5%), 40%);;
+$text-color-title: desaturate(darken($light-yellow, 5%), 40%);
 $text-color-dark: $dark-grey;
 $text-color-med: $med-grey;
 $text-color-selected: $light-yellow;
+$text-color-legend: desaturate(darken($light-yellow, 5%), 40%);
+$text-color-legend-highlight: $light-yellow;
 
 // link
 $link-color: $light-blue;

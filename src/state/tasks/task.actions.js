@@ -13,7 +13,7 @@ import {
 import { JsonApiModel } from 'data/models/jsonapi.model';
 
 // local
-import * as task_constants from './task.constants';
+import * as constants from './task.constants';
 
 // --------------------------
 // text filter
@@ -21,13 +21,13 @@ import * as task_constants from './task.constants';
 
 export function resetTextFilter () {
     return {
-        type:     task_constants.ACTION_RESET_TEXT_FILTER
+        type:     constants.ACTION_RESET_TEXT_FILTER
     };
 }
 
 export function setTextFilter (value) {
     return {
-        type:     task_constants.ACTION_SET_TEXT_FILTER,
+        type:     constants.ACTION_SET_TEXT_FILTER,
         value:    value
     };
 }
@@ -38,13 +38,13 @@ export function setTextFilter (value) {
 
 export function resetStatusFilter () {
     return {
-        type:     task_constants.ACTION_RESET_COMPLETE_FILTER
+        type:     constants.ACTION_RESET_COMPLETE_FILTER
     };
 }
 
 export function setStatusFilter (value) {
     return {
-        type:     task_constants.ACTION_SET_COMPLETE_FILTER,
+        type:     constants.ACTION_SET_COMPLETE_FILTER,
         value:    value
     };
 }
@@ -94,13 +94,13 @@ export function deleteTask (task) {
 
 export function makeTask () {
     return {
-        type:     task_constants.ACTION_MAKE_TASK
+        type:     constants.ACTION_MAKE_TASK
     };
 }
 
 export function removeTask (task) {
     return {
-        type: task_constants.ACTION_REMOVE_TASK,
+        type: constants.ACTION_REMOVE_TASK,
         task
     };
 }
@@ -169,7 +169,7 @@ export function updateTask (task) {
 
 export function updateTaskLocally (task, data) {
     return {
-        type: task_constants.ACTION_UPDATE_TASK_LOCALLY,
+        type: constants.ACTION_UPDATE_TASK_LOCALLY,
         task,
         data
     };
@@ -185,7 +185,8 @@ export function refreshTasks (project_server_id) {
 
 export function fetchTasks (project_server_id) {
     return function (dispatch) {
-        let _endpoint = `projects/${project_server_id}/tasks`;
+        
+        const _endpoint = `projects/${project_server_id}/tasks`;
 
         dispatch(readEndpoint(_endpoint))
             .catch(() => {

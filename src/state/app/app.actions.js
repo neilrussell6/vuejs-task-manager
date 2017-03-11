@@ -1,16 +1,16 @@
 // local
-import * as settings from './app.constants';
+import * as constants from './app.constants';
 
 // --------------------------
 
 export function toggleArtificialDelay () {
     return {
-        type: settings.ACTION_TOGGLE_ARTIFICIAL_DELAY
+        type: constants.ACTION_TOGGLE_ARTIFICIAL_DELAY
     };
 }
 
 export function toggleMinimalMessage () {
     return {
-        type: settings.ACTION_TOGGLE_MESSAGE_MINIMAL
+        type: constants.ACTION_TOGGLE_MESSAGE_MINIMAL
     };
 }

@@ -16,11 +16,8 @@ import * as TaskActions from 'state/tasks/task.actions';
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
-// utils
-import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
-
 // local
-import * as project_constants from './project.constants';
+import * as constants from './project.constants';
 
 // --------------------------
 // project
@@ -61,20 +58,20 @@ export function deleteProject (project) {
 
 export function makeProject () {
     return {
-        type: project_constants.ACTION_MAKE_PROJECT
+        type: constants.ACTION_MAKE_PROJECT
     };
 }
 
 export function removeProject (project) {
     return {
-        type: project_constants.ACTION_REMOVE_PROJECT,
+        type: constants.ACTION_REMOVE_PROJECT,
         project
     };
 }
 
 export function selectProject (data) {
     return {
-        type:    project_constants.ACTION_SELECT_PROJECT,
+        type:    constants.ACTION_SELECT_PROJECT,
         data:    data
     };
 }
@@ -97,13 +94,13 @@ export function updateProject (project) {
 // projects
 // --------------------------
 
-export function refreshProjects () {
-    return fetchProjects();
+export function refreshProjects (user_id) {
+    return fetchProjects(user_id);
 }
 
-export function fetchProjects () {
+export function fetchProjects (user_id) {
     return function (dispatch) {
-        const _endpoint = 'users/1/projects';
+        const _endpoint = `users/${user_id}/projects`;
 
         dispatch(readEndpoint(_endpoint))
             .catch(() => {

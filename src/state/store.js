@@ -11,17 +11,21 @@ import { tasks } from 'state/tasks/reducers/tasks.reducer';
 import { message } from 'state/message/reducers/message.reducer';
 import { tasks_status_filter } from 'state/tasks/reducers/tasks-status-filter.reducer';
 import { tasks_text_filter } from 'state/tasks/reducers/tasks-text-filter.reducer';
+import { user } from 'state/user/reducers/user.reducer';
+
+// middleware
 import { delayFetchMiddleware } from './delay-fetch/delay-fetch.middleware';
 
 const reducer = combineReducers({
-    app,
     api,
+    app,
     projects,
     message,
     selected_project,
     tasks,
     tasks_status_filter,
-    tasks_text_filter
+    tasks_text_filter,
+    user
 });
 
 const loggerMiddleware = createLogger();

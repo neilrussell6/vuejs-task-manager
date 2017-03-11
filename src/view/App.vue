@@ -47,9 +47,22 @@
 
         <section class="main" :class="{disabled: is_disabled}">
 
-            <div class="overlay"></div>
+            <div class="wrapper">
+                <div class="overlay"></div>
+                <tasks v-if="user_is_authenticated"></tasks>
+                <login v-else :on-submit="_onUserLogin"></login>
+            </div>
 
-            <tasks></tasks>
+            <footer class="footer">
+                <div class="column column-left">
+                    contact: <span class="highlight">neilrussell6@gmail.com</span>
+                </div>
+                <div class="column column-right">
+                    <button class="no-bg" v-on:click="_onUserLogout()">
+                        <span>logout</span><i class="fa fa-sign-out" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </footer>
 
         </section>
 
@@ -63,12 +76,13 @@
 
     // actions
     import * as MessageActions from 'state/message/message.actions';
-    import * as ProjectsActions from 'state/projects/project.actions';
     import * as AppActions from 'state/app/app.actions';
+    import * as UserActions from 'state/user/user.actions';
 
     // components
     import CommonMessage from 'view/common/common-message/CommonMessage.dumb';
     import Tasks from './tasks/Tasks.smart';
+    import Login from './login/Login.dumb';
 
     // store
     import { store } from 'state/store';
@@ -86,7 +100,8 @@
 
         components: {
             CommonMessage,
-            Tasks
+            Tasks,
+            Login
         },
 
         data: function () {
@@ -95,7 +110,8 @@
                 previous_message: null,
                 is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
                 is_disabled: false,
-                is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT
+                is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT,
+                user_is_authenticated: false
             };
         },
 
@@ -122,12 +138,32 @@
                 store.dispatch(AppActions.toggleMinimalMessage());
             },
 
+            // ------------------------------------
+            // handlers: login
+            // ------------------------------------
+
+            _onUserLogin: function (credentials) {
+                store.dispatch(UserActions.loginUser(credentials));
+            },
+
+            // ------------------------------------
+            // handlers: login
+            // ------------------------------------
+
+            _onUserLogout: function () {
+                store.dispatch(UserActions.logoutUser());
+            },
+
             // ----------------------
             // utils
             // ----------------------
 
             _updateView: function () {
                 const _state = store.getState();
+
+                // user
+
+                this.user_is_authenticated = _state.user.is_authenticated;
 
                 // app
 
@@ -166,14 +202,13 @@
         created: function () {
             _vm = this;
             store.subscribe(this._updateView.bind(this));
-            store.dispatch(setEndpointHost('http://127.0.0.1:8000'));
-            store.dispatch(setEndpointPath('/api'));
+
+            store.dispatch(setEndpointHost(app_settings.DOMAIN));
+            store.dispatch(setEndpointPath(app_settings.API_PREFIX));
             store.dispatch(setHeaders({
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9cL2FwaVwvYWNjZXNzX3Rva2VucyIsImlhdCI6MTQ4ODc5MDM3OCwiZXhwIjoxODQ4NzkwMzc4LCJuYmYiOjE0ODg3OTAzNzgsImp0aSI6IjI0NTVjYTY4MWViOWQwNWQ3MzU5MTgzMzBjZGU0NjEyIn0.KhIHnlieyeiPuio_10rLK978cHg0flFR32IRNOSlNJg',
                 'Content-Type': 'application/vnd.api+json',
                 'Accept': 'application/vnd.api+json'
             }));
-            store.dispatch(ProjectsActions.refreshProjects());
         }
     };
 
