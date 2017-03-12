@@ -39,6 +39,18 @@ Make commands
  * **push** – Pushes local repository to GitHub.
  * **publish** – Creates a new GitHub release. [ MESSAGE ]
 
+Roadmap
+-------
+
+ * Save user login state in local storage
+ * Add ability to delete projects
+ * Add ability to edit project name in mobile view
+ * Add pagination for tasks
+ * Create build for native mobile
+ * Create profile section for managing account
+ * Add routing and sync state with url routes (eg. /projects/101/tasks)
+ * Create signup for public use
+
 License
 -------
 
