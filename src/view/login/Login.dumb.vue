@@ -25,8 +25,8 @@
     export default {
         data: function () {
             return {
-                email: null,
-                password: null
+                email: "neilrussell6@gmail.com",//null,
+                password: "admin"//null
             };
         },
 

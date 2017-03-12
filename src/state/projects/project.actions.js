@@ -96,6 +96,14 @@ export function updateProject (project) {
     };
 }
 
+export function updateProjectLocally (project, data) {
+    return {
+        type: constants.ACTION_UPDATE_PROJECT_LOCALLY,
+        project,
+        data
+    };
+}
+
 // --------------------------
 // projects
 // --------------------------

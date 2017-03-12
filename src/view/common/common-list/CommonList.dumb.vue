@@ -129,7 +129,7 @@
                 this.editing_item_local_id = data.local_id;
             },
 
-                _onInlineEditEnter: function () {
+            _onInlineEditEnter: function () {
 
                 if (this.editing_item === null) {
                     return;
@@ -193,7 +193,6 @@
                 this.editing_item = null;
                 this.editing_item_before_value = null;
                 this.editing_item_local_id = null;
-                this.selected_item_local_id = null;
             }
         }
     };
