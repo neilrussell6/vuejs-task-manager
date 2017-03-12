@@ -33,6 +33,12 @@
             padding-top: $med-v-pad;
             width: 100%;
         }
+
+        button {
+            &:disabled {
+                color: $text-color-med;
+            }
+        }
     }
 }
 

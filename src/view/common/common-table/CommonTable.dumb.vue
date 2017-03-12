@@ -165,6 +165,10 @@
                     this.editing_item_before_value = _new_item[ this.defaultEditingColumnKey ];
                     this.editing_item_local_id = _new_item.local_id;
                     this.editing_column_key = this.defaultEditingColumnKey;
+
+                    if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
+                        this.cellConfigs[ this.editing_column_key ].onEdit(this.editing_item);
+                    }
                 }
             }
         },
@@ -194,6 +198,10 @@
                 this.editing_item_before_value = data[ column_key ];
                 this.editing_item_local_id = data.local_id;
                 this.editing_column_key = column_key;
+
+                if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
+                    this.cellConfigs[ this.editing_column_key ].onEdit(this.editing_item);
+                }
             },
 
             _onInlineEditEnter: function () {

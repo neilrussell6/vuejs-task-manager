@@ -6,7 +6,9 @@
             <div class="control-group">
                 <div class="control control-left">
 
-                    <button class="add-task-button" v-on:click="_onNewProject()">
+                    <button class="add-task-button"
+                            v-on:click="_onNewProject()"
+                            :disabled="is_editing_project">
                         <span class="label">NEW PROJECT</span>
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </button>
@@ -28,8 +30,9 @@
             <common-list :data="projects"
                          label-field="name"
                          :selected-unique-id="selected_project_local_id"
+                         :on-blur="_onProjectUpdate"
+                         :on-edit="_onProjectEdit"
                          :on-select="_onProjectSelection"
-                         :on-blur="_onProjectEdit"
             ></common-list>
 
         </template>
@@ -61,6 +64,7 @@
         data: function () {
             return {
                 has_projects: false,
+                is_editing_project: false,
                 projects: [],
                 selected_project: null,
                 selected_project_local_id: null,
@@ -83,7 +87,13 @@
                 store.dispatch(TaskActions.fetchTasks(this.selected_project.server_id));
             },
 
-            _onProjectEdit: function (project, key, value, prev_value) {
+            _onProjectEdit: function (project) {
+                this.is_editing_project = true;
+            },
+
+            _onProjectUpdate: function (project, key, value, prev_value) {
+
+                this.is_editing_project = false;
 
                 // if edited value is now invalid
                 if (value === "") {

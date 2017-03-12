@@ -75,6 +75,7 @@
             focusNewItem: { type: Boolean, default: true },
             labelField: { type: String },
             onBlur: { type: Function },
+            onEdit: { type: Function },
             onSelect: { type: Function },
             selectedUniqueId: { type: String, default: null }
         },
@@ -110,6 +111,10 @@
                     this.editing_item_before_value = _new_item[ this.labelField ];
                     this.editing_item_local_id = _new_item.local_id;
                     this.selected_item_local_id = _new_item.local_id;
+
+                    if (typeof this.onEdit !== 'undefined') {
+                        this.onEdit(this.editing_item);
+                    }
                 }
             },
             selectedUniqueId: function (value) {
@@ -127,6 +132,10 @@
                 this.editing_item = data;
                 this.editing_item_before_value = data[ this.labelField ];
                 this.editing_item_local_id = data.local_id;
+
+                if (typeof this.onEdit !== 'undefined') {
+                    this.onEdit(this.editing_item);
+                }
             },
 
             _onInlineEditEnter: function () {

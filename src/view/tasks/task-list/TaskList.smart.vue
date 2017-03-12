@@ -45,7 +45,9 @@
             <div class="control-group">
                 <div class="control control-left">
 
-                    <button class="add-task-button" v-on:click="_onNewTask()" :disabled="selected_project === null">
+                    <button class="add-task-button"
+                            v-on:click="_onNewTask()"
+                            :disabled="selected_project === null || is_editing_task">
                         <i class="fa fa-plus" aria-hidden="true"></i>
                         <span class="label">NEW TASK</span>
                     </button>
@@ -53,7 +55,8 @@
                 </div>
                 <div class="control control-right">
 
-                    <button v-on:click="_onRefreshTasks()" :disabled="selected_project === null">
+                    <button v-on:click="_onRefreshTasks()"
+                            :disabled="selected_project === null">
                         <span class="label">REFRESH TASKS</span>
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
@@ -118,6 +121,7 @@
             return {
                 filtered_tasks: [],
                 has_tasks: false,
+                is_editing_task: false,
                 selected_project: null,
                 status_filter: '',
                 tasks: [],
@@ -135,7 +139,8 @@
                     },
                     name: {
                         type: 'inline-edit',
-                        onBlur: this._onTaskEdit,
+                        onEdit: this._onTaskEdit,
+                        onBlur: this._onTaskUpdate,
                         canEdit: function (data) {
                             return data.status === 1;
                         }
@@ -200,7 +205,13 @@
             // handlers : common-table : tasks
             // ------------------------------------
 
-            _onTaskEdit: function (task, key, value, prev_value) {
+            _onTaskEdit: function (task) {
+                this.is_editing_task = true;
+            },
+
+            _onTaskUpdate: function (task, key, value, prev_value) {
+
+                this.is_editing_task = false;
 
                 // if edited value is now invalid
                 if (value === "") {
