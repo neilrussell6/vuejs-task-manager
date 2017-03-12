@@ -91,6 +91,25 @@ button {
         cursor: default;
         pointer-events: none;
     }
+}
+
+input {
+    &[type='text'],
+    &[type='password'] {
+        background-color: $input-bg-color;
+        border: 0;
+        color: $input-text-color;
+        padding: $small-v-pad $small-h-pad;
+
+        &:focus {
+            color: $input-text-color-focus;
+        }
+    }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-xs) {
 
     &.no-bg {
         background: transparent;
@@ -105,22 +124,8 @@ button {
         }
 
         i {
-            padding-left: 10px;
             font-size: 1.1em;
-        }
-    }
-}
-
-input {
-    &[type='text'],
-    &[type='password'] {
-        background-color: $input-bg-color;
-        border: 0;
-        color: $input-text-color;
-        padding: $small-v-pad $small-h-pad;
-
-        &:focus {
-            color: $input-text-color-focus;
+            padding-left: 10px;
         }
     }
 }
@@ -156,11 +161,10 @@ input {
 .header {
     align-items: center;
     display: flex;
-    justify-content: left;
+    justify-content: center;
     transition: justify-content .5s linear;
 
     .title {
-        margin-left: $big-h-pad;
         opacity: 1;
         transition: opacity .5s linear;
 
@@ -172,7 +176,7 @@ input {
         h1 {
             color: $text-color-title;
             font-family: 'TlwgTypewriter', serif;
-            font-size: 22px;
+            font-size: 20px;
             text-shadow: rgba($light-yellow, .2) 0 10px 10px;
         }
 
@@ -180,34 +184,58 @@ input {
             color: darken($text-color-title, 20%);
             font-family: 'TlwgTypewriter', serif;
             font-size: 14px;
-            margin-right: -$big-h-pad;
+            margin-right: -$med-h-pad;
             margin-top: -14px;
             text-align: right;
         }
     }
 
     .controls {
-        background-color: $bg-color-dark;
-        border: 1px solid $bdr-color-dark;
-        box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
-        opacity: 1;
-        padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
-        position: absolute;
-        right: 0;
-        top: 0;
-        transition: opacity .5s linear;
+        display: none;
+    }
+}
 
-        &.disabled {
-            opacity: .2;
+// > sm
+
+@media screen and (min-width: $breakpoint-xs) {
+
+    .header {
+        justify-content: left;
+
+        .title {
+            margin-left: $big-h-pad;
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .sub {
+                margin-right: -$big-h-pad;
+            }
+        }
+
+        .controls {
+            background-color: $bg-color-dark;
+            border: 1px solid $bdr-color-dark;
+            box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
+            opacity: 1;
+            padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
+            position: absolute;
+            right: 0;
+            top: 0;
             transition: opacity .5s linear;
+
+            &.disabled {
+                opacity: .2;
+                transition: opacity .5s linear;
+            }
         }
     }
 }
 
-
 // > 1000
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: $breakpoint-md) {
 
     .header {
         justify-content: center;
@@ -224,10 +252,17 @@ input {
 // ----------------------------------
 
 .main {
-    margin: ($big-v-pad * 2) auto $big-v-pad;
+    margin: $big-v-pad auto;
     //overflow: auto;
     position: relative;
     transition: filter .2s ease-out;
+
+    .no-results {
+        box-sizing: border-box;
+        color: $text-color-med;
+        padding: $small-v-pad $small-h-pad;
+        text-align: center;
+    }
 
     .wrapper {
         position: relative;
@@ -257,116 +292,203 @@ input {
 
     .body {
         background-color: $bg-color-med;
-        box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
-        box-sizing: border-box;
-        display: flex;
-        min-height: 600px;
+        min-height: 400px;
 
         &.bordered {
             border: 1px solid $bdr-color-med;
             box-sizing: border-box;
         }
 
-        .column-left {
-            align-items: stretch;
-            background-color: $bg-color-dark;
-            box-sizing: border-box;
-            clear: both;
-            flex: 1;
-            float: left;
-            padding-bottom: $big-v-pad;
-            padding-top: $big-v-pad;
+        &.project-selected {
+            .column-left {
+                display: none;
+            }
 
+            .column-right {
+                display: block;
+            }
+        }
+
+        .column-left {
             &.bordered {
                 border: 1px solid $bdr-color-med;
+                border-bottom: 0;
                 border-right-style: none;
             }
         }
 
         .column-right {
-            float: right;
-            padding: $big-v-pad $big-h-pad;
+            display: none;
 
             &.bordered {
                 border: 1px solid $bdr-color-med;
+                border-bottom: 0;
                 box-sizing: border-box;
             }
         }
     }
 
     .footer {
-        display: flex;
         align-items: stretch;
-        justify-content: space-between;
         color: $text-color-legend;
+        display: flex;
+        justify-content: space-between;
 
         .column {
             padding: $big-v-pad 0;
         }
 
         .column-left {
-            // ...
+            padding-left: $med-h-pad;
         }
 
         .column-right {
-            // ...
+            padding-right: $med-h-pad;
+        }
+    }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-xs) {
+
+    .main {
+        margin: ($big-v-pad * 2) auto $big-v-pad;
+
+        .no-results {
+            text-align: left;
+        }
+
+        .body {
+            box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
+            box-sizing: border-box;
+            display: flex;
+            min-height: 600px;
+
+            &.project-selected {
+                .column-left {
+                    display: block;
+                }
+
+                .column-right {
+                    display: block;
+                }
+            }
+
+            .column-left {
+                align-items: stretch;
+                background-color: $bg-color-dark;
+                box-sizing: border-box;
+                clear: both;
+                display: block;
+                flex: 1;
+                float: left;
+                padding-bottom: $big-v-pad;
+                padding-top: $big-v-pad;
+            }
+
+            .column-right {
+                display: block;
+                float: right;
+                padding: $big-v-pad $big-h-pad;
+
+                &.bordered {
+                    border: 1px solid $bdr-color-med;
+                }
+            }
+        }
+
+        .footer {
+
+            .column-left {
+                padding-left: $med-h-pad;
+            }
+
+            .column-right {
+                padding-right: $med-h-pad;
+
+                button {
+                    padding-right: 0;
+                }
+            }
+        }
+    }
+}
+
+// sm < 899
+
+@media screen and (min-width: $breakpoint-xs) and (max-width: ($breakpoint-sm - 1px)) {
+
+    .main {
+        .body {
+            .column-left {
+                width: 200px;
+            }
+
+            .column-right {
+                width: calc(100% - 200px);
+            }
+        }
+    }
+}
+
+// sm < 1199
+
+@media screen and (min-width: $breakpoint-xs) and (max-width: ($breakpoint-lg - 1px)) {
+
+    .main {
+        margin: ($big-v-pad * 2) auto $big-v-pad;
+        width: 100%;
+
+        .body {
+            .column-left {
+                padding-bottom: $big-v-pad;
+                padding-top: $big-v-pad;
+                width: 260px;
+            }
+
+            .column-right {
+                padding: $big-v-pad $big-h-pad;
+                width: calc(100% - 260px);
+            }
         }
     }
 }
 
 // > 1201
 
-@media screen and (min-width: 1201px) {
+@media screen and (min-width: $breakpoint-lg) {
 
     .main {
         margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 1200px;
 
-       .body .column-left {
-            padding-bottom: $xbig-v-pad;
-            padding-top: $xbig-v-pad;
-            width: 340px;
+        .body {
+            .column-left {
+                padding-bottom: $xbig-v-pad;
+                padding-top: $xbig-v-pad;
+                width: 340px;
+            }
+
+            .column-right {
+                padding: $xbig-v-pad $xbig-h-pad;
+                width: calc(100% - 340px);
+            }
         }
 
-        .body .column-right {
-            padding: $xbig-v-pad $xbig-h-pad;
-            width: calc(100% - 340px);
-        }
-    }
-}
+        .footer {
 
-// < 1200
+            .column-left {
+                padding-left: 0;
+            }
 
-@media screen and (max-width: 1200px) {
+            .column-right {
+                padding-right: 0;
 
-    .main {
-        margin: ($big-v-pad * 2) auto $big-v-pad;
-        width: 100%;
-
-        .body .column-left {
-            padding-bottom: $big-v-pad;
-            padding-top: $big-v-pad;
-            width: 260px;
-        }
-
-        .body .column-right {
-            padding: $big-v-pad $big-h-pad;
-            width: calc(100% - 260px);
-        }
-    }
-}
-
-// < 900
-
-@media screen and (max-width: 900px) {
-
-    .main {
-        .body.column-left {
-            width: 200px;
-        }
-
-        .body.column-right {
-            width: calc(100% - 200px);
+                button {
+                    padding-right: 0;
+                }
+            }
         }
     }
 }

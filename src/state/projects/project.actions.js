@@ -69,6 +69,12 @@ export function removeProject (project) {
     };
 }
 
+export function deselectProject () {
+    return {
+        type:    constants.ACTION_DESELECT_PROJECT
+    };
+}
+
 export function selectProject (data) {
     return {
         type:    constants.ACTION_SELECT_PROJECT,

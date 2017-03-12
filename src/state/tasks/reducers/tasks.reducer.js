@@ -3,6 +3,7 @@ import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // state
 import * as api_constants from 'state/redux-json-api.constants';
+import * as project_constants from 'state/projects/project.constants';
 
 // utils
 import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
@@ -173,6 +174,9 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
                 ...[ _item ],
                 ...list.slice(_index + 1)
             ];
+
+        case project_constants.ACTION_DESELECT_PROJECT:
+            return task_constants.DEFAULT_TASK_LIST_STATE;
 
         default:
             return list;

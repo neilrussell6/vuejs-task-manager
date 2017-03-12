@@ -1,13 +1,37 @@
 <template xmlns:v-on="http://www.w3.org/1999/xhtml">
-    <div>
+    <div class="task-list">
+
+        <!-- controls -->
         <div class="controls task-controls bordered">
-            <div class="control-group">
-                <div class="control">
+
+            <!-- small filter control & back button -->
+            <div class="control-group small-controls">
+                <div class="control control-left text-filter">
+
+                    <button class="add-task-button" v-on:click="_onBack()">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                        <span class="label">BACK</span>
+                    </button>
+
+                </div>
+                <div class="control control-right status-filter">
+
+                    <button class="add-task-button" v-on:click="_onNewProject()">
+                        <span class="label">TRASH</span>
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- big filter controls -->
+            <div class="control-group big-controls">
+                <div class="control control-left text-filter">
 
                     <text-filter :on-change="_onTextFilterUpdate" :term="text_filter"></text-filter>
 
                 </div>
-                <div class="control right">
+                <div class="control control-right status-filter">
 
                     <status-filter class="status-filter"
                                    :selected-status-filter="status_filter"
@@ -16,17 +40,21 @@
 
                 </div>
             </div>
+
+            <!-- task controls -->
             <div class="control-group">
-                <div class="control">
+                <div class="control control-left">
 
                     <button class="add-task-button" v-on:click="_onNewTask()" :disabled="selected_project === null">
                         <i class="fa fa-plus" aria-hidden="true"></i>
+                        <span class="label">NEW TASK</span>
                     </button>
 
                 </div>
-                <div class="control right">
+                <div class="control control-right">
 
                     <button v-on:click="_onRefreshTasks()" :disabled="selected_project === null">
+                        <span class="label">REFRESH TASKS</span>
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
 
@@ -56,6 +84,7 @@
     // actions
     import * as MessageActions from 'state/message/message.actions';
     import * as TaskActions from 'state/tasks/task.actions';
+    import * as ProjectActions from 'state/projects/project.actions';
 
     // components
     import CommonList from 'view/common/common-list/CommonList.dumb';
@@ -147,6 +176,10 @@
             // ------------------------------------
             // handlers : controls
             // ------------------------------------
+
+            _onBack: function () {
+                store.dispatch(ProjectActions.deselectProject());
+            },
 
             _onNewTask: function () {
                 store.dispatch(TaskActions.resetTextFilter());

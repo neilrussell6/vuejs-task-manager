@@ -49,17 +49,18 @@
 
             <div class="wrapper">
                 <div class="overlay"></div>
-                <tasks v-if="user_is_authenticated"></tasks>
+                <tasks v-if="is_user_authenticated"></tasks>
                 <login v-else :on-submit="_onUserLogin"></login>
             </div>
 
             <footer class="footer">
                 <div class="column column-left">
-                    contact: <span class="highlight">neilrussell6@gmail.com</span>
+                    <span class="highlight">neilrussell6@gmail.com</span>
                 </div>
                 <div class="column column-right">
                     <button class="no-bg" v-on:click="_onUserLogout()">
-                        <span>logout</span><i class="fa fa-sign-out" aria-hidden="true"></i>
+                        <span class="label">logout</span>
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
                     </button>
                 </div>
             </footer>
@@ -108,10 +109,10 @@
             return {
                 message: null,
                 previous_message: null,
-                is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
-                is_disabled: false,
                 is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT,
-                user_is_authenticated: false
+                is_disabled: false,
+                is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
+                is_user_authenticated: false
             };
         },
 
@@ -154,16 +155,16 @@
                 store.dispatch(UserActions.logoutUser());
             },
 
-            // ----------------------
+            // ------------------------------------
             // utils
-            // ----------------------
+            // ------------------------------------
 
             _updateView: function () {
                 const _state = store.getState();
 
                 // user
 
-                this.user_is_authenticated = _state.user.is_authenticated;
+                this.is_user_authenticated = _state.user.is_authenticated;
 
                 // app
 

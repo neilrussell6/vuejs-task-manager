@@ -4,16 +4,18 @@
 
         <div class="controls project-controls bordered">
             <div class="control-group">
-                <div class="control">
+                <div class="control control-left">
 
                     <button class="add-task-button" v-on:click="_onNewProject()">
+                        <span class="label">NEW PROJECT</span>
                         <i class="fa fa-plus" aria-hidden="true"></i>
                     </button>
 
                 </div>
-                <div class="control">
+                <div class="control control-right">
 
                     <button v-on:click="_onRefreshProjects()">
+                        <span class="label">REFRESH PROJECTS</span>
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
 

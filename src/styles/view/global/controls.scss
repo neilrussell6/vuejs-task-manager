@@ -1,7 +1,8 @@
 @import '../../app.vars';
 
 .controls {
-    margin-bottom: $big-v-pad;
+    margin-bottom: $med-v-pad;
+    margin-top: $med-v-pad;
     overflow: auto;
 
     &.bordered {
@@ -11,7 +12,7 @@
     .control-group {
         display: flex;
         justify-content: space-between;
-        overflow: auto;
+        overflow: hidden;
         padding-bottom: $med-v-pad;
 
         &:last-child {
@@ -20,10 +21,45 @@
         }
 
         .control {
+            padding: 0;
+        }
+
+        .control-left {
+            margin-left: $med-h-pad;
+
+            .label {
+                padding-left: $small-h-pad;
+            }
+        }
+
+        .control-right {
+            margin-right: $med-h-pad;
+
+            .label {
+                padding-right: $small-h-pad;
+            }
+        }
+    }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-xs) {
+
+    .controls {
+        margin-bottom: $big-v-pad;
+        margin-top: 0;
+
+        .control-group .control {
+            margin: 0;
             padding: 0 $small-h-pad;
 
             &:nth-child(3n) {
                 clear: both;
+            }
+
+            .label {
+                display: none;
             }
         }
     }

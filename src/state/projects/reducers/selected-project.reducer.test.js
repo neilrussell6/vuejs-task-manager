@@ -6,7 +6,7 @@ import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // local
 import * as Reducer from './selected-project.reducer';
-import { ACTION_SELECT_PROJECT } from '../project.constants';
+import * as constants from '../project.constants';
 
 describe("selected_project reducer", () => {
 
@@ -28,7 +28,7 @@ describe("selected_project reducer", () => {
 
             const _state_before = {};
             const _action = {
-                type: ACTION_SELECT_PROJECT,
+                type: constants.ACTION_SELECT_PROJECT,
                 data: {
                     id: 101,
                     name: 'AAA'
@@ -41,6 +41,24 @@ describe("selected_project reducer", () => {
             let _result = Reducer.selected_project(_state_before, _action);
 
             expect(_result instanceof Project).to.equal(true, 'item should be instance of Project');
+        });
+    });
+
+    describe("ACTION_DESELECT_PROJECT", () => {
+
+        it("should return default state", () => {
+
+            const _state_before = new Project({ name: 'AAA' });
+            const _action = {
+                type: constants.ACTION_DESELECT_PROJECT
+            };
+
+            deepFreeze(_state_before);
+            deepFreeze(_action);
+
+            let _result = Reducer.selected_project(_state_before, _action);
+
+            expect(_result).to.equal(constants.DEFAULT_SELECTED_PROJECT_STATE);
         });
     });
 });

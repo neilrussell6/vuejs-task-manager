@@ -1,5 +1,5 @@
 <template>
-    <div class="body">
+    <div class="body" :class="{'project-selected': is_project_selected}">
 
         <div class="column column-left bordered">
             <project-list></project-list>
@@ -29,6 +29,23 @@
         components: {
             ProjectList,
             TaskList
+        },
+
+        data: function () {
+            return {
+                is_project_selected: false
+            };
+        },
+
+        methods: {
+            _updateView: function () {
+                const _state = store.getState();
+                this.is_project_selected = _state.selected_project !== null;
+            }
+        },
+
+        created: function () {
+            store.subscribe(this._updateView.bind(this));
         }
     };
 </script>

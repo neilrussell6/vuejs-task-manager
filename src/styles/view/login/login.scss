@@ -1,48 +1,47 @@
 @import '../../app.vars';
 
-.main {
-    .body {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: center;
+.main .body {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 
-        .content {
+    .content {
 
-            form {
-                display: flex;
-                width: 100%;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-            }
+        form {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
 
-            fieldset {
-                border: 0;
+        fieldset {
+            border: 0;
+            box-sizing: border-box;
+            flex-direction: row;
+            flex-flow: row wrap;
+            margin: 0;
+            margin-bottom: $big-v-pad;
+            max-width: 240px;
+            padding: 0;
+            width: 100%;
+
+            input {
                 box-sizing: border-box;
-                padding: 0;
-                margin: 0;
+                margin-bottom: $med-v-pad;
                 width: 100%;
-                flex-flow: row wrap;
-                flex-direction: row;
-                margin-bottom: $big-v-pad;
-                max-width: 240px;
-
-                input {
-                    box-sizing: border-box;
-                    margin-bottom: $med-v-pad;
-                    width: 100%;
-                }
-
-                button {
-                    width: 100%;
-                }
             }
 
-            legend {
-                color: $text-color-legend;
-                margin-bottom: $small-v-pad;
+            button {
+                width: 100%;
             }
+        }
+
+        legend {
+            color: $text-color-legend;
+            margin-bottom: $small-v-pad;
         }
     }
 }
+

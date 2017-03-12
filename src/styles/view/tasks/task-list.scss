@@ -5,14 +5,32 @@
 }
 
 .task-list {
-    clear: both;
-    list-style: none;
-    margin-bottom: $big-v-pad;
-    min-height: 200px;
-    padding: 0;
 
-    .no-results {
-        color: $text-color-med;
-        padding: $small-v-pad $small-h-pad;
+    .controls .control-group.big-controls {
+        display: none;
     }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-xs) {
+
+    .task-list {
+        clear: both;
+        list-style: none;
+        margin-bottom: $big-v-pad;
+        min-height: 200px;
+        padding: 0;
+
+        .controls .control-group {
+
+            &.small-controls {
+                display: none;
+            }
+
+            &.big-controls {
+                display: flex;
+            }
+        }
+   }
 }
