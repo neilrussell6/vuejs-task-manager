@@ -16,10 +16,10 @@
                 </div>
                 <div class="control control-right status-filter">
 
-                    <button class="add-task-button" v-on:click="_onNewProject()">
-                        <span class="label">TRASH</span>
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                    </button>
+                    <common-cycle-button :data="status_filter_cycle_button_data"
+                                         :on-click="_onStatusFilterSelection"
+                                         :selected-index="status_filter_cycle_button_index"
+                    ></common-cycle-button>
 
                 </div>
             </div>
@@ -90,6 +90,7 @@
     import * as ProjectActions from 'state/projects/project.actions';
 
     // components
+    import CommonCycleButton from 'view/common/common-cycle-button/CommonCycleButton.dumb';
     import CommonList from 'view/common/common-list/CommonList.dumb';
     import CommonTable from 'view/common/common-table/CommonTable.dumb';
     import StatusFilter from './status-filter/StatusFilter.dumb';
@@ -98,7 +99,7 @@
     // store
     import { store } from 'state/store';
 
-    // settings
+    // data
     import { TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
     import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 
@@ -111,6 +112,7 @@
     export default {
 
         components: {
+            CommonCycleButton,
             CommonTable,
             CommonList,
             StatusFilter,
@@ -119,6 +121,12 @@
 
         data: function () {
             return {
+                status_filter_cycle_button_data: [
+                    { label: "ALL", value: STATUS_FILTER_TYPE.ALL, icon_class: "fa-star-o" },
+                    { label: "INCOMPLETE", value: STATUS_FILTER_TYPE.INCOMPLETE, icon_class: "fa-star-half-o" },
+                    { label: "COMPLETE", value: STATUS_FILTER_TYPE.COMPLETE, icon_class: "fa-star" },
+                    { label: "TRASH", value: STATUS_FILTER_TYPE.TRASH, icon_class: "fa-trash" }
+                ],
                 filtered_tasks: [],
                 has_tasks: false,
                 is_editing_task: false,
@@ -304,6 +312,7 @@
                 this.tasks_table_keys   = this.status_filter === STATUS_FILTER_TYPE.TRASH ? this.tasks_table_keys_trash : this.tasks_table_keys_default;
                 this.filtered_tasks     = TextFilterUtils.filterTasks(StatusFilterUtils.filterTasks(this.tasks, this.status_filter), this.text_filter);
                 this.has_tasks          = this.filtered_tasks.length > 0;
+                this.status_filter_cycle_button_index = this.status_filter_cycle_button_data.reduce((result, item, i) => item.value === this.status_filter ? i : result, 0);
             }
         },
 
