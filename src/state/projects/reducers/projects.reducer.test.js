@@ -1,6 +1,5 @@
 import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
-import sinon from 'sinon';
 
 // data
 import { Project } from 'data/models/crud/jsonapi/project.model';

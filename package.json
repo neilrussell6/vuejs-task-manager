@@ -25,7 +25,7 @@
     "redux": "^3.6.0",
     "redux-json-api": "^1.7.0",
     "redux-thunk": "^2.2.0",
-    "rfc4122": "^1.0.5",
+    "uuid": "^3.0.1",
     "vue": "^2.1.10",
     "vue-clickaway": "^2.1.0",
     "vue-focus": "^2.1.0",
