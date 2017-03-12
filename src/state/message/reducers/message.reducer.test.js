@@ -156,4 +156,30 @@ describe("message reducer", () => {
             expect(_result).to.be.null;
         });
     });
+
+    describe("ACTION_SET_MESSAGE", () => {
+
+        it("should return message as per provided config", () => {
+
+            const _state_before = 'AAA';
+            const _action = {
+                type: constants.ACTION_SET_MESSAGE,
+                data: {
+                    label: "watch out!",
+                    style: MESSAGE_STYLE.WARNING,
+                    icon: {
+                        class: 'fa fa-exclamation-triangle fa-2x'
+                    }
+                }
+            };
+
+            deepFreeze(_action);
+
+            let _result = Reducer.message(_state_before, _action);
+
+            expect(_result.label).to.equal("watch out!");
+            expect(_result.style).to.equal(MESSAGE_STYLE.WARNING);
+            expect(_result.icon.class).to.equal('fa fa-exclamation-triangle fa-2x');
+        });
+    });
 });

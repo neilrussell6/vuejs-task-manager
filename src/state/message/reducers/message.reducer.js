@@ -257,6 +257,10 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             };
             break;
 
+        case message_constants.ACTION_SET_MESSAGE:
+            _data = action.data;
+            break;
+
         case message_constants.ACTION_CANCEL_DELETE:
             return null;
     }

@@ -53,7 +53,6 @@
             // ------------------------------------
 
             _submit: function () {
-
                 if (typeof this.onSubmit !== 'undefined') {
                     this.onSubmit({
                         email: this.email,

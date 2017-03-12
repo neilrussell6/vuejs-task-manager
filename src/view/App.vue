@@ -74,6 +74,8 @@
 
     // data
     import * as app_settings from 'data/app.settings';
+    import * as message_settings from 'data/message.settings';
+    import { MESSAGE_STYLE } from 'data/models/basic/message.model';
 
     // actions
     import * as MessageActions from 'state/message/message.actions';
@@ -144,6 +146,15 @@
             // ------------------------------------
 
             _onUserLogin: function (credentials) {
+
+                if (credentials.email === null || credentials.password === null) {
+                    return store.dispatch(MessageActions.setMessage({
+                        label: "Please provide all required credentials",
+                        style: MESSAGE_STYLE.WARNING,
+                        expire: message_settings.MESSAGE_DEFAULT_EXPIRE * 2
+                    }));
+                }
+
                 store.dispatch(UserActions.loginUser(credentials));
             },
 

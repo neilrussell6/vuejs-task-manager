@@ -2,8 +2,15 @@
 import * as constants from './message.constants';
 
 // --------------------------
-// delete
+// actions
 // --------------------------
+
+export function setMessage (data) {
+    return {
+        type: constants.ACTION_SET_MESSAGE,
+        data
+    };
+}
 
 export function cancelDelete () {
     return {
