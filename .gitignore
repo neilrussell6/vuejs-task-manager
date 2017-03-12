@@ -4,3 +4,4 @@ coverage/
 *.log
 _ignore
 dist
+src/data/app.settings.js
