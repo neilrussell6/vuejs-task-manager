@@ -175,6 +175,7 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
                 ...list.slice(_index + 1)
             ];
 
+        case project_constants.ACTION_MAKE_PROJECT:
         case project_constants.ACTION_DESELECT_PROJECT:
             return task_constants.DEFAULT_TASK_LIST_STATE;
 
