@@ -147,7 +147,7 @@
 
             _onUserLogin: function (credentials) {
 
-                if (credentials.email === null || credentials.password === null) {
+                if ((credentials.username === null && credentials.email === null) || credentials.password === null) {
                     return store.dispatch(MessageActions.setMessage({
                         label: "Please provide all required credentials",
                         style: MESSAGE_STYLE.WARNING,

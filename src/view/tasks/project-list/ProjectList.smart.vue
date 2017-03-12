@@ -25,21 +25,16 @@
             </div>
         </div>
 
-        <template v-if="has_projects">
+        <common-list v-show="has_projects"
+                     :data="projects"
+                     label-field="name"
+                     :selected-unique-id="selected_project_local_id"
+                     :on-blur="_onProjectUpdate"
+                     :on-edit="_onProjectEdit"
+                     :on-select="_onProjectSelection"
+        ></common-list>
 
-            <common-list :data="projects"
-                         label-field="name"
-                         :selected-unique-id="selected_project_local_id"
-                         :on-blur="_onProjectUpdate"
-                         :on-edit="_onProjectEdit"
-                         :on-select="_onProjectSelection"
-            ></common-list>
-
-        </template>
-
-        <template v-else>
-            <div class="no-results">no projects</div>
-        </template>
+        <div v-show="!has_projects" class="no-results">no projects</div>
 
     </div>
 </template>

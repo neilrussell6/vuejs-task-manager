@@ -85,11 +85,11 @@
 
                 // if empty or no new items
                 // ... then exit
-                if (value.length === 0 || value.length === prev_value.length || value.length - prev_value.length !== 1) {
+                if (value.length === 0 || value.length === prev_value.length) {
                     return;
                 }
 
-                // there is 1 new item
+                // there are new items
                 // ... focus new item
                 if (this.focusNewItem) {
 

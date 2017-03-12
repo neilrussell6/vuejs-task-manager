@@ -3,7 +3,8 @@ import {
     API_READ_FAILED,
     createResource,
     readEndpoint,
-    setHeader
+    setHeader,
+    setHeaders,
 } from 'redux-json-api';
 
 // data
@@ -82,6 +83,12 @@ export function logoutUser () {
     return function (dispatch) {
 
         dispatch(willLogoutUser());
+
+        // unset Auth header, by resetting all headers
+        dispatch(setHeaders({
+            'Content-Type': 'application/vnd.api+json',
+            'Accept': 'application/vnd.api+json'
+        }));
 
         window.setTimeout(() => {
 

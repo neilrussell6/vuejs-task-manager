@@ -75,7 +75,7 @@
                           :data-keys.once="tasks_table_keys"
             ></common-table>
 
-            <div class="no-results" v-show="!has_tasks">no results</div>
+            <div v-show="!has_tasks" class="no-results">no results</div>
 
         </div>
     </div>

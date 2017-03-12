@@ -5,13 +5,13 @@
             <form v-on:submit.prevent>
 
                 <fieldset>
-                    <input type="text" v-model="email" placeholder="email..." />
+                    <input type="text" v-model="identifier" placeholder="username or email..." />
                     <input type="password" v-model="password" placeholder="password..." />
                     <button v-on:click="_onSubmitClick()">LOGIN</button>
                 </fieldset>
 
                 <legend>Try it out, login with:</legend>
-                <legend>username: <span class="highlight">demo</span></legend>
+                <legend>identifier: <span class="highlight">demo</span></legend>
                 <legend>password: <span class="highlight">demo</span></legend>
             </form>
         </div>
@@ -25,7 +25,7 @@
     export default {
         data: function () {
             return {
-                email: null,
+                identifier: null,
                 password: null
             };
         },
@@ -53,11 +53,15 @@
             // ------------------------------------
 
             _submit: function () {
+                let _credentials =  { password: this.password };
+                if (this.identifier.match('/\@/')) {
+                    _credentials.email = this.identifier;
+                } else {
+                    _credentials.username = this.identifier;
+                }
+
                 if (typeof this.onSubmit !== 'undefined') {
-                    this.onSubmit({
-                        email: this.email,
-                        password: this.password
-                    });
+                    this.onSubmit(_credentials);
                 }
             }
         }
