@@ -74,10 +74,14 @@
             // ------------------------------------
 
             _onNewProject: function () {
+                store.dispatch(TaskActions.resetTextFilter());
+                store.dispatch(TaskActions.resetStatusFilter());
                 store.dispatch(ProjectActions.makeProject());
             },
 
             _onProjectSelection: function (project) {
+                store.dispatch(TaskActions.resetTextFilter());
+                store.dispatch(TaskActions.resetStatusFilter());
                 store.dispatch(ProjectActions.selectProject(project));
                 store.dispatch(TaskActions.fetchTasks(this.selected_project.server_id));
             },

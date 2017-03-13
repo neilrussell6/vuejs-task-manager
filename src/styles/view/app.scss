@@ -214,22 +214,22 @@ input {
             }
         }
 
-        .controls {
-            background-color: $bg-color-dark;
-            border: 1px solid $bdr-color-dark;
-            box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
-            opacity: 1;
-            padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: opacity .5s linear;
-
-            &.disabled {
-                opacity: .2;
-                transition: opacity .5s linear;
-            }
-        }
+        //.controls {
+        //    background-color: $bg-color-dark;
+        //    border: 1px solid $bdr-color-dark;
+        //    box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
+        //    opacity: 1;
+        //    padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
+        //    position: absolute;
+        //    right: 0;
+        //    top: 0;
+        //    transition: opacity .5s linear;
+        //
+        //    &.disabled {
+        //        opacity: .2;
+        //        transition: opacity .5s linear;
+        //    }
+        //}
     }
 }
 
@@ -256,6 +256,10 @@ input {
     //overflow: auto;
     position: relative;
     transition: filter .2s ease-out;
+
+    .controls {
+        background-color: lighten($bg-color-dark, 3%);
+    }
 
     .no-results {
         box-sizing: border-box;
@@ -354,6 +358,10 @@ input {
 
     .main {
         margin: ($big-v-pad * 2) auto $big-v-pad;
+
+        .controls {
+            background-color: transparent;
+        }
 
         .no-results {
             text-align: left;

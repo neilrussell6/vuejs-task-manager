@@ -2,11 +2,11 @@
 
 .controls {
     margin-bottom: $med-v-pad;
-    margin-top: $med-v-pad;
+    padding-top: $med-v-pad;
     overflow: auto;
 
     &.bordered {
-        border-bottom: 1px solid $bdr-color-light;
+        border-bottom: 1px solid $bdr-color-med;
     }
 
     .control-group {

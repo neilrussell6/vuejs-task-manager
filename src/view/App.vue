@@ -55,7 +55,7 @@
 
             <footer class="footer">
                 <div class="column column-left">
-                    <span class="highlight">neilrussell6@gmail.com</span>
+                    <span class="highlight">&nbsp;</span>
                 </div>
                 <div class="column column-right">
                     <button class="no-bg" v-on:click="_onUserLogout()">
