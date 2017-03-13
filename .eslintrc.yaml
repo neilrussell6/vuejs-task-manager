@@ -1,7 +1,7 @@
 extends: "eslint:recommended"
 
 env:
-    node:       false
+    node:       true
     browser:    true
     mocha:      true
 

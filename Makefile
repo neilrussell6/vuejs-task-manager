@@ -75,8 +75,8 @@ help:
 	@$(call echo_help, "jslint-w", "Lints source JavaScript and watches files for change.")
 	@$(call echo_help, "sasslint", "Lints SASS.")
 	@$(call echo_help, "sasslint-w", "Lints SASS and watches files for change.")
-	@$(call echo_help, "test", "Tests the source JavaScript.")
-	@$(call echo_help, "test-w", "Tests the source JavaScript and watches files for change.")
+	@$(call echo_help, "test", "Tests the source JavaScript.", "GREP")
+	@$(call echo_help, "test-w", "Tests the source JavaScript and watches files for change.", "GREP")
 	@$(call echo_help, "coverage", "Generates a testing coverage report for source JavaScript.")
 	@$(call echo_help, "serve", "Runs webpack-dev-server with live reloading.")
 	@$(call echo_help, "build", "Creates a production build for distribution and copies assets directory.")
@@ -123,13 +123,26 @@ sasslint-w:
 # test
 #
 # Tests source JavaScript.
+#
+# args:
+#  * GREP (allows you to run only tests whose describe statements match the GREP value")
+#
 #------------------------------
 
 test: jslint
-	@NODE_PATH="$(DIR_SRC)" mocha -R "$(REPORTER)" "$(FILES_TEST)" --compilers js:babel-core/register ; exit 0
+	@if [ -n "$(GREP)" ] ; \
+		then grep="--grep $(GREP)" ; \
+		else grep="" ; \
+	fi ; \
+	NODE_PATH="$(DIR_SRC)" mocha -R "$(REPORTER)" "$(FILES_TEST)" --compilers js:babel-core/register $${grep}; exit 0
+	# NODE_PATH="./src" ./node_modules/.bin/mocha -R "spec" "src/**/*test.js" --compilers js:babel-core/register
 
 test-w: jslint
-	@NODE_PATH="$(DIR_SRC)" mocha -w -R "$(REPORTER)" "$(FILES_TEST)" --compilers js:babel-core/register ; exit 0
+	@if [ -n "$(GREP)" ] ; \
+		then grep="--grep $(GREP)" ; \
+		else grep="" ; \
+	fi ; \
+	NODE_PATH="$(DIR_SRC)" mocha -w -R "$(REPORTER)" "$(FILES_TEST)" --compilers js:babel-core/register $${grep}; exit 0
 
 #------------------------------
 # coverage
