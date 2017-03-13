@@ -53,7 +53,13 @@
             // ------------------------------------
 
             _submit: function () {
+
+                if (this.identifier === null || this.password === null) {
+                    return;
+                }
+
                 let _credentials =  { password: this.password };
+
                 if (this.identifier.match('/\@/')) {
                     _credentials.email = this.identifier;
                 } else {
