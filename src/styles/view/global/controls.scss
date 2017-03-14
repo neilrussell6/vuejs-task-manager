@@ -2,8 +2,8 @@
 
 .controls {
     margin-bottom: $med-v-pad;
-    padding-top: $med-v-pad;
     overflow: auto;
+    padding-top: $med-v-pad;
 
     &.bordered {
         border-bottom: 1px solid $bdr-color-med;
