@@ -4,4 +4,4 @@ coverage/
 *.log
 _ignore
 dist
-laravel-forge-deply.sh
+laravel-forge-deploy.sh

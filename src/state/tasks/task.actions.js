@@ -114,6 +114,8 @@ export function toggleTaskComplete (task) {
 
         const _task = task.toggleStatusComplete();
 
+        dispatch(updateTaskLocally(task, _task));
+
         dispatch(updateResource(_task.resource_object))
             .catch(() => {
                 dispatch(API_READ_FAILED);
