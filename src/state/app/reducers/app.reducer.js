@@ -36,7 +36,7 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
         case user_constants.ACTION_USER_LOGGED_OUT:
             return Object.assign({}, state, { is_disabled: false });
 
-        // case api_constants.API_WILL_CREATE:
+        case api_constants.API_WILL_CREATE:
         case api_constants.API_WILL_DELETE:
         case api_constants.API_WILL_READ:
         // case api_constants.API_WILL_UPDATE:
