@@ -11,10 +11,17 @@ import {
 
 // actions
 import * as TaskActions from 'state/tasks/task.actions';
+import * as StorageActions from 'state/storage/storage.actions';
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Project } from 'data/models/crud/jsonapi/project.model';
+
+// state
+import * as common_constants from 'state/common.constants';
+
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
 
 // local
 import * as constants from './project.constants';
@@ -23,22 +30,55 @@ import * as constants from './project.constants';
 // project
 // --------------------------
 
-export function createProject (project, project_local_id) {
+export function storeOrUpdateProject (project, user) {
     return function (dispatch) {
 
-        if (!(project instanceof JsonApiModel) || project.resource_object === null) {
-            throw new Error("Invalid model");
-        }
+        return StorageUtils.validate(project).then(() => {
 
-        dispatch(createResource(project.resource_object))
-            .then((response) => {
-                let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
-                dispatch(selectProject(_data));
-                dispatch(TaskActions.fetchTasks(response.data.id));
-            })
-            .catch(() => {
-                dispatch(API_CREATE_FAILED);
-            });
+            // get item from local storage
+            const _resource_object = project.resource_object;
+
+            return StorageUtils.view(_resource_object.type, _resource_object.id).then((response) => {
+
+                // project is not in storage
+                if (typeof response === 'undefined') {
+
+                    console.log("CREATE");
+
+                    const _relationships = { user_id: user.uuid };
+                    return StorageUtils.store(project, _relationships);
+                }
+
+                // project is in storage
+
+                console.log("UPDATE");
+                const _existing_project = new Project(response);
+
+                // ... if project is unchanged
+                if (JSON.stringify(_existing_project.resource_object) === JSON.stringify(project.resource_object)) {
+                    return Promise.resolve(_existing_project);
+                }
+
+                // .. if project is changed
+                return StorageUtils.update(project);
+
+            }).catch((message) => console.log("MESSAGE A ", message));
+        }).catch((message) => console.log("MESSAGE A ", message));
+
+
+        // if (!(project instanceof JsonApiModel) || project.resource_object === null) {
+        //     throw new Error("Invalid model");
+        // }
+        //
+        // dispatch(createResource(project.resource_object))
+        //     .then((response) => {
+        //         let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
+        //         dispatch(selectProject(_data));
+        //         dispatch(TaskActions.fetchTasks(response.data.id));
+        //     })
+        //     .catch(() => {
+        //         dispatch(API_CREATE_FAILED);
+        //     });
     };
 }
 
@@ -56,16 +96,17 @@ export function deleteProject (project) {
     };
 }
 
-export function makeProject () {
+export function makeProject (data = {}) {
     return {
-        type: constants.ACTION_MAKE_PROJECT
+        type: constants.ACTION_MAKE_PROJECT,
+        data
     };
 }
 
-export function removeProject (project) {
+export function removeProject (uuid) {
     return {
         type: constants.ACTION_REMOVE_PROJECT,
-        project
+        uuid
     };
 }
 
@@ -75,28 +116,34 @@ export function deselectProject () {
     };
 }
 
-export function selectProject (data) {
-    return {
-        type:    constants.ACTION_SELECT_PROJECT,
-        data:    data
+export function selectProject (project) {
+    return function (dispatch) {
+        dispatch({
+            type:   constants.ACTION_SELECT_PROJECT,
+            data:   project
+        });
+
+        dispatch(TaskActions.fetchTasks(project));
     };
 }
 
 export function updateProject (project) {
     return function (dispatch) {
 
-        if (!(project instanceof JsonApiModel) || project.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        dispatch(updateResource(project.resource_object))
-            .catch(() => {
-                dispatch(API_UPDATE_FAILED);
-            });
+        // dispatch(StorageActions.update(project));
+        //
+        // if (!(project instanceof JsonApiModel) || project.resource_object === null) {
+        //     throw new Error("Invalid model");
+        // }
+        //
+        // dispatch(updateResource(project.resource_object))
+        //     .catch(() => {
+        //         dispatch(API_UPDATE_FAILED);
+        //     });
     };
 }
 
-export function updateProjectLocally (project, data) {
+export function updateLocalProject (project, data) {
     return {
         type: constants.ACTION_UPDATE_PROJECT_LOCALLY,
         project,
@@ -108,17 +155,19 @@ export function updateProjectLocally (project, data) {
 // projects
 // --------------------------
 
-export function refreshProjects (user_id) {
-    return fetchProjects(user_id);
+export function refreshProjects (user) {
+    return fetchProjects(user);
 }
 
-export function fetchProjects (user_id) {
+export function fetchProjects (user) {
     return function (dispatch) {
-        const _endpoint = `users/${user_id}/projects`;
 
-        dispatch(readEndpoint(_endpoint))
-            .catch(() => {
-                dispatch(API_READ_FAILED);
+        // get projects from local storage
+        return StorageUtils.index('projects').then((projects) => {
+            dispatch({
+                type: constants.ACTION_FETCHED_PROJECTS,
+                data: projects
             });
+        });
     };
 }

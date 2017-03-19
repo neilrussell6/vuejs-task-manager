@@ -15,7 +15,7 @@ export class JsonApiModel extends CRUDModel {
     }
 
     get exclude_attributes () {
-        return ['server_id', 'local_id', 'created_at', 'updated_at'];
+        return ['uuid', 'created_at', 'updated_at'];
     }
 
     get properties () {
@@ -33,8 +33,8 @@ export class JsonApiModel extends CRUDModel {
             attributes: this.attributes
         };
 
-        if (typeof this.server_id !== 'undefined' && this.server_id !== null) {
-            Object.assign(result, { id: this.server_id });
+        if (typeof this.uuid !== 'undefined' && this.uuid !== null) {
+            Object.assign(result, { id: this.uuid });
         }
 
         return result;
@@ -50,8 +50,8 @@ export class JsonApiModel extends CRUDModel {
             type: this.type
         };
 
-        if (typeof this.server_id !== 'undefined' && this.server_id !== null) {
-            Object.assign(result, { id: this.server_id });
+        if (typeof this.uuid !== 'undefined' && this.uuid !== null) {
+            Object.assign(result, { id: this.uuid });
         }
 
         return result;

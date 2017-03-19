@@ -28,7 +28,7 @@
         <common-list v-show="has_projects"
                      :data="projects"
                      label-field="name"
-                     :selected-unique-id="selected_project_local_id"
+                     :selected-uuid="selected_project_uuid"
                      :on-blur="_onProjectUpdate"
                      :on-edit="_onProjectEdit"
                      :on-select="_onProjectSelection"
@@ -62,7 +62,7 @@
                 is_editing_project: false,
                 projects: [],
                 selected_project: null,
-                selected_project_local_id: null,
+                selected_project_uuid: null,
                 user: null
             };
         },
@@ -83,7 +83,6 @@
                 store.dispatch(TaskActions.resetTextFilter());
                 store.dispatch(TaskActions.resetStatusFilter());
                 store.dispatch(ProjectActions.selectProject(project));
-                store.dispatch(TaskActions.fetchTasks(this.selected_project.server_id));
             },
 
             _onProjectEdit: function (project) {
@@ -99,29 +98,22 @@
 
                     // ... and no valid previous value is available remove item before it is stored
                     if (prev_value === "") {
-                        return store.dispatch(ProjectActions.removeProject(project));
+                        return store.dispatch(ProjectActions.removeProject(project.uuid));
                     }
                     // ... but a valid previous value is available, then revert to previous value
                     else {
-                        return store.dispatch(ProjectActions.updateProjectLocally(project, { [ key ]: prev_value }));
+//                        return store.dispatch(ProjectActions.updateLocalProject(project, { [ key ]: prev_value }));
                     }
                 }
 
                 // if edited value is unchanged
                 // ... do nothing
                 if (value === prev_value) {
-                    return;
+//                    return;
                 }
 
                 // edited value is valid
-                // ... and already has a server id
-                if (project.hasOwnProperty('server_id')) {
-                    store.dispatch(ProjectActions.updateProject(project));
-                }
-                // ... but has no server id
-                else {
-                    store.dispatch(ProjectActions.createProject(project, project.local_id));
-                }
+                store.dispatch(ProjectActions.storeOrUpdateProject(project, this.user));
             },
 
             _onRefreshProjects: function () {
@@ -142,7 +134,7 @@
                 this.user               = _state.user;
 
                 // computed data
-                this.selected_project_local_id = this.selected_project !== null ? this.selected_project.local_id : null;
+                this.selected_project_uuid = this.selected_project !== null ? this.selected_project.uuid : null;
                 this.has_projects       = this.projects.length > 0;
             }
         },

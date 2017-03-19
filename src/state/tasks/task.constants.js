@@ -13,6 +13,7 @@ export const ACTION_SET_COMPLETE_FILTER     = 'SET_COMPLETE_FILTER';
 export const ACTION_RESET_COMPLETE_FILTER   = 'RESET_COMPLETE_FILTER';
 
 // task
+export const ACTION_FETCHED_TASKS           = 'FETCHED_TASKS';
 export const ACTION_MAKE_TASK               = 'MAKE_TASK';
 export const ACTION_REMOVE_TASK             = 'ACTION_REMOVE_TASK';
 export const ACTION_UPDATE_TASK_LOCALLY     = 'UPDATE_TASK_LOCALLY';

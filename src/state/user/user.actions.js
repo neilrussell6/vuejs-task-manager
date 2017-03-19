@@ -1,3 +1,4 @@
+import jws from 'jws';
 import {
     API_CREATE_FAILED,
     API_READ_FAILED,
@@ -8,12 +9,18 @@ import {
 } from 'redux-json-api';
 
 // data
-import { JsonApiModel } from 'data/models/jsonapi.model';
 import * as app_settings from 'data/app.settings';
+import { JsonApiModel } from 'data/models/jsonapi.model';
+import { User } from 'data/models/crud/jsonapi/user.model';
 
 // state
-import * as ProjectActions from 'state/projects/project.actions';
 import * as api_constants from 'state/redux-json-api.constants';
+
+// store
+import { store } from 'state/store';
+
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
 
 // local
 import * as constants from './user.constants';
@@ -22,10 +29,105 @@ import * as constants from './user.constants';
 // user
 // --------------------------
 
-export function updateUserLocally (data) {
+export function updateLocalUser (data) {
     return {
-        type: constants.ACTION_UPDATE_USER_LOCALLY,
+        type: constants.ACTION_UPDATE_LOCAL_USER,
         data
+    };
+}
+
+export function fetchOrCreateLocalUser(state) {
+    return function (dispatch) {
+
+        const _state = store.getState();
+        let _user;
+
+        // get user from state
+        if (_state.user !== null && typeof _state.user.uuid !== 'undefined') {
+            dispatch({
+                type: constants.ACTION_FETCHED_USER,
+                data: state.user
+            });
+            return Promise.resolve(state.user);
+        }
+
+        // get user from local storage
+        return StorageUtils.index('users').then((users) => {
+
+            if (users !== null && users.length === 1) {
+                _user = new User(users[0]);
+                dispatch({
+                    type: constants.ACTION_FETCHED_USER,
+                    data: _user
+                });
+                return Promise.resolve(_user);
+            }
+
+            // clear existing users, then make and store new user
+            return StorageUtils.destroyAll('users').then(() => {
+
+                const uuid = StorageUtils.makeUUID();
+                const _user = new User({ uuid });
+
+                return StorageUtils.store(_user).then(() => {
+
+                    // viewed
+                    dispatch({
+                        type: constants.ACTION_FETCHED_USER,
+                        data: _user
+                    });
+                    Promise.resolve(_user);
+                });
+            });
+        });
+    };
+}
+
+export function fetchOrCreateUser () {
+    return function (dispatch) {
+
+        // // ... if user has no access token
+        // if (_state.user === null || _state.user.access_token === null) {
+        //     return Promise.resolve(_state.user);
+        // }
+        //
+        // // ... if access token is expired
+        // const _access_token = jws.decode(_state.user.access_token);
+        // const _numeric_date_access_token = _access_token.payload.exp;
+        // const _numeric_date_now = Date.now() / 1000;
+        //
+        // if (_numeric_date_access_token < _numeric_date_now) {
+        //     return Promise.resolve(_state.user);
+        // }
+        //
+        // // ... if access token is not expired
+        // return dispatch(fetchUser(_state.user.access_token))
+        //     .then((response) => {
+        //
+        //         // update local user
+        //         dispatch(updateLocalUser(Object.assign({}, { id: response.data.id }, response.data.attributes)));
+        //
+        //         // get user from state
+        //         _state = store.getState();
+        //
+        //         return Promise.resolve(_state.user);
+        //     })
+        //     .catch(() => {
+        //         dispatch(API_READ_FAILED);
+        //     });
+    };
+}
+
+export function fetchUser (access_token) {
+    return function (dispatch) {
+
+        // set Auth header
+        dispatch(setHeader({
+            'Authorization': `Bearer ${access_token}`
+        }));
+
+        // get auth user
+        return dispatch(readEndpoint('access_tokens/owner'));
     };
 }
 
@@ -42,40 +144,26 @@ export function loginUser (credentials) {
         };
 
         // fake 'will create' to prompt message
-        // TODO: think of a better way to do this (problem is, delay-fetch middle doesn't delay the API call, only the response being passed down the line)
+        // TODO: think of a better way to do this (problem is, delay-fetch middleware doesn't delay the API call, only the response being passed down the line)
         dispatch({
             type: api_constants.API_WILL_CREATE,
             payload: { type: 'access_tokens' }
         });
 
         // authenticate
-        window.setTimeout(() => {
-            dispatch(createResource(_resource_object))
-                .then((response) => {
+        dispatch(createResource(_resource_object))
+            .then((response) => {
 
-                    const _access_token = response.data.attributes.access_token;
+                dispatch(fetchUser(response.data.attributes.access_token))
+                    .then((response) => {
 
-                    // set Auth header
-                    dispatch(setHeader({
-                        'Authorization': `Bearer ${_access_token}`
-                    }));
-
-                    // get auth user
-                    window.setTimeout(() => {
-                        const _endpoint = 'access_tokens/owner';
-                        dispatch(readEndpoint(_endpoint))
-                            .then((response) => {
-
-                                dispatch(updateUserLocally(Object.assign({}, { id: response.data.id }, response.data.attributes)));
-                                dispatch(ProjectActions.refreshProjects(response.data.id));
-                            })
-                            .catch(() => {
-                                dispatch(API_READ_FAILED);
-                            });
-                    }, app_settings.LOGIN_DELAY);
-
-                });
-        }, app_settings.LOGIN_DELAY);
+                        // update local user
+                        dispatch(updateLocalUser(Object.assign({}, { id: response.data.id }, response.data.attributes)));
+                    })
+                    .catch(() => {
+                        dispatch(API_READ_FAILED);
+                    });
+            });
     };
 }
 
@@ -92,7 +180,7 @@ export function logoutUser () {
 
         window.setTimeout(() => {
 
-            dispatch(updateUserLocally({
+            dispatch(updateLocalUser({
                 is_authenticated: false,
                 access_token: null
             }));

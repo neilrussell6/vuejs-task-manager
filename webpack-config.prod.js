@@ -1,6 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var EXCLUDE = /\.\/node_modules/;
 
@@ -57,6 +59,13 @@ module.exports = {
         pathinfo: false
     },
     plugins: [
+        new CopyWebpackPlugin([
+            { from: 'static' }
+        ]),
+        new ServiceWorkerWebpackPlugin({
+            entry: './src/service-worker.js',
+            filename: 'service-worker.js'
+        }),
         new HtmlWebpackPlugin({
             'template': './src/index.html'
         }),

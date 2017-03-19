@@ -4,7 +4,7 @@
         <header class="header">
 
             <div class="title" :class="{disabled: message !== null}">
-                <h1>VueJS/Laravel Task Manager</h1>
+                <h1>Tasks</h1>
                 <div class="sub">by Neil Russell</div>
             </div>
 
@@ -49,8 +49,9 @@
 
             <div class="wrapper">
                 <div class="overlay"></div>
-                <tasks v-if="is_user_authenticated"></tasks>
-                <login v-else :on-submit="_onUserLogin"></login>
+                <tasks></tasks>
+                <!--<tasks v-if="is_user_authenticated"></tasks>-->
+                <!--<login v-else :on-submit="_onUserLogin"></login>-->
             </div>
 
             <footer class="footer">
@@ -89,7 +90,6 @@
 
     // store
     import { store } from 'state/store';
-    import { setEndpointHost, setEndpointPath, setAccessToken, setHeaders } from 'redux-json-api';
 
     // settings
     import { ACTION_REQUEST_DELETE_CONFIRMATION } from 'state/message/message.constants';
@@ -175,7 +175,7 @@
 
                 // user
 
-                this.is_user_authenticated = _state.user.is_authenticated;
+                this.is_user_authenticated = _state.user !== null ? _state.user.is_authenticated : false;
 
                 // app
 
@@ -190,6 +190,7 @@
                     this.message            = null;
                     this.previous_message   = null;
                 }
+
                 // if new message
                 else if (_state.message !== this.previous_message && _state.message !== null) {
 
@@ -214,13 +215,6 @@
         created: function () {
             _vm = this;
             store.subscribe(this._updateView.bind(this));
-
-            store.dispatch(setEndpointHost(app_settings.DOMAIN));
-            store.dispatch(setEndpointPath(app_settings.API_PREFIX));
-            store.dispatch(setHeaders({
-                'Content-Type': 'application/vnd.api+json',
-                'Accept': 'application/vnd.api+json'
-            }));
         }
     };
 

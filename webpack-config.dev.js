@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
 var EXCLUDE = /\.\/node_modules/;
 
@@ -108,6 +109,10 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             'template': './src/index.html'
+        }),
+        new ServiceWorkerWebpackPlugin({
+            entry: './src/service-worker.js',
+            filename: 'service-worker.js'
         })
     ],
     resolve: {

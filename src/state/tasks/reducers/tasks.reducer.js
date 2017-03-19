@@ -21,6 +21,11 @@ function task (task, action) {
 
     switch (action.type) {
 
+        // ---------------------------
+        // task actions
+        // ---------------------------
+
+        case task_constants.ACTION_FETCHED_TASKS:
         case task_constants.ACTION_MAKE_TASK:
             _data = Object.assign({}, action.data );
             return new Task(_data);
@@ -29,18 +34,22 @@ function task (task, action) {
             _data = Object.assign({}, task, action.data);
             return new Task(_data);
 
-        case api_constants.API_CREATED:
-            _data = Object.assign({}, task.properties, action.payload.data.attributes, { id: action.payload.data.id });
-            return new Task(_data);
+        // ---------------------------
+        // storage actions
+        // ---------------------------
 
-        case api_constants.API_UPDATED:
-            _data = Object.assign({}, task.properties, action.payload.data.attributes);
-            return new Task(_data);
-
-        case api_constants.API_READ:
-            const local_id = LocalStorageUtils.getUniqueLocalId();
-            _data = Object.assign({}, { id: task.id }, { local_id }, task.attributes);
-            return new Task(_data);
+        // case api_constants.API_CREATED:
+        //     _data = Object.assign({}, task.properties, action.payload.data.attributes, { id: action.payload.data.id });
+        //     return new Task(_data);
+        //
+        // case api_constants.API_UPDATED:
+        //     _data = Object.assign({}, task.properties, action.payload.data.attributes);
+        //     return new Task(_data);
+        //
+        // case api_constants.API_READ:
+        //     const local_id = LocalStorageUtils.getUniqueLocalId();
+        //     _data = Object.assign({}, { id: task.id }, { local_id }, task.attributes);
+        //     return new Task(_data);
     }
 }
 
@@ -54,6 +63,14 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
     let _item;
 
     switch (action.type) {
+
+        // ---------------------------
+        // task actions
+        // ---------------------------
+
+        case task_constants.ACTION_FETCHED_TASKS:
+            console.log("XXXXXXXXXXXXX", action.data);
+            return action.data.map((item) => task({}, Object.assign({}, action, { data: item })));
 
         case task_constants.ACTION_MAKE_TASK:
             const _new_task = task({}, Object.assign({}, action, {
@@ -92,92 +109,100 @@ export function tasks (list = task_constants.DEFAULT_TASK_LIST_STATE, action) {
                 ...list.slice(_index + 1)
             ];
 
-        case api_constants.API_CREATED:
-
-            if (action.payload.data.type !== 'tasks') {
-                return list;
-            }
-
-            // get index
-            _index = list.reduce((val, item, i) => !item.hasOwnProperty('server_id') ? i : val, null);
-
-            if (_index === null) {
-                return list;
-            }
-
-            // ... and update with given data attributes
-            _item = task(list[ _index ], action);
-
-            // ... and splice it in at it's original index, but in a new collection
-            return [
-                ...list.slice(0, _index),
-                ...[ _item ],
-                ...list.slice(_index + 1)
-            ];
-
-        case api_constants.API_DELETED:
-
-            if (action.payload.type !== 'tasks') {
-                return list;
-            }
-
-            // get index
-            _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.id)) ? i : val, null);
-
-            if (_index === null) {
-                return list;
-            }
-
-            // return a new collection excluding deleted item
-            return [
-                ...list.slice(0, _index),
-                ...list.slice(_index + 1)
-            ];
-
-        case api_constants.API_READ:
-            let _regex = new RegExp('tasks$');
-
-            if (!_regex.test(action.payload.endpoint)) {
-                return list;
-            }
-
-            return action.payload.data.reduce((result, item) => {
-
-                if (item.type !== 'tasks') {
-                    return result;
-                }
-
-                result = [ ...result, task(item, action) ];
-
-                return result;
-            }, []);
-
-        case api_constants.API_UPDATED:
-
-            if (action.payload.data.type !== 'tasks') {
-                return list;
-            }
-
-            // get index
-            _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.data.id)) ? i : val, null);
-
-            if (_index === null) {
-                return list;
-            }
-
-            // ... and update with given data attributes
-            _item = task(list[ _index ], action);
-
-            // ... and splice it in at it's original index, but in a new collection
-            return [
-                ...list.slice(0, _index),
-                ...[ _item ],
-                ...list.slice(_index + 1)
-            ];
+        // ---------------------------
+        // project actions
+        // ---------------------------
 
         case project_constants.ACTION_MAKE_PROJECT:
         case project_constants.ACTION_DESELECT_PROJECT:
             return task_constants.DEFAULT_TASK_LIST_STATE;
+
+        // ---------------------------
+        // storage actions
+        // ---------------------------
+
+        // case api_constants.API_CREATED:
+        //
+        //     if (action.payload.data.type !== 'tasks') {
+        //         return list;
+        //     }
+        //
+        //     // get index
+        //     _index = list.reduce((val, item, i) => !item.hasOwnProperty('server_id') ? i : val, null);
+        //
+        //     if (_index === null) {
+        //         return list;
+        //     }
+        //
+        //     // ... and update with given data attributes
+        //     _item = task(list[ _index ], action);
+        //
+        //     // ... and splice it in at it's original index, but in a new collection
+        //     return [
+        //         ...list.slice(0, _index),
+        //         ...[ _item ],
+        //         ...list.slice(_index + 1)
+        //     ];
+        //
+        // case api_constants.API_DELETED:
+        //
+        //     if (action.payload.type !== 'tasks') {
+        //         return list;
+        //     }
+        //
+        //     // get index
+        //     _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.id)) ? i : val, null);
+        //
+        //     if (_index === null) {
+        //         return list;
+        //     }
+        //
+        //     // return a new collection excluding deleted item
+        //     return [
+        //         ...list.slice(0, _index),
+        //         ...list.slice(_index + 1)
+        //     ];
+        //
+        // case api_constants.API_READ:
+        //     let _regex = new RegExp('tasks$');
+        //
+        //     if (!_regex.test(action.payload.endpoint)) {
+        //         return list;
+        //     }
+        //
+        //     return action.payload.data.reduce((result, item) => {
+        //
+        //         if (item.type !== 'tasks') {
+        //             return result;
+        //         }
+        //
+        //         result = [ ...result, task(item, action) ];
+        //
+        //         return result;
+        //     }, []);
+        //
+        // case api_constants.API_UPDATED:
+        //
+        //     if (action.payload.data.type !== 'tasks') {
+        //         return list;
+        //     }
+        //
+        //     // get index
+        //     _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.data.id)) ? i : val, null);
+        //
+        //     if (_index === null) {
+        //         return list;
+        //     }
+        //
+        //     // ... and update with given data attributes
+        //     _item = task(list[ _index ], action);
+        //
+        //     // ... and splice it in at it's original index, but in a new collection
+        //     return [
+        //         ...list.slice(0, _index),
+        //         ...[ _item ],
+        //         ...list.slice(_index + 1)
+        //     ];
 
         default:
             return list;

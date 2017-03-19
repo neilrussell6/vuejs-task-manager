@@ -159,14 +159,16 @@ input {
 // ----------------------------------
 
 .header {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     justify-content: center;
     transition: justify-content .5s linear;
+    height: 100px;
 
     .title {
         opacity: 1;
         transition: opacity .5s linear;
+        width: auto;
 
         &.disabled {
             opacity: .2;
@@ -176,16 +178,17 @@ input {
         h1 {
             color: $text-color-title;
             font-family: 'TlwgTypewriter', serif;
-            font-size: 20px;
+            font-size: 38px;
             text-shadow: rgba($light-yellow, .2) 0 10px 10px;
+            padding: 0 $big-h-pad;
+            line-height: 20px;
         }
 
         .sub {
             color: darken($text-color-title, 20%);
             font-family: 'TlwgTypewriter', serif;
             font-size: 14px;
-            margin-right: -$med-h-pad;
-            margin-top: -14px;
+            margin-top: -12px;
             text-align: right;
         }
     }
@@ -204,13 +207,15 @@ input {
 
         .title {
             margin-left: $big-h-pad;
+            width: auto;
 
             h1 {
-                font-size: 22px;
+                font-size: 38px;
+                padding: 0 $big-h-pad;
             }
 
             .sub {
-                margin-right: -$big-h-pad;
+                margin-top: -12px;
             }
         }
 
@@ -252,8 +257,7 @@ input {
 // ----------------------------------
 
 .main {
-    margin: $big-v-pad auto;
-    //overflow: auto;
+    margin: 0 auto $big-v-pad;
     position: relative;
     transition: filter .2s ease-out;
 
@@ -357,7 +361,7 @@ input {
 @media screen and (min-width: $breakpoint-xs) {
 
     .main {
-        margin: ($big-v-pad * 2) auto $big-v-pad;
+        margin: 0 auto $big-v-pad;
 
         .controls {
             background-color: transparent;
@@ -423,29 +427,28 @@ input {
     }
 }
 
-// sm < 899
+// xs < sm
 
 @media screen and (min-width: $breakpoint-xs) and (max-width: ($breakpoint-sm - 1px)) {
 
     .main {
         .body {
             .column-left {
-                width: 200px;
+                width: 180px;
             }
 
             .column-right {
-                width: calc(100% - 200px);
+                width: calc(100% - 180px);
             }
         }
     }
 }
 
-// sm < 1199
+// sm < lg
 
-@media screen and (min-width: $breakpoint-xs) and (max-width: ($breakpoint-lg - 1px)) {
+@media screen and (min-width: $breakpoint-sm) and (max-width: ($breakpoint-lg - 1px)) {
 
     .main {
-        margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 100%;
 
         .body {
@@ -463,12 +466,11 @@ input {
     }
 }
 
-// > 1201
+// > lg
 
 @media screen and (min-width: $breakpoint-lg) {
 
     .main {
-        margin: ($big-v-pad * 2) auto $big-v-pad;
         width: 1200px;
 
         .body {
@@ -527,8 +529,8 @@ input {
     }
 
     .cell-button {
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 0;
+        padding-right: 0;
         width: 20px;
     }
 
@@ -552,6 +554,15 @@ input {
             pointer-events: none;
             text-decoration: line-through;
         }
+    }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-sm) {
+    .common-table .cell-button {
+        padding-left: 5px;
+        padding-right: 5px;
     }
 }
 

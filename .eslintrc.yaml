@@ -18,3 +18,6 @@ rules:
     no-case-declarations: 0
     no-fallthrough: 0
     semi: 2
+
+globals:
+    Promise: true

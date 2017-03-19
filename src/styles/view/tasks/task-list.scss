@@ -6,12 +6,21 @@
 
 .task-list {
 
-    .controls .control-group.big-controls {
-        display: none;
+    .controls .control-group {
+
+        .text-filter,
+        .status-filter {
+            display: none;
+        }
+
+        .back-button,
+        .status-filter-cycle-button {
+            display: flex;
+        }
     }
 }
 
-// > sm
+// > xs
 
 @media screen and (min-width: $breakpoint-xs) {
 
@@ -24,13 +33,58 @@
 
         .controls .control-group {
 
-            &.small-controls {
-                display: none;
+            .text-filter,
+            .status-filter {
+                display: flex;
             }
 
-            &.big-controls {
-                display: flex;
+            .back-button,
+            .status-filter-cycle-button {
+                display: none;
             }
         }
    }
 }
+
+//// > xs
+//
+//@media screen and (min-width: $breakpoint-xs) {
+//
+//    .task-list {
+//        clear: both;
+//        list-style: none;
+//        margin-bottom: $big-v-pad;
+//        min-height: 200px;
+//        padding: 0;
+//
+//        .controls .control-group {
+//
+//            .text-filter,
+//            .status-filter-cycle-button,
+//            .status-filter-cycle-button .label {
+//                display: flex;
+//            }
+//
+//            .back-button,
+//            .status-filter {
+//                display: none;
+//            }
+//        }
+//   }
+//}
+//
+//// > sm
+//
+//@media screen and (min-width: $breakpoint-sm) {
+//
+//    .task-list .controls .control-group {
+//
+//        .status-filter {
+//            display: flex;
+//        }
+//
+//        .status-filter-cycle-button {
+//            display: none;
+//        }
+//   }
+//}

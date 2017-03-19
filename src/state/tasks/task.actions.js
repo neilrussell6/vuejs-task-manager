@@ -12,6 +12,9 @@ import {
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
+
 // local
 import * as constants from './task.constants';
 
@@ -185,14 +188,27 @@ export function refreshTasks (project_server_id) {
     return fetchTasks(project_server_id);
 }
 
-export function fetchTasks (project_server_id) {
+export function fetchTasks (project) {
     return function (dispatch) {
-        
-        const _endpoint = `projects/${project_server_id}/tasks`;
 
-        dispatch(readEndpoint(_endpoint))
-            .catch(() => {
-                dispatch(API_READ_FAILED);
+        // get tasks from local storage
+        return StorageUtils.index('tasks').then((tasks) => {
+            dispatch({
+                type: constants.ACTION_FETCHED_TASKS,
+                data: tasks
             });
+        });
     };
 }
+
+// export function fetchTasks (project_server_id) {
+//     return function (dispatch) {
+//
+//         const _endpoint = `projects/${project_server_id}/tasks`;
+//
+//         dispatch(readEndpoint(_endpoint))
+//             .catch(() => {
+//                 dispatch(API_READ_FAILED);
+//             });
+//     };
+// }

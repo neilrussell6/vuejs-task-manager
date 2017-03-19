@@ -4,39 +4,30 @@
         <!-- controls -->
         <div class="controls task-controls bordered">
 
-            <!-- small filter control & back button -->
-            <div class="control-group small-controls">
-                <div class="control control-left text-filter">
+            <!-- controls -->
+            <div class="control-group">
+                <div class="control control-left">
 
-                    <button class="add-task-button" v-on:click="_onBack()">
+                    <text-filter class="text-filter" :on-change="_onTextFilterUpdate" :term="text_filter"></text-filter>
+
+                    <button class="back-button" v-on:click="_onBack()">
                         <i class="fa fa-chevron-left" aria-hidden="true"></i>
                         <span class="label">BACK</span>
                     </button>
 
                 </div>
-                <div class="control control-right status-filter">
-
-                    <common-cycle-button :data="status_filter_cycle_button_data"
-                                         :on-click="_onStatusFilterSelection"
-                                         :selected-index="status_filter_cycle_button_index"
-                    ></common-cycle-button>
-
-                </div>
-            </div>
-
-            <!-- big filter controls -->
-            <div class="control-group big-controls">
-                <div class="control control-left text-filter">
-
-                    <text-filter :on-change="_onTextFilterUpdate" :term="text_filter"></text-filter>
-
-                </div>
-                <div class="control control-right status-filter">
+                <div class="control control-right">
 
                     <status-filter class="status-filter"
                                    :selected-status-filter="status_filter"
                                    :on-select="_onStatusFilterSelection"
                     ></status-filter>
+
+                    <common-cycle-button class="status-filter-cycle-button"
+                                         :data="status_filter_cycle_button_data"
+                                         :on-click="_onStatusFilterSelection"
+                                         :selected-index="status_filter_cycle_button_index"
+                    ></common-cycle-button>
 
                 </div>
             </div>

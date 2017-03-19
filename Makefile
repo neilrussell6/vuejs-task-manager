@@ -171,7 +171,8 @@ report-coverage:
 # Runs webpack-dev-server with live reloading.
 #------------------------------
 
-serve: sasslint jslint test
+#serve: sasslint jslint test
+serve:
 	@webpack-dev-server --config "$(FILE_WEBPACK_CONFIG_DEV)" --hot --inline --open
 
 #------------------------------

@@ -4,18 +4,18 @@
         <template v-for="item in data">
 
             <!-- selected / inline edit -->
-            <template v-if="selected_item_local_id === item.local_id">
+            <template v-if="selected_item_uuid === item.uuid">
 
                 <li class="selected inline-edit editable"
-                    :class="{editing: editing_item_local_id === item.local_id}"
+                    :class="{editing: editing_item_uuid === item.uuid}"
                     v-on:click="_onInlineEditClick(item)">
 
                     <!-- editing -->
-                    <template v-if="editing_item_local_id === item.local_id">
+                    <template v-if="editing_item_uuid === item.uuid">
                         <input type="text"
-                               :id="item.local_id"
+                               :id="item.uuid"
                                placeholder="project name"
-                               v-focus="editing_item_local_id === item.local_id"
+                               v-focus="editing_item_uuid === item.uuid"
                                v-model="item[ labelField ]"
                                v-on:keyup.enter="_onInlineEditEnter()"
                                v-on-clickaway="_onInlineEditClickOutside"
@@ -50,6 +50,7 @@
 
     // utils
     import * as CollectionUtils from 'utils/collection.utils';
+    import * as StorageUtils from 'utils/storage/storage.utils';
 
     export default {
 
@@ -57,8 +58,8 @@
             return {
                 editing_item: null,
                 editing_item_before_value: null,
-                editing_item_local_id: null,
-                selected_item_local_id: null
+                editing_item_uuid: null,
+                selected_item_uuid: null
             };
         },
 
@@ -77,7 +78,7 @@
             onBlur: { type: Function },
             onEdit: { type: Function },
             onSelect: { type: Function },
-            selectedUniqueId: { type: String, default: null }
+            selectedUuid: { type: String, default: null }
         },
 
         watch: {
@@ -101,24 +102,30 @@
                         return;
                     }
 
-                    // item already has a server id, so is not new
-                    if (_new_item.hasOwnProperty('server_id')) {
-                        return;
-                    }
+                    // check if item is in storage
+                    StorageUtils.isStored(_new_item).then((is_stored) => {
 
-                    // focus item for editing
-                    this.editing_item = _new_item;
-                    this.editing_item_before_value = _new_item[ this.labelField ];
-                    this.editing_item_local_id = _new_item.local_id;
-                    this.selected_item_local_id = _new_item.local_id;
+                        if (is_stored) {
+                            return;
+                        }
 
-                    if (typeof this.onEdit !== 'undefined') {
-                        this.onEdit(this.editing_item);
-                    }
+                        // focus item for editing
+                        this.editing_item = _new_item;
+                        this.editing_item_before_value = _new_item[ this.labelField ];
+                        this.editing_item_uuid = _new_item.uuid;
+                        this.selected_item_uuid = _new_item.uuid;
+
+                        if (typeof this.onEdit !== 'undefined') {
+                            this.onEdit(this.editing_item);
+                        }
+                    })
+                    .catch((message) => {
+                        console.error(message);
+                    });
                 }
             },
-            selectedUniqueId: function (value) {
-                this.selected_item_local_id = value;
+            selectedUuid: function (value) {
+                this.selected_item_uuid = value;
             }
         },
 
@@ -131,7 +138,7 @@
             _onInlineEditClick: function (data) {
                 this.editing_item = data;
                 this.editing_item_before_value = data[ this.labelField ];
-                this.editing_item_local_id = data.local_id;
+                this.editing_item_uuid = data.uuid;
 
                 if (typeof this.onEdit !== 'undefined') {
                     this.onEdit(this.editing_item);
@@ -180,7 +187,7 @@
                     this.onSelect(item);
                 }
 
-                this.selected_item_local_id = item.local_id;
+                this.selected_item_uuid = item.uuid;
             },
 
             // ------------------------------------
@@ -189,19 +196,19 @@
 
             _getItemClass: function (item) {
 
-                if (this.editing_item_local_id === null) {
+                if (this.editing_item_uuid === null) {
                     return;
                 }
 
                 return {
-                    selected: item.local_id === this.selected_item_local_id
+                    selected: item.uuid === this.selected_item_uuid
                 };
             },
 
             _resetEditing: function () {
                 this.editing_item = null;
                 this.editing_item_before_value = null;
-                this.editing_item_local_id = null;
+                this.editing_item_uuid = null;
             }
         }
     };

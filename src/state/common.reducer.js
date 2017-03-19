@@ -1,53 +1,24 @@
-// data
-import { Project } from 'data/models/crud/jsonapi/project.model';
-
 // state
-import * as storage_constants from 'state/storage/storage.constants';
-import * as common_reducer from 'state/common.reducer';
 import * as common_constants from 'state/common.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
 
-// local
-import * as project_constants from '../project.constants';
-
-// ---------------------------
-// private
-// ---------------------------
-
-function project (state, action) {
-
-    let _data;
+export function item (state, action) {
 
     switch (action.type) {
 
         // ---------------------------
-        // project actions
+        // common actions
         // ---------------------------
 
-        case project_constants.ACTION_FETCHED_PROJECTS:
-            return new Project(action.data);
-
-        case project_constants.ACTION_UPDATE_PROJECT_LOCALLY:
-            return new Project(Object.assign({}, state, action.data));
+        case common_constants.ACTION_MAKE:
+            return new action.model(Object.assign({}, action.data, { uuid: StorageUtils.makeUUID() }));
 
         // ---------------------------
         // storage actions
         // ---------------------------
 
-        // case storage_constants.API_CREATED:
-        //     _data = Object.assign({}, project.properties, action.payload.data.attributes, { id: action.payload.data.id });
-        //     return new Project(_data);
-        //
-        // case storage_constants.API_UPDATED:
-        //     _data = Object.assign({}, project.properties, action.payload.data.attributes);
-        //     return new Project(_data);
-        
-        case storage_constants.ACTION_LOCAL_STORAGE_VIEWED:
-            const uuid = StorageUtils.makeUUID();
-            // _data = Object.assign({}, { id: project.id }, { uuid }, project.attributes);
-            return new Project({});
     }
 }
 
@@ -55,7 +26,7 @@ function project (state, action) {
 // public
 // ---------------------------
 
-export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, action = {}) {
+export function collection (state, action) {
 
     let _index;
     let _item;
@@ -63,20 +34,17 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
     switch (action.type) {
 
         // ---------------------------
-        // project actions
+        // common actions
         // ---------------------------
 
-        case project_constants.ACTION_FETCHED_PROJECTS:
-            return action.data.map((item) => project({}, Object.assign({}, action, { data: item })));
-
-        case project_constants.ACTION_MAKE_PROJECT:
-            return common_reducer.collection(state, Object.assign({}, action, {
-                type: common_constants.ACTION_MAKE,
-                model: Project
-            }));
+        case common_constants.ACTION_MAKE:
+            return [
+                ...state,
+                item({}, Object.assign({}, action, { index: state.length }))
+            ];
 
         case project_constants.ACTION_REMOVE_PROJECT:
-            _index = state.reduce((val, item, i) => (item.uuid === action.uuid) ? i : val, 0);
+            _index = state.reduce((val, item, i) => (item.uuid === action.data.uuid) ? i : val, 0);
 
             return [
                 ...state.slice(0, _index),
@@ -106,15 +74,15 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
 
         // case storage_constants.API_CREATED:
         //
-        //     if (action.type !== 'projects') {
-        //         return state;
+        //     if (action.payload.data.type !== 'projects') {
+        //         return list;
         //     }
         //
         //     // get index
-        //     _index = state.reduce((val, item, i) => !item.hasOwnProperty('uuid') ? i : val, null);
+        //     _index = list.reduce((val, item, i) => !item.hasOwnProperty('server_id') ? i : val, null);
         //
         //     if (_index === null) {
-        //         return state;
+        //         return list;
         //     }
         //
         //     // ... and update with given data attributes
@@ -126,7 +94,7 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
         //         ...[ _item ],
         //         ...list.slice(_index + 1)
         //     ];
-
+        //
         // case storage_constants.API_DELETED:
         //
         //     if (action.payload.type !== 'projects') {
