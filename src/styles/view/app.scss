@@ -122,11 +122,6 @@ input {
                 text-decoration: underline;
             }
         }
-
-        i {
-            font-size: 1.1em;
-            padding-left: 10px;
-        }
     }
 }
 
@@ -193,9 +188,22 @@ input {
         }
     }
 
-    //.controls {
-    //    display: none;
-    //}
+    .controls {
+        position: absolute;
+        top: $med-v-pad;
+        right: $small-h-pad;
+        margin: 0;
+        padding: 0;
+
+        i {
+            font-size: 1.1em;
+            padding-left: 0;
+        }
+
+        .label {
+            display: none;
+        }
+    }
 }
 
 // > sm
@@ -203,6 +211,7 @@ input {
 @media screen and (min-width: $breakpoint-xs) {
 
     .header {
+        flex-direction: row;
         justify-content: left;
 
         .title {
@@ -219,22 +228,30 @@ input {
             }
         }
 
-        //.controls {
-        //    background-color: $bg-color-dark;
-        //    border: 1px solid $bdr-color-dark;
-        //    box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
-        //    opacity: 1;
-        //    padding: $med-h-pad ($med-h-pad * 2) $med-h-pad $med-h-pad;
-        //    position: absolute;
-        //    right: 0;
-        //    top: 0;
-        //    transition: opacity .5s linear;
-        //
-        //    &.disabled {
-        //        opacity: .2;
-        //        transition: opacity .5s linear;
-        //    }
-        //}
+        .controls {
+            background-color: $bg-color-dark;
+            border: 1px solid $bdr-color-dark;
+            box-shadow: 0 0 75px -6px rgba(0, 0, 0, .39);
+            opacity: 1;
+            padding: $med-h-pad $med-h-pad $med-h-pad $med-h-pad;
+            position: absolute;
+            right: $med-h-pad;
+            top: 0;
+            transition: opacity .5s linear;
+
+            &.disabled {
+                opacity: .2;
+                transition: opacity .5s linear;
+            }
+
+            i {
+                padding-left: 10px;
+            }
+
+            .label {
+                display: inline;
+            }
+        }
     }
 }
 
@@ -352,6 +369,11 @@ input {
 
         .column-right {
             padding-right: $med-h-pad;
+
+            button i {
+                font-size: 1.1em;
+                padding-left: 10px;
+            }
         }
     }
 }

@@ -5,7 +5,6 @@ import { User } from 'data/models/crud/jsonapi/user.model';
 import * as api_constants from 'state/redux-json-api.constants';
 
 // utils
-import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
 import * as StorageUtils from 'utils/storage/storage.utils';
 
 // local
@@ -36,44 +35,13 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
             return _user;
 
         case user_constants.ACTION_FETCHED_USER:
-            console.log("ACTION_FETCHED_USER");
-            // return action.data;
-            var r = new User(Object.assign({}, action.data, { is_authenticated: true }));
-            console.log(r);
-            return r;
+            return action.data;
+            // return new User(Object.assign({}, action.data, { is_authenticated: true }));
 
         case user_constants.ACTION_UPDATE_LOCAL_USER:
-            console.log("ACTION_UPDATE_LOCAL_USER");
             _user = new User(Object.assign({}, state, action.data));
             StorageUtils.store('user', _user);
             return _user;
-
-        // case user_constants.ACTION_FETCH_OR_CREATE_LOCAL_USER:
-        //
-        //     // user exists in state
-        //     if (state !== null && typeof state.uuid !== 'undefined') {
-        //         return state;
-        //     }
-        //
-        //     // get user from local storage
-        //     _user = StorageUtils.view('users');
-        //     console.log(_user);
-        //     // if (_user !== null) {
-        //     //
-        //     //     console.log(_user);
-        //     //
-        //     //     // ... return user from local storage
-        //     //     return new User(_user);
-        //     // }
-        //     //
-        //     // // user does not exist in state or in local storage
-        //     // // ... make & store
-        //     // const uuid = StorageUtils.makeUUID();
-        //     // _user = new User({ uuid });
-        //     // StorageUtils.store(_user);
-        //
-        //     // ... return new user
-        //     return _user;
 
         default:
             return state;

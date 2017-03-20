@@ -12,7 +12,8 @@
 
                 <div class="control">
                     <button v-on:click="_onToggleShowLogin()">
-                            <i class="fa fa-user" aria-hidden="true"></i>
+                        <span class="label">login</span>
+                        <i class="fa fa-user" aria-hidden="true"></i>
                     </button>
                 </div>
 
@@ -195,7 +196,6 @@
                 this.is_disabled = _state.app.is_disabled;
                 this.is_message_minimal = _state.app.is_message_minimal;
                 this.show_login = _state.app.show_login;
-                console.log(this.show_login);
 
                 // message
 

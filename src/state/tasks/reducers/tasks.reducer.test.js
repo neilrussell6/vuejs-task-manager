@@ -6,9 +6,6 @@ import sinon from 'sinon';
 import { API_READ } from 'state/redux-json-api.constants';
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
-// utils
-import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
-
 // local
 import * as task_constants from '../task.constants';
 import * as Reducer from './tasks.reducer';

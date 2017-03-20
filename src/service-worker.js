@@ -3,18 +3,17 @@ import * as app_settings from 'data/app.settings';
 const CACHE_NAME_API = 'task-manager-api-v1-' + (new Date()).toISOString();
 const CACHE_NAME_APP_SHELL = 'task-manager-app-shell-v1-' + (new Date()).toISOString();
 
-console.log("ZZZZZZ");
 const { assets } = global.serviceWorkerOption;
 let _files_to_cache = [
     ...assets,
     '/',
-    '/index.html'//,
-    // '/service-worker.js'
+    '/index.html'
 ];
-
 console.log(_files_to_cache);
 
-_files_to_cache = _files_to_cache.map((file) => `http://10.0.0.3:8887${file}`);
+_files_to_cache = _files_to_cache.map((path) => {
+    return new URL(path, global.location).toString();
+});
 
 console.log(_files_to_cache);
 
@@ -24,7 +23,7 @@ console.log(_files_to_cache);
 
 self.addEventListener('install', function(e) {
 
-    // console.log('[Service Worker] Install');
+    console.log('[Service Worker] Install');
 
     // --------------------------------------------
     // App Shell
@@ -36,7 +35,7 @@ self.addEventListener('install', function(e) {
     e.waitUntil(
         caches.open(CACHE_NAME_APP_SHELL).then(function(cache) {
 
-            // console.log('[Service Worker] Caching App Shell');
+            console.log('[Service Worker] Caching App Shell');
 
             return cache.addAll(_files_to_cache);
         }).catch(function(error) { console.error(error); })
@@ -49,7 +48,7 @@ self.addEventListener('install', function(e) {
 
 self.addEventListener('activate', function(e) {
 
-    // console.log('[Service Worker] Activate');
+    console.log('[Service Worker] Activate');
 
     // --------------------------------------------
     // Clear old cache
@@ -60,7 +59,7 @@ self.addEventListener('activate', function(e) {
             return Promise.all(keyList.map(function(key) {
                 if (key !== CACHE_NAME_APP_SHELL && key !== CACHE_NAME_API) {
 
-                    // console.log('[Service Worker] Removing old cache', key);
+                    console.log('[Service Worker] Removing old cache', key);
 
                     return caches.delete(key);
                 }
@@ -80,7 +79,7 @@ self.addEventListener('activate', function(e) {
 
 self.addEventListener('fetch', function(e) {
 
-    // console.log('[Service Worker] Fetch', e.request.url);
+    console.log('[Service Worker] Fetch', e.request.url);
 
     let _api_url = app_settings.DOMAIN;
 
@@ -103,8 +102,8 @@ self.addEventListener('fetch', function(e) {
                 var api_response;
 
                 cache.match(e.request.url).then(function(response) {
-                    // console.log('[Service Worker] API Request : CACHE MATCH', e.request.url);
-                    // console.log(response);
+                    console.log('[Service Worker] API Request : CACHE MATCH', e.request.url);
+                    console.log(response);
                     if (typeof response !== 'undefined') {
                         response.clone().json().then(
                             (response) => {
@@ -119,9 +118,9 @@ self.addEventListener('fetch', function(e) {
 
                 return fetch(e.request).then(function(response) {
 
-                    // console.log('[Service Worker] API Request : FETCH RESPONSE');
-                    // console.log(response);
-                    // console.log('[Service Worker] Caching API response', e.request.url);
+                    console.log('[Service Worker] API Request : FETCH RESPONSE');
+                    console.log(response);
+                    console.log('[Service Worker] Caching API response', e.request.url);
 
                     if (typeof response !== 'undefined' && typeof cache_response !== 'undefined') {
                         response.clone().json().then(
@@ -160,12 +159,12 @@ self.addEventListener('fetch', function(e) {
 
                 if (response) {
 
-                    // console.log('[Service Worker] App Shell Request : CACHE');
+                    console.log('[Service Worker] App Shell Request : CACHE');
 
                     return response;
                 }
 
-                // console.log('[Service Worker] App Shell Request : NO CACHE : FETCH');
+                console.log('[Service Worker] App Shell Request : NO CACHE : FETCH');
 
                 return fetch(e.request);
                 // return response || fetch(e.request);

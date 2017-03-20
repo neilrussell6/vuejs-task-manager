@@ -50,11 +50,11 @@ export function destroyProject (project, user) {
                     return;
                 }
 
-                // destroy on server
-                dispatch(deleteResource(project.resource_identifier_object))
-                    .catch(() => {
-                        dispatch(API_DELETE_FAILED);
-                    });
+                // // destroy on server
+                // dispatch(deleteResource(project.resource_identifier_object))
+                //     .catch(() => {
+                //         dispatch(API_DELETE_FAILED);
+                //     });
 
             }).catch(Promise.reject);
         }).catch(Promise.reject);
@@ -105,15 +105,15 @@ export function storeProject (project, user) {
                 }
 
                 // store on server
-                dispatch(createResource(project.resource_object))
-                    .then((response) => {
-                        let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
-                        dispatch(selectProject(_data));
-                        dispatch(TaskActions.fetchTasks(response.data.id));
-                    })
-                    .catch(() => {
-                        dispatch(API_CREATE_FAILED);
-                    });
+                // dispatch(createResource(project.resource_object))
+                //     .then((response) => {
+                //         let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
+                //         dispatch(selectProject(_data));
+                //         dispatch(TaskActions.fetchTasks(response.data.id));
+                //     })
+                //     .catch(() => {
+                //         dispatch(API_CREATE_FAILED);
+                //     });
 
             }).catch(Promise.reject);
         }).catch(Promise.reject);
@@ -138,10 +138,10 @@ export function updateProject (project, data = {}, user) {
             }
 
             // update on server
-            dispatch(updateResource(project.resource_object))
-                .catch(() => {
-                    dispatch(API_UPDATE_FAILED);
-                });
+            // dispatch(updateResource(project.resource_object))
+            //     .catch(() => {
+            //         dispatch(API_UPDATE_FAILED);
+            //     });
 
         }).catch(Promise.reject);
     };
@@ -171,24 +171,24 @@ export function fetchProjects (user) {
                 return;
             }
 
-            // index from server
-            const _endpoint = `users/${user.uuid}/projects`;
-
-            dispatch(readEndpoint(_endpoint))
-                .then(
-                    (response) => {
-
-                        const _data = response.payload.data;
-
-                        // update many in local storage
-                        return StorageUtils.updateMany('projects').then ((projects) => {
-
-                        });
-                    }
-                )
-                .catch(() => {
-                    dispatch(API_READ_FAILED);
-                });
+            // // index from server
+            // const _endpoint = `users/${user.uuid}/projects`;
+            //
+            // dispatch(readEndpoint(_endpoint))
+            //     .then(
+            //         (response) => {
+            //
+            //             const _data = response.payload.data;
+            //
+            //             // update many in local storage
+            //             return StorageUtils.updateMany('projects').then ((projects) => {
+            //
+            //             });
+            //         }
+            //     )
+            //     .catch(() => {
+            //         dispatch(API_READ_FAILED);
+            //     });
 
 
         }).catch(Promise.reject);

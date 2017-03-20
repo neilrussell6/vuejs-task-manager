@@ -8,9 +8,6 @@ import { User } from 'data/models/crud/jsonapi/user.model';
 // state
 import * as api_constants from 'state/redux-json-api.constants';
 
-// utils
-import * as LocalStorageUtils from 'utils/local-storage/local-storage.utils';
-
 // local
 import * as Reducer from './user.reducer';
 import * as user_constants from '../user.constants';
