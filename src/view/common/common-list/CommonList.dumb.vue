@@ -136,6 +136,12 @@
             // ------------------------------------
 
             _onInlineEditClick: function (data) {
+
+                // if already editing
+                if (this.editing_item !==  null) {
+                    return;
+                }
+
                 this.editing_item = data;
                 this.editing_item_before_value = data[ this.labelField ];
                 this.editing_item_uuid = data.uuid;

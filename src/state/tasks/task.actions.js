@@ -11,12 +11,142 @@ import {
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
+import { Task } from 'data/models/crud/jsonapi/task.model';
+import * as TaskActions from 'state/tasks/task.actions';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
 
 // local
 import * as constants from './task.constants';
+
+// ==============================================
+// local storage
+// ==============================================
+
+// --------------------------
+// item
+// --------------------------
+
+export function destroyTask (task) {
+    return function (dispatch) {
+
+        return StorageUtils.validate(task).then(() => {
+
+            const _resource_object = task.resource_object;
+
+            return StorageUtils.destroy(_resource_object.type, _resource_object.id).then(() => {
+
+                dispatch({
+                    type: constants.ACTION_DESTROYED_TASK,
+                    task
+                });
+
+            }).catch(Promise.reject);
+        }).catch(Promise.reject);
+    };
+}
+
+export function storeOrUpdateTask (task, project, user) {
+    return function (dispatch) {
+
+        return StorageUtils.validate(task).then(() => {
+
+            const _resource_object = task.resource_object;
+
+            return StorageUtils.view(_resource_object.type, _resource_object.id).then((response) => {
+
+                // is not in storage
+
+                if (typeof response === 'undefined') {
+                    return dispatch(storeTask(task, project, user));
+                }
+
+                // is in storage
+
+                return dispatch(updateTask(task));
+
+            }).catch(Promise.reject);
+        }).catch(Promise.reject);
+    };
+}
+
+export function storeTask (task, project, user) {
+    return function (dispatch) {
+
+        return StorageUtils.validate(task).then(() => {
+
+            const _task = new Task(Object.assign({}, task, { project_uuid: project.uuid, user_uuid: user.uuid }));
+            return StorageUtils.store(_task).then((uuid) => {
+
+                dispatch({
+                    type: constants.ACTION_STORED_TASK,
+                    task: _task
+                });
+
+            }).catch(Promise.reject);
+        }).catch(Promise.reject);
+    };
+}
+
+export function updateTask (task, data = {}) {
+    return function (dispatch) {
+
+        Promise.all([ StorageUtils.validate(task), StorageUtils.update(task, data) ]).then((responses) => {
+
+            dispatch({
+                type: constants.ACTION_UPDATED_TASK,
+                task,
+                data
+            });
+
+        }).catch(Promise.reject);
+    };
+}
+
+export function toggleTaskComplete (task) {
+    return function (dispatch) {
+        dispatch(updateTask(task, task.toggleStatusComplete()));
+    };
+}
+
+export function trashTask (task) {
+    return function (dispatch) {
+        dispatch(updateTask(task, task.trash()));
+    };
+}
+
+export function undoTrashTask (task) {
+    return function (dispatch) {
+        dispatch(updateTask(task, task.undoTrash()));
+    };
+}
+
+// --------------------------
+// collection
+// --------------------------
+
+export function refreshTasks (project) {
+    return fetchTasks(project);
+}
+
+export function fetchTasks (project) {
+    return function (dispatch) {
+
+        return StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
+
+            dispatch({
+                type: constants.ACTION_INDEXED_TASKS,
+                data: tasks
+            });
+
+        }).catch(Promise.reject);
+    };
+}
+
+// ==============================================
+// state
+// ==============================================
 
 // --------------------------
 // text filter
@@ -53,162 +183,37 @@ export function setStatusFilter (value) {
 }
 
 // --------------------------
-// task
+// item
 // --------------------------
 
-export function createTask (task, project) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        const _resource_object = Object.assign({}, task.resource_object, {
-            relationships: {
-                project: {
-                    data: {
-                        type: 'projects',
-                        id: project.server_id
-                    }
-                }
-            }
-        });
-
-        dispatch(createResource(_resource_object))
-            .catch(() => {
-                dispatch(API_CREATE_FAILED);
-            });
-    };
-}
-
-export function deleteTask (task) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_identifier_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        dispatch(deleteResource(task.resource_identifier_object))
-            .catch(() => {
-                dispatch(API_DELETE_FAILED);
-            });
-    };
-}
-
-export function makeTask () {
+export function deselectTask () {
     return {
-        type:     constants.ACTION_MAKE_TASK
+        type:    constants.ACTION_DESELECT_TASK
     };
 }
 
-export function removeTask (task) {
+export function makeTask (data = {}) {
     return {
-        type: constants.ACTION_REMOVE_TASK,
-        task
-    };
-}
-
-export function toggleTaskComplete (task) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        const _task = task.toggleStatusComplete();
-
-        dispatch(updateTaskLocally(task, _task));
-
-        dispatch(updateResource(_task.resource_object))
-            .catch(() => {
-                dispatch(API_READ_FAILED);
-            });
-    };
-}
-
-export function trashTask (task) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        const _task = task.trash();
-
-        dispatch(updateResource(_task.resource_object))
-            .catch(() => {
-                dispatch(API_UPDATE_FAILED);
-            });
-    };
-}
-
-export function undoTrashTask (task) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        const _task = task.undoTrash();
-
-        dispatch(updateResource(_task.resource_object))
-            .catch(() => {
-                dispatch(API_UPDATE_FAILED);
-            });
-    };
-}
-
-export function updateTask (task) {
-    return function (dispatch) {
-
-        if (!(task instanceof JsonApiModel) || task.resource_object === null) {
-            throw new Error("Invalid model");
-        }
-
-        dispatch(updateResource(task.resource_object))
-            .catch(() => {
-                dispatch(API_UPDATE_FAILED);
-            });
-    };
-}
-
-export function updateTaskLocally (task, data) {
-    return {
-        type: constants.ACTION_UPDATE_TASK_LOCALLY,
-        task,
+        type: constants.ACTION_MAKE_TASK,
         data
     };
 }
 
-// --------------------------
-// tasks
-// --------------------------
-
-export function refreshTasks (project_server_id) {
-    return fetchTasks(project_server_id);
-}
-
-export function fetchTasks (project) {
-    return function (dispatch) {
-
-        // get tasks from local storage
-        return StorageUtils.index('tasks').then((tasks) => {
-            dispatch({
-                type: constants.ACTION_FETCHED_TASKS,
-                data: tasks
-            });
-        });
+export function removeTask (uuid) {
+    return {
+        type: constants.ACTION_REMOVE_TASK,
+        uuid
     };
 }
 
-// export function fetchTasks (project_server_id) {
-//     return function (dispatch) {
-//
-//         const _endpoint = `projects/${project_server_id}/tasks`;
-//
-//         dispatch(readEndpoint(_endpoint))
-//             .catch(() => {
-//                 dispatch(API_READ_FAILED);
-//             });
-//     };
-// }
+export function selectTask (task) {
+    return function (dispatch) {
+
+        dispatch({
+            type:   constants.ACTION_SELECT_TASK,
+            data:   task
+        });
+
+        dispatch(TaskActions.fetchTasks(task));
+    };
+}

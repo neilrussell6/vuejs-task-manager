@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="row in data" :class="[{ editing: row.local_id === editing_item_local_id}, _rowClass(row)]">
+            <tr v-for="row in data" :class="[{ editing: row.uuid === editing_item_uuid}, _rowClass(row)]">
                 <template v-for="key in dataKeys">
 
                     <!-- cell templates -->
@@ -61,11 +61,11 @@
                                 :class="'cell-'+key">
 
                                 <!-- editing -->
-                                <template v-if="editing_item_local_id === row.local_id">
+                                <template v-if="editing_item_uuid === row.uuid">
                                     <input type="text"
-                                           :id="row.local_id"
+                                           :id="row.uuid"
                                            placeholder="task name"
-                                           v-focus="editing_item_local_id === row.local_id"
+                                           v-focus="editing_item_uuid === row.uuid"
                                            v-model="row[ key ]"
                                            v-on:keyup.enter="_onInlineEditEnter()"
                                            v-on-clickaway="_onInlineEditClickOutside"
@@ -101,6 +101,7 @@
 
     // utils
     import * as CollectionUtils from 'utils/collection.utils';
+    import * as StorageUtils from 'utils/storage/storage.utils';
 
     let _vm;
 
@@ -110,7 +111,7 @@
             return {
                 editing_item: null,
                 editing_item_before_value: null,
-                editing_item_local_id: null,
+                editing_item_uuid: null,
                 editing_column_key: null
             };
         },
@@ -155,20 +156,26 @@
                         return;
                     }
 
-                    // item already has a server id, so is not new
-                    if (_new_item.hasOwnProperty('server_id')) {
-                        return;
-                    }
+                    // check if item is in storage
+                    StorageUtils.isStored(_new_item).then((is_stored) => {
 
-                    // focus item for editing
-                    this.editing_item = _new_item;
-                    this.editing_item_before_value = _new_item[ this.defaultEditingColumnKey ];
-                    this.editing_item_local_id = _new_item.local_id;
-                    this.editing_column_key = this.defaultEditingColumnKey;
+                        if (is_stored) {
+                            return;
+                        }
 
-                    if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
-                        this.cellConfigs[ this.editing_column_key ].onEdit(this.editing_item);
-                    }
+                        // focus item for editing
+                        this.editing_item = _new_item;
+                        this.editing_item_before_value = _new_item[ this.defaultEditingColumnKey ];
+                        this.editing_item_uuid = _new_item.uuid;
+                        this.editing_column_key = this.defaultEditingColumnKey;
+
+                        if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
+                            this.cellConfigs[ this.editing_column_key ].onEdit(this.editing_item);
+                        }
+                    })
+                    .catch((message) => {
+                        console.error(message);
+                    });
                 }
             }
         },
@@ -190,13 +197,18 @@
 
             _onInlineEditClick: function (data, column_key) {
 
+                // if already editing
+                if (this.editing_item !==  null) {
+                    return;
+                }
+
                 if (this.cellConfigs[ column_key ].hasOwnProperty('canEdit') && !this.cellConfigs[ column_key ].canEdit(data)) {
                     return;
                 }
 
                 this.editing_item = data;
                 this.editing_item_before_value = data[ column_key ];
-                this.editing_item_local_id = data.local_id;
+                this.editing_item_uuid = data.uuid;
                 this.editing_column_key = column_key;
 
                 if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
@@ -259,7 +271,7 @@
 
             _resetEditing: function () {
                 _vm.editing_item = null;
-                _vm.editing_item_local_id = null;
+                _vm.editing_item_uuid = null;
                 _vm.editing_column_key = null;
             },
 

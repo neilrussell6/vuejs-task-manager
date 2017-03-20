@@ -10,9 +10,16 @@ export class Task extends JsonApiModel {
 
     get defaults () {
         return {
+            uuid: null,
+            user_uuid: null,
+            project_uuid: null,
             name: '',
             status: TASK_STATUS.INCOMPLETE
         };
+    }
+
+    get exclude_attributes () {
+        return ['uuid', 'project_uuid', 'user_uuid', 'created_at', 'updated_at'];
     }
 
     get type () {

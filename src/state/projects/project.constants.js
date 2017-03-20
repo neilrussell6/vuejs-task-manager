@@ -2,12 +2,17 @@
 // actions
 // --------------------------
 
-export const ACTION_MAKE_PROJECT = 'ACTION_MAKE_PROJECT';
-export const ACTION_REMOVE_PROJECT = 'REMOVE_PROJECT';
-export const ACTION_SELECT_PROJECT = 'SELECT_PROJECT';
-export const ACTION_DESELECT_PROJECT = 'DESELECT_PROJECT';
-export const ACTION_UPDATE_PROJECT_LOCALLY = 'UPDATE_PROJECT_LOCALLY';
-export const ACTION_FETCHED_PROJECTS = 'FETCHED_PROJECTS';
+// projects : local storage
+export const ACTION_DESTROYED_PROJECT   = 'DESTROYED_PROJECT';
+export const ACTION_INDEXED_PROJECTS    = 'INDEXED_PROJECTS';
+export const ACTION_STORED_PROJECT      = 'STORED_PROJECT';
+export const ACTION_UPDATED_PROJECT     = 'UPDATED_PROJECT';
+
+// projects : state
+export const ACTION_DESELECT_PROJECT    = 'DESELECT_PROJECT';
+export const ACTION_MAKE_PROJECT        = 'MAKE_PROJECT';
+export const ACTION_REMOVE_PROJECT      = 'REMOVE_PROJECT';
+export const ACTION_SELECT_PROJECT      = 'SELECT_PROJECT';
 
 // --------------------------
 // default states

@@ -95,17 +95,31 @@ export function index (resource_type) {
     });
 }
 
-export function indexRelated (resource, relationship) {
-    return view(resource, relationship, ENDPOINT_INDEX_RELATED);
+export function indexRelated (related_type, related_key, related_value) {
+    return new Promise((resolve, reject) => {
+
+        validate().then(() => {
+
+            db[ related_type ]
+                .where(related_key).equals(related_value)
+                .toArray()
+                .then((response) => {
+                    resolve(response);
+                })
+                .catch(reject);
+        })
+        .catch(reject);
+    });
 }
 
-export function store (resource, relationships = {}) {
+export function store (resource) {
     return new Promise((resolve, reject) => {
 
         validate(resource).then(() => {
 
             const _resource_object = resource.resource_object;
-            const _data = Object.assign({}, _resource_object.attributes, { uuid: _resource_object.id }, relationships);
+            const _data = resource;
+
             db[ _resource_object.type ].add(_data).then((response) => {
                 resolve(response);
             })
@@ -115,13 +129,13 @@ export function store (resource, relationships = {}) {
     });
 }
 
-export function update (resource) {
+export function update (resource, data = {}) {
     return new Promise((resolve, reject) => {
 
         validate(resource).then(() => {
 
             const _resource_object = resource.resource_object;
-            const _data = Object.assign({}, _resource_object.attributes, { uuid: _resource_object.id });
+            const _data = Object.assign({}, _resource_object.attributes, { uuid: _resource_object.id }, data);
 
             db[ _resource_object.type ].put(_data).then((response) => {
                 resolve(response);
@@ -138,6 +152,20 @@ export function view (resource_type, resource_uuid) {
         validate().then(() => {
 
             db[ resource_type ].get(resource_uuid).then((response) => {
+                resolve(response);
+            })
+            .catch(reject);
+        })
+        .catch(reject);
+    });
+}
+
+export function destroy (resource_type, resource_uuid) {
+    return new Promise((resolve, reject) => {
+
+        validate().then(() => {
+
+            db[ resource_type ].delete(resource_uuid).then((response) => {
                 resolve(response);
             })
             .catch(reject);

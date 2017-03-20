@@ -26,30 +26,31 @@ store.dispatch(setHeaders({
     'Accept': 'application/vnd.api+json'
 }));
 
-store.dispatch(UserActions.fetchOrCreateLocalUser()).then((user) => {
-    store.dispatch(ProjectActions.fetchProjects(user)).then((projects) => {
-    })
-})
-.catch((message) => {
-    console.error(message);
-});
+// store.dispatch(UserActions.fetchOrCreateLocalUser()).then((user) => {
+//     store.dispatch(ProjectActions.fetchProjects(user));
+// })
+// .catch((message) => {
+//     console.error(message);
+// });
 
 // ----------------------------------------------------------------
 // Service Worker
 // ----------------------------------------------------------------
 
-// if ('serviceWorker' in navigator) {
-//
-//     Promise.all([
-//         runtime.register,
-//         store.dispatch(UserActions.fetchOrCreateLocalUser())
-//     ]).then((response) => {
-//
-//         // fetch projects
-//         const _user = response[1];
-//         store.dispatch(ProjectActions.fetchProjects(_user));
-//     })
-//     .catch((message) => {
-//         console.error(message);
-//     });
-// }
+if ('serviceWorker' in navigator) {
+
+    console.log("XXXXX");
+
+    Promise.all([
+        runtime.register,
+        store.dispatch(UserActions.fetchOrCreateLocalUser())
+    ]).then((responses) => {
+
+        // fetch projects
+        const _user = responses[1];
+        store.dispatch(ProjectActions.fetchProjects(_user));
+    })
+    .catch((message) => {
+        console.error(message);
+    });
+}

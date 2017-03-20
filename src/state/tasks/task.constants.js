@@ -12,11 +12,17 @@ export const ACTION_RESET_TEXT_FILTER       = 'RESET_TEXT_FILTER';
 export const ACTION_SET_COMPLETE_FILTER     = 'SET_COMPLETE_FILTER';
 export const ACTION_RESET_COMPLETE_FILTER   = 'RESET_COMPLETE_FILTER';
 
-// task
-export const ACTION_FETCHED_TASKS           = 'FETCHED_TASKS';
-export const ACTION_MAKE_TASK               = 'MAKE_TASK';
-export const ACTION_REMOVE_TASK             = 'ACTION_REMOVE_TASK';
-export const ACTION_UPDATE_TASK_LOCALLY     = 'UPDATE_TASK_LOCALLY';
+// tasks : local storage
+export const ACTION_DESTROYED_TASK   = 'DESTROYED_TASK';
+export const ACTION_INDEXED_TASKS    = 'INDEXED_TASKS';
+export const ACTION_STORED_TASK      = 'STORED_TASK';
+export const ACTION_UPDATED_TASK     = 'UPDATED_TASK';
+
+// tasks : state
+export const ACTION_DESELECT_TASK    = 'DESELECT_TASK';
+export const ACTION_MAKE_TASK        = 'MAKE_TASK';
+export const ACTION_REMOVE_TASK      = 'REMOVE_TASK';
+export const ACTION_SELECT_TASK      = 'SELECT_TASK';
 
 // --------------------------
 // default states

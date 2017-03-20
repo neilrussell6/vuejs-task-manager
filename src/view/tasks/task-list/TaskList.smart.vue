@@ -171,7 +171,8 @@
                 },
                 tasks_table_keys_default: ['name', 'complete', 'trash'],
                 tasks_table_keys_trash: ['name', 'undo', 'delete'],
-                text_filter: ''
+                text_filter: '',
+                user: null
             };
         },
 
@@ -217,11 +218,11 @@
 
                     // ... and no valid previous value is available remove item before it is stored
                     if (prev_value === "") {
-                        return store.dispatch(TaskActions.removeTask(task));
+                        return store.dispatch(TaskActions.removeTask(task.uuid));
                     }
                     // ... but a valid previous value is available, then revert to previous value
                     else {
-                        return store.dispatch(TaskActions.updateTaskLocally(task, { [ key ]: prev_value }));
+                        return store.dispatch(TaskActions.updateTask(task, { [ key ]: prev_value }));
                     }
                 }
 
@@ -232,14 +233,7 @@
                 }
 
                 // edited value is valid
-                // ... and already has a server id
-                if (task.hasOwnProperty('server_id')) {
-                    store.dispatch(TaskActions.updateTask(task));
-                }
-                // ... but has no server id
-                else {
-                    store.dispatch(TaskActions.createTask(task, this.selected_project));
-                }
+                store.dispatch(TaskActions.storeOrUpdateTask(task, this.selected_project, this.user));
             },
 
             _onToggleTaskComplete: function (task) {
@@ -257,7 +251,7 @@
             _onDeleteTask: function (task) {
                 store.dispatch(MessageActions.requestDeleteConfirmation(task, (is_confirmed) => {
                     if (is_confirmed) {
-                        store.dispatch(TaskActions.deleteTask(task));
+                        store.dispatch(TaskActions.destroyTask(task));
                     } else {
                         store.dispatch(MessageActions.cancelDelete());
                     }
@@ -297,6 +291,7 @@
                 this.status_filter      = _state.tasks_status_filter;
                 this.tasks              = _state.tasks;
                 this.text_filter        = _state.tasks_text_filter;
+                this.user               = _state.user;
 
                 // computed data
                 this.tasks_table_cell_configs = this.status_filter === STATUS_FILTER_TYPE.TRASH ? this.tasks_table_cell_configs_trash : this.tasks_table_cell_configs_default;

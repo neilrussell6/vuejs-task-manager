@@ -102,14 +102,14 @@
                     }
                     // ... but a valid previous value is available, then revert to previous value
                     else {
-//                        return store.dispatch(ProjectActions.updateLocalProject(project, { [ key ]: prev_value }));
+                        return store.dispatch(ProjectActions.updateProject(project, { [ key ]: prev_value }));
                     }
                 }
 
                 // if edited value is unchanged
                 // ... do nothing
                 if (value === prev_value) {
-//                    return;
+                    return;
                 }
 
                 // edited value is valid

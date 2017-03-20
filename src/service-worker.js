@@ -3,6 +3,7 @@ import * as app_settings from 'data/app.settings';
 const CACHE_NAME_API = 'task-manager-api-v1-' + (new Date()).toISOString();
 const CACHE_NAME_APP_SHELL = 'task-manager-app-shell-v1-' + (new Date()).toISOString();
 
+console.log("ZZZZZZ");
 const { assets } = global.serviceWorkerOption;
 let _files_to_cache = [
     ...assets,
@@ -10,6 +11,12 @@ let _files_to_cache = [
     '/index.html'//,
     // '/service-worker.js'
 ];
+
+console.log(_files_to_cache);
+
+_files_to_cache = _files_to_cache.map((file) => `http://10.0.0.3:8887${file}`);
+
+console.log(_files_to_cache);
 
 // --------------------------------------------
 // install
