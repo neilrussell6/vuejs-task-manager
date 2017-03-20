@@ -15,6 +15,9 @@ import { setEndpointHost, setEndpointPath, setHeaders } from 'redux-json-api';
 // view
 import './view/main';
 
+// local
+const USE_SERVICE_WORKER = true;
+
 // ----------------------------------------------------------------
 // API
 // ----------------------------------------------------------------
@@ -26,50 +29,55 @@ store.dispatch(setHeaders({
     'Accept': 'application/vnd.api+json'
 }));
 
-// // ----------------------------------------------------------------
-// // without Service Worker
-// // ----------------------------------------------------------------
-//
-// store.dispatch(UserActions.fetchOrCreateLocalUser()).then((user) => {
-//     store.dispatch(ProjectActions.fetchProjects(user));
-// })
-// .catch((message) => {
-//     console.error(message);
-// });
+if (!USE_SERVICE_WORKER) {
 
-// // ----------------------------------------------------------------
-// // Service Worker (reference)
-// // ----------------------------------------------------------------
-//
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker
-//         .register('./service-worker.js')
-//         .then(function() {
-//             console.log('[Service Worker] Registered');
-//         })
-//         .catch((message) => {
-//             console.error(message);
-//         });
-// }
+    // ----------------------------------------------------------------
+    // without Service Worker
+    // ----------------------------------------------------------------
 
-// ----------------------------------------------------------------
-// Service Worker
-// ----------------------------------------------------------------
-
-if ('serviceWorker' in navigator) {
-
-    Promise.all([
-        runtime.register(),
-        store.dispatch(UserActions.fetchOrCreateLocalUser())
-    ]).then((responses) => {
-
-        console.log('[Service Worker] Registered');
-
-        // fetch projects
-        const _user = responses[1];
-        store.dispatch(ProjectActions.fetchProjects(_user));
+    store.dispatch(UserActions.fetchOrCreateLocalUser()).then((user) => {
+        store.dispatch(ProjectActions.fetchProjects(user));
     })
     .catch((message) => {
         console.error(message);
     });
+
+} else {
+
+    // // ----------------------------------------------------------------
+    // // Service Worker (reference)
+    // // ----------------------------------------------------------------
+    //
+    // if ('serviceWorker' in navigator) {
+    //     navigator.serviceWorker
+    //         .register('./service-worker.js')
+    //         .then(function() {
+    //             console.log('[Service Worker] Registered');
+    //         })
+    //         .catch((message) => {
+    //             console.error(message);
+    //         });
+    // }
+
+    // ----------------------------------------------------------------
+    // Service Worker
+    // ----------------------------------------------------------------
+
+    if ('serviceWorker' in navigator) {
+
+        Promise.all([
+            runtime.register(),
+            store.dispatch(UserActions.fetchOrCreateLocalUser())
+        ]).then((responses) => {
+
+            console.log('[Service Worker] Registered');
+
+            // fetch projects
+            const _user = responses[1];
+            store.dispatch(ProjectActions.fetchProjects(_user));
+        })
+        .catch((message) => {
+            console.error(message);
+        });
+    }
 }
