@@ -30,6 +30,37 @@ import * as constants from './project.constants';
 // item
 // --------------------------
 
+export function destroyProject (project, user) {
+    return function (dispatch) {
+
+        return StorageUtils.validate(project).then(() => {
+
+            const _resource_object = project.resource_object;
+
+            // destroy on local storage
+            return StorageUtils.destroy(_resource_object.type, _resource_object.id).then(() => {
+
+                dispatch({
+                    type: constants.ACTION_DESTROYED_PROJECT,
+                    project
+                });
+
+                // if user is not authenticated
+                if (!user.is_authenticated) {
+                    return;
+                }
+
+                // destroy on server
+                dispatch(deleteResource(project.resource_identifier_object))
+                    .catch(() => {
+                        dispatch(API_DELETE_FAILED);
+                    });
+
+            }).catch(Promise.reject);
+        }).catch(Promise.reject);
+    };
+}
+
 export function storeOrUpdateProject (project, user) {
     return function (dispatch) {
 
@@ -59,6 +90,7 @@ export function storeProject (project, user) {
 
         return StorageUtils.validate(project).then(() => {
 
+            // store in local storage
             const _relationships = { user_uuid: user.uuid };
             return StorageUtils.store(project, _relationships).then((uuid) => {
 
@@ -67,14 +99,31 @@ export function storeProject (project, user) {
                     project
                 });
 
+                // if user is not authenticated
+                if (!user.is_authenticated) {
+                    return;
+                }
+
+                // store on server
+                dispatch(createResource(project.resource_object))
+                    .then((response) => {
+                        let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
+                        dispatch(selectProject(_data));
+                        dispatch(TaskActions.fetchTasks(response.data.id));
+                    })
+                    .catch(() => {
+                        dispatch(API_CREATE_FAILED);
+                    });
+
             }).catch(Promise.reject);
         }).catch(Promise.reject);
     };
 }
 
-export function updateProject (project, data = {}) {
+export function updateProject (project, data = {}, user) {
     return function (dispatch) {
 
+        // update in local storage
         Promise.all([ StorageUtils.validate(project), StorageUtils.update(project, data) ]).then((uuid) => {
 
             dispatch({
@@ -82,6 +131,17 @@ export function updateProject (project, data = {}) {
                 project,
                 data
             });
+
+            // if user is not authenticated
+            if (!user.is_authenticated) {
+                return;
+            }
+
+            // update on server
+            dispatch(updateResource(project.resource_object))
+                .catch(() => {
+                    dispatch(API_UPDATE_FAILED);
+                });
 
         }).catch(Promise.reject);
     };
@@ -98,12 +158,38 @@ export function refreshProjects (user) {
 export function fetchProjects (user) {
     return function (dispatch) {
 
-        return StorageUtils.index('projects').then((projects) => {
+        // index from local storage
+        return StorageUtils.index('projects').then ((projects) => {
 
             dispatch({
                 type: constants.ACTION_INDEXED_PROJECTS,
                 data: projects
             });
+
+            // if user is not authenticated
+            if (!user.is_authenticated) {
+                return;
+            }
+
+            // index from server
+            const _endpoint = `users/${user.uuid}/projects`;
+
+            dispatch(readEndpoint(_endpoint))
+                .then(
+                    (response) => {
+
+                        const _data = response.payload.data;
+
+                        // update many in local storage
+                        return StorageUtils.updateMany('projects').then ((projects) => {
+
+                        });
+                    }
+                )
+                .catch(() => {
+                    dispatch(API_READ_FAILED);
+                });
+
 
         }).catch(Promise.reject);
     };

@@ -113,7 +113,11 @@
                 }
 
                 // edited value is valid
+                // ... store or update project
                 store.dispatch(ProjectActions.storeOrUpdateProject(project, this.user));
+
+                // select project
+                store.dispatch(ProjectActions.selectProject(project));
             },
 
             _onRefreshProjects: function () {

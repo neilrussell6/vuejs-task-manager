@@ -39,16 +39,19 @@ export function updateLocalUser (data) {
 export function fetchOrCreateLocalUser(state) {
     return function (dispatch) {
 
-        const _state = store.getState();
+        let _state = store.getState();
         let _user;
 
         // get user from state
         if (_state.user !== null && typeof _state.user.uuid !== 'undefined') {
+
             dispatch({
                 type: constants.ACTION_FETCHED_USER,
                 data: state.user
             });
-            return Promise.resolve(state.user);
+
+            _state = store.getState();
+            return Promise.resolve(_state.user);
         }
 
         // get user from local storage
@@ -56,11 +59,14 @@ export function fetchOrCreateLocalUser(state) {
 
             if (users !== null && users.length === 1) {
                 _user = new User(users[0]);
+
                 dispatch({
                     type: constants.ACTION_FETCHED_USER,
                     data: _user
                 });
-                return Promise.resolve(_user);
+
+                _state = store.getState();
+                return Promise.resolve(_state.user);
             }
 
             // clear existing users, then make and store new user
@@ -76,7 +82,9 @@ export function fetchOrCreateLocalUser(state) {
                         type: constants.ACTION_FETCHED_USER,
                         data: _user
                     });
-                    Promise.resolve(_user);
+
+                    _state = store.getState();
+                    Promise.resolve(_state.user);
                 });
             });
         });

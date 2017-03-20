@@ -36,9 +36,14 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
             return _user;
 
         case user_constants.ACTION_FETCHED_USER:
-            return action.data;
+            console.log("ACTION_FETCHED_USER");
+            // return action.data;
+            var r = new User(Object.assign({}, action.data, { is_authenticated: true }));
+            console.log(r);
+            return r;
 
         case user_constants.ACTION_UPDATE_LOCAL_USER:
+            console.log("ACTION_UPDATE_LOCAL_USER");
             _user = new User(Object.assign({}, state, action.data));
             StorageUtils.store('user', _user);
             return _user;

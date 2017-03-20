@@ -16,6 +16,9 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
 
     switch (action.type) {
 
+        case app_constants.ACTION_TOGGLE_SHOW_LOGIN:
+            return Object.assign({}, state, { show_login: state.show_login ? false : true });
+
         // case app_constants.ACTION_TOGGLE_ARTIFICIAL_DELAY:
         //     if (state.artificial_delay > 0) {
         //         return Object.assign({}, state, { artificial_delay: 0 });

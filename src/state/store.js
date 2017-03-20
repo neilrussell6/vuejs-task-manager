@@ -28,17 +28,19 @@ const reducer = combineReducers({
     user
 });
 
+const USE_LOGGER_MIDDLEWARE = false;
+
 let _middleware = [
     // delayFetchMiddleware, // delays API calls for dev (use before thunk)
     thunkMiddleware // lets us dispatch () functions
 ];
 
 // process will be globally available because it's defined in webpack config
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && USE_LOGGER_MIDDLEWARE) {
 
     // redux-logger: logs actions (use after thunk)
-    // const _logger_middleware = createLogger();
-    _middleware = [ ..._middleware ];//, _logger_middleware ];
+    const _logger_middleware = createLogger();
+    _middleware = [ ..._middleware, _logger_middleware ];
 }
 
 export const store = createStore(

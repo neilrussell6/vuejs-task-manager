@@ -9,36 +9,44 @@
             </div>
 
             <div class="controls" :class="{disabled: message !== null}">
+
                 <div class="control">
-
-                    <button v-on:click="_onToggleArtificialDelay()">
-
-                        <template v-if="is_artificially_delayed">
-                            <i class="fa fa-check-square" aria-hidden="true"></i>
-                        </template>
-
-                        <template v-else>
-                            <i class="fa fa-square" aria-hidden="true"></i>
-                        </template>
-
+                    <button v-on:click="_onToggleShowLogin()">
+                            <i class="fa fa-user" aria-hidden="true"></i>
                     </button>
-                    artificial delay
                 </div>
-                <div class="control">
 
-                    <button v-on:click="_onToggleMinimalMessage()">
+                <!--<div class="control">-->
 
-                        <template v-if="is_message_minimal">
-                            <i class="fa fa-check-square" aria-hidden="true"></i>
-                        </template>
+                    <!--<button v-on:click="_onToggleArtificialDelay()">-->
 
-                        <template v-else>
-                            <i class="fa fa-square" aria-hidden="true"></i>
-                        </template>
+                        <!--<template v-if="is_artificially_delayed">-->
+                            <!--<i class="fa fa-check-square" aria-hidden="true"></i>-->
+                        <!--</template>-->
 
-                    </button>
-                    minimal message
-                </div>
+                        <!--<template v-else>-->
+                            <!--<i class="fa fa-square" aria-hidden="true"></i>-->
+                        <!--</template>-->
+
+                    <!--</button>-->
+                    <!--artificial delay-->
+                <!--</div>-->
+                <!---->
+                <!--<div class="control">-->
+
+                    <!--<button v-on:click="_onToggleMinimalMessage()">-->
+
+                        <!--<template v-if="is_message_minimal">-->
+                            <!--<i class="fa fa-check-square" aria-hidden="true"></i>-->
+                        <!--</template>-->
+
+                        <!--<template v-else>-->
+                            <!--<i class="fa fa-square" aria-hidden="true"></i>-->
+                        <!--</template>-->
+
+                    <!--</button>-->
+                    <!--minimal message-->
+                <!--</div>-->
             </div>
 
         </header>
@@ -49,9 +57,8 @@
 
             <div class="wrapper">
                 <div class="overlay"></div>
-                <tasks></tasks>
-                <!--<tasks v-if="is_user_authenticated"></tasks>-->
-                <!--<login v-else :on-submit="_onUserLogin"></login>-->
+                <tasks v-show="!show_login"></tasks>
+                <login v-show="show_login" :on-submit="_onUserLogin"></login>
             </div>
 
             <footer class="footer">
@@ -109,12 +116,13 @@
 
         data: function () {
             return {
-                message: null,
-                previous_message: null,
                 is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT,
                 is_disabled: false,
                 is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
-                is_user_authenticated: false
+                is_user_authenticated: false,
+                message: null,
+                previous_message: null,
+                show_login: false
             };
         },
 
@@ -144,6 +152,10 @@
             // ------------------------------------
             // handlers: login
             // ------------------------------------
+
+            _onToggleShowLogin: function () {
+                store.dispatch(AppActions.toggleShowLogin());
+            },
 
             _onUserLogin: function (credentials) {
 
@@ -179,9 +191,11 @@
 
                 // app
 
-                this.is_disabled = _state.app.is_disabled;
                 this.is_artificially_delayed = _state.app.artificial_delay > 0;
+                this.is_disabled = _state.app.is_disabled;
                 this.is_message_minimal = _state.app.is_message_minimal;
+                this.show_login = _state.app.show_login;
+                console.log(this.show_login);
 
                 // message
 
