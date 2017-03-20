@@ -4,6 +4,7 @@ export class User extends JsonApiModel {
 
     get defaults () {
         return {
+            server_id: null,
             uuid: null,
             email: null,
             first_name: null,

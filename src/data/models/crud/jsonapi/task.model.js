@@ -10,6 +10,7 @@ export class Task extends JsonApiModel {
 
     get defaults () {
         return {
+            server_id: null,
             uuid: null,
             user_uuid: null,
             project_uuid: null,
@@ -19,7 +20,7 @@ export class Task extends JsonApiModel {
     }
 
     get exclude_attributes () {
-        return ['uuid', 'project_uuid', 'user_uuid', 'created_at', 'updated_at'];
+        return ['server_id', 'uuid', 'project_uuid', 'user_uuid', 'created_at', 'updated_at'];
     }
 
     get type () {

@@ -4,7 +4,7 @@ import * as api_constants from 'state/redux-json-api.constants';
 export const delayFetchMiddleware = store => next => action => {
 
     const _state = store.getState();
-    // const _was_authentication_request = action.type === api_constants.API_CREATED && action.payload.data.type === 'access_tokens';
+    // const _was_authentication_request = action.type === redux_jsonapi_constants.API_CREATED && action.payload.data.type === 'access_tokens';
     // const _delay = _was_authentication_request ? app_settings.LOGIN_DELAY : _state.app.artificial_delay;
     const _delay = _state.app.artificial_delay;
     let _timeout_id;

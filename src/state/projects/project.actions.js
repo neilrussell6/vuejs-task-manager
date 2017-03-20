@@ -38,7 +38,7 @@ export function destroyProject (project, user) {
             const _resource_object = project.resource_object;
 
             // destroy on local storage
-            return StorageUtils.destroy(_resource_object.type, _resource_object.id).then(() => {
+            return StorageUtils.destroy(_resource_object.type, project.uuid).then(() => {
 
                 dispatch({
                     type: constants.ACTION_DESTROYED_PROJECT,
@@ -68,7 +68,7 @@ export function storeOrUpdateProject (project, user) {
 
             const _resource_object = project.resource_object;
 
-            return StorageUtils.view(_resource_object.type, _resource_object.id).then((response) => {
+            return StorageUtils.view(_resource_object.type, project.uuid).then((response) => {
 
                 // is not in storage
 
@@ -163,7 +163,7 @@ export function fetchProjects (user) {
 
             dispatch({
                 type: constants.ACTION_INDEXED_PROJECTS,
-                data: projects
+                projects
             });
 
             // if user is not authenticated

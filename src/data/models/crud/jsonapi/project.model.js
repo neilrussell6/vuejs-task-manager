@@ -4,7 +4,8 @@ export class Project extends JsonApiModel {
 
     get defaults () {
         return {
-            uuid: null,
+            server_id: null,
+            user_id: null,
             user_uuid: null,
             project_uuid: null,
             name: ''
@@ -12,7 +13,7 @@ export class Project extends JsonApiModel {
     }
 
     get exclude_attributes () {
-        return ['uuid', 'user_uuid', 'created_at', 'updated_at'];
+        return ['server_id', 'uuid', 'user_uuid', 'created_at', 'updated_at'];
     }
 
     get type () {

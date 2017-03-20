@@ -33,9 +33,7 @@ export function isStored (resource) {
 
         validate(resource).then(() => {
 
-            const _resource_object = resource.resource_object;
-
-            view(_resource_object.type, _resource_object.id).then((response) => {
+            view(resource.type, resource.uuid).then((response) => {
                 resolve(typeof response !== 'undefined');
             }).catch(reject);
 
@@ -135,7 +133,7 @@ export function update (resource, data = {}) {
         validate(resource).then(() => {
 
             const _resource_object = resource.resource_object;
-            const _data = Object.assign({}, _resource_object.attributes, { uuid: _resource_object.id }, data);
+            const _data = Object.assign({}, _resource_object.attributes, { uuid: resource.uuid }, data);
 
             db[ _resource_object.type ].put(_data).then((response) => {
                 resolve(response);

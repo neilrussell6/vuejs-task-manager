@@ -57,7 +57,7 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
         // ---------------------------
 
         case project_constants.ACTION_INDEXED_PROJECTS:
-            return action.data.map((item) => project({}, Object.assign({}, action, { data: item })));
+            return action.projects.map((item) => project({}, Object.assign({}, action, { data: item })));
 
         case project_constants.ACTION_STORED_PROJECT:
         case project_constants.ACTION_UPDATED_PROJECT:
@@ -95,75 +95,6 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
                 ...state.slice(0, _index),
                 ...state.slice(_index + 1)
             ];
-
-        // ---------------------------
-        // storage actions
-        // ---------------------------
-
-        // case storage_constants.API_CREATED:
-        //
-        //     if (action.type !== 'projects') {
-        //         return state;
-        //     }
-        //
-        //     // get index
-        //     _index = state.reduce((val, item, i) => !item.hasOwnProperty('uuid') ? i : val, null);
-        //
-        //     if (_index === null) {
-        //         return state;
-        //     }
-        //
-        //     // ... and update with given data attributes
-        //     _item = project(list[ _index ], action);
-        //
-        //     // ... and splice it in at it's original index, but in a new collection
-        //     return [
-        //         ...list.slice(0, _index),
-        //         ...[ _item ],
-        //         ...list.slice(_index + 1)
-        //     ];
-
-        // case storage_constants.API_DELETED:
-        //
-        //     if (action.payload.type !== 'projects') {
-        //         return list;
-        //     }
-        //
-        //     // get index
-        //     _index = list.reduce((val, item, i) => (parseInt(item.server_id) === parseInt(action.payload.id)) ? i : val, null);
-        //
-        //     if (_index === null) {
-        //         return list;
-        //     }
-        //
-        //     // return a new collection excluding deleted item
-        //     return [
-        //         ...list.slice(0, _index),
-        //         ...list.slice(_index + 1)
-        //     ];
-        //
-        // case storage_constants.ACTION_LOCAL_STORAGE_VIEWED:
-        //
-        //     let _regex = new RegExp('projects$');
-        //
-        //     if (!_regex.test(action.endpoint)) {
-        //         return state;
-        //     }
-        //
-        //     if (action.response === null) {
-        //         return state;
-        //     }
-        //
-        //     return action.response.data.reduce((result, item) => {
-        //
-        //         if (item.type !== 'projects') {
-        //             return result;
-        //         }
-        //
-        //         result = [ ...result, project(item, action) ];
-        //
-        //         return result;
-        //     }, []);
 
         default:
             return state;

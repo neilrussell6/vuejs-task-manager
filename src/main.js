@@ -35,7 +35,7 @@ if (!USE_SERVICE_WORKER) {
     // without Service Worker
     // ----------------------------------------------------------------
 
-    store.dispatch(UserActions.fetchOrCreateLocalUser()).then((user) => {
+    store.dispatch(UserActions.viewOrStoreUser()).then((user) => {
         store.dispatch(ProjectActions.fetchProjects(user));
     })
     .catch((message) => {
@@ -67,7 +67,7 @@ if (!USE_SERVICE_WORKER) {
 
         Promise.all([
             runtime.register(),
-            store.dispatch(UserActions.fetchOrCreateLocalUser())
+            store.dispatch(UserActions.viewOrStoreUser())
         ]).then((responses) => {
 
             console.log('[Service Worker] Registered');

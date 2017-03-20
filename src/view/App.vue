@@ -11,10 +11,21 @@
             <div class="controls" :class="{disabled: message !== null}">
 
                 <div class="control">
-                    <button v-on:click="_onToggleShowLogin()">
-                        <span class="label">login</span>
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                    </button>
+
+                    <template v-if="is_user_authenticated">
+                        <div class="authenticated">
+                            <span class="label">{{user.first_name}} {{user.last_name}}</span>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </div>
+                    </template>
+
+                    <template v-else>
+                        <button v-on:click="_onToggleShowLogin()">
+                            <span class="label">login</span>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </button>
+                    </template>
+
                 </div>
 
                 <!--<div class="control">-->
@@ -67,10 +78,7 @@
                     <span class="highlight">&nbsp;</span>
                 </div>
                 <div class="column column-right">
-                    <button class="no-bg" v-on:click="_onUserLogout()">
-                        <span class="label">logout</span>
-                        <i class="fa fa-sign-out" aria-hidden="true"></i>
-                    </button>
+                    <span>&nbsp;</span>
                 </div>
             </footer>
 
@@ -123,7 +131,8 @@
                 is_user_authenticated: false,
                 message: null,
                 previous_message: null,
-                show_login: false
+                show_login: false,
+                user: null
             };
         },
 
@@ -160,6 +169,7 @@
 
             _onUserLogin: function (credentials) {
 
+                // TODO: fix this, credentials are strings for some reason
                 if ((credentials.username === null && credentials.email === null) || credentials.password === null) {
                     return store.dispatch(MessageActions.setMessage({
                         label: "Please provide all required credentials",
@@ -168,7 +178,7 @@
                     }));
                 }
 
-                store.dispatch(UserActions.loginUser(credentials));
+                store.dispatch(UserActions.loginUser(this.user, credentials));
             },
 
             // ------------------------------------
@@ -176,7 +186,7 @@
             // ------------------------------------
 
             _onUserLogout: function () {
-                store.dispatch(UserActions.logoutUser());
+                store.dispatch(UserActions.logoutUser(this.user));
             },
 
             // ------------------------------------
@@ -189,6 +199,7 @@
                 // user
 
                 this.is_user_authenticated = _state.user !== null ? _state.user.is_authenticated : false;
+                this.user = _state.user;
 
                 // app
 

@@ -16,6 +16,9 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
 
     switch (action.type) {
 
+        case user_constants.ACTION_LOGGED_IN_USER:
+            return Object.assign({}, state, { show_login: false });
+
         case app_constants.ACTION_TOGGLE_SHOW_LOGIN:
             return Object.assign({}, state, { show_login: state.show_login ? false : true });
 
@@ -28,21 +31,21 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
         // case app_constants.ACTION_TOGGLE_MESSAGE_MINIMAL:
         //     return Object.assign({}, state, { is_message_minimal: state.is_message_minimal ? false : true });
         //
-        // case api_constants.API_CREATE_FAILED:
-        // case api_constants.API_CREATED:
-        // case api_constants.API_DELETE_FAILED:
-        // case api_constants.API_DELETED:
-        // case api_constants.API_READ_FAILED:
-        // case api_constants.API_READ:
-        // case api_constants.API_UPDATE_FAILED:
-        // case api_constants.API_UPDATED:
+        // case redux_jsonapi_constants.API_CREATE_FAILED:
+        // case redux_jsonapi_constants.API_CREATED:
+        // case redux_jsonapi_constants.API_DELETE_FAILED:
+        // case redux_jsonapi_constants.API_DELETED:
+        // case redux_jsonapi_constants.API_READ_FAILED:
+        // case redux_jsonapi_constants.API_READ:
+        // case redux_jsonapi_constants.API_UPDATE_FAILED:
+        // case redux_jsonapi_constants.API_UPDATED:
         // case user_constants.ACTION_USER_LOGGED_OUT:
         //     return Object.assign({}, state, { is_disabled: false });
         //
-        // case api_constants.API_WILL_CREATE:
-        // case api_constants.API_WILL_DELETE:
-        // case api_constants.API_WILL_READ:
-        // // case api_constants.API_WILL_UPDATE:
+        // case redux_jsonapi_constants.API_WILL_CREATE:
+        // case redux_jsonapi_constants.API_WILL_DELETE:
+        // case redux_jsonapi_constants.API_WILL_READ:
+        // // case redux_jsonapi_constants.API_WILL_UPDATE:
         // case user_constants.ACTION_WILL_LOGOUT_USER:
         //     return Object.assign({}, state, { is_disabled: true });
 

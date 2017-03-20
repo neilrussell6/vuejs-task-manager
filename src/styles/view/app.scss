@@ -203,6 +203,17 @@ input {
         .label {
             display: none;
         }
+
+        .authenticated {
+            padding: $small-v-pad $small-h-pad;
+
+            .label {
+                color: $light-yellow;
+            }
+            i {
+                color: $light-green;
+            }
+        }
     }
 }
 
@@ -598,6 +609,7 @@ input {
     li {
         padding-left: 0;
         width: 100%;
+        border-bottom: 1px solid $dark-grey;
 
         &.selected {
             background-color: darken($bg-color-dark, 2%);
@@ -641,6 +653,14 @@ input {
             text-transform: none;
             width: 100%;
         }
+    }
+}
+
+// > sm
+
+@media screen and (min-width: $breakpoint-sm) {
+    .common-list li {
+        border-bottom: 0;
     }
 }
 

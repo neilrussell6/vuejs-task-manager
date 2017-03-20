@@ -51,7 +51,7 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
         // ---------------------------
 
         case task_constants.ACTION_INDEXED_TASKS:
-            return action.data.map((item) => task({}, Object.assign({}, action, { data: item })));
+            return action.tasks.map((item) => task({}, Object.assign({}, action, { data: item })));
 
         case task_constants.ACTION_STORED_TASK:
         case task_constants.ACTION_UPDATED_TASK:

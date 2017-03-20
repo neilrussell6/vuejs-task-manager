@@ -35,7 +35,7 @@ export function destroyTask (task) {
 
             const _resource_object = task.resource_object;
 
-            return StorageUtils.destroy(_resource_object.type, _resource_object.id).then(() => {
+            return StorageUtils.destroy(_resource_object.type, task.uuid).then(() => {
 
                 dispatch({
                     type: constants.ACTION_DESTROYED_TASK,
@@ -54,7 +54,7 @@ export function storeOrUpdateTask (task, project, user) {
 
             const _resource_object = task.resource_object;
 
-            return StorageUtils.view(_resource_object.type, _resource_object.id).then((response) => {
+            return StorageUtils.view(_resource_object.type, task.uuid).then((response) => {
 
                 // is not in storage
 
@@ -137,7 +137,7 @@ export function fetchTasks (project) {
 
             dispatch({
                 type: constants.ACTION_INDEXED_TASKS,
-                data: tasks
+                tasks
             });
 
         }).catch(Promise.reject);
