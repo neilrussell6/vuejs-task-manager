@@ -52,8 +52,7 @@ export function updateUser (user, data = {}, suppress_server_call = false) {
             //     });
             return Promise.resolve();
 
-        // }).catch(Promise.reject);
-        }).catch((message) => console.log(message));
+        }).catch((message) => console.error(message));
     };
 }
 
@@ -88,21 +87,39 @@ export function viewOrStoreUser() {
 
                 _state = store.getState();
 
-                // // ... if user has no access token
-                // if (_state.user === null || _state.user.access_token === null) {
-                //     return Promise.resolve(_state.user);
-                // }
-                //
-                // // ... if access token is expired
-                // const _access_token = jws.decode(_state.user.access_token);
-                // const _numeric_date_access_token = _access_token.payload.exp;
-                // const _numeric_date_now = Date.now() / 1000;
-                //
-                // if (_numeric_date_access_token < _numeric_date_now) {
-                //     return Promise.resolve(_state.user);
-                // }
-                //
-                // // ... if access token is not expired
+                // ... if user has no access token
+
+                if (_state.user === null || _state.user.access_token === null) {
+                    return Promise.resolve(_state.user);
+                }
+
+                // ... if access token is expired
+
+                const _access_token = jws.decode(_state.user.access_token);
+                const _numeric_date_access_token = _access_token.payload.exp;
+                const _numeric_date_now = Date.now() / 1000;
+
+                if (_numeric_date_access_token < _numeric_date_now) {
+
+                    dispatch({
+                        type: constants.ACTION_TOKEN_EXPIRED,
+                        user: _state.user
+                    });
+
+                    return dispatch(updateUser(_state.user, { is_authenticated: false }, true)).then((response) => {
+
+                        _state = store.getState();
+                        return Promise.resolve(_state.user);
+
+                    }).catch((message) => console.error(message));
+                }
+
+                // ... if access token is not expired
+
+                // set Auth header
+                dispatch(setHeader({
+                    'Authorization': `Bearer ${_state.user.access_token}`
+                }));
 
                 return Promise.resolve(_state.user);
             }
@@ -123,8 +140,8 @@ export function viewOrStoreUser() {
                     _state = store.getState();
                     return Promise.resolve(_state.user);
                 });
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
@@ -168,8 +185,7 @@ export function loginUser (user, credentials) {
                         type: constants.ACTION_LOGGED_IN_USER,
                         user: _state.user
                     });
-                })
-                .catch(Promise.reject);
+                }).catch((message) => console.error(message));
 
             }).catch((error) => dispatch(api_actions.apiError(error)));
         }).catch((error) => dispatch(api_actions.apiError(error)));

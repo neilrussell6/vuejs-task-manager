@@ -5,9 +5,8 @@ export class Project extends JsonApiModel {
     get defaults () {
         return {
             server_id: null,
-            user_id: null,
+            uuid: null,
             user_uuid: null,
-            project_uuid: null,
             name: ''
         };
     }

@@ -25,8 +25,8 @@
     export default {
         data: function () {
             return {
-                identifier: null,
-                password: null
+                identifier: "demo",
+                password: "demo"
             };
         },
 

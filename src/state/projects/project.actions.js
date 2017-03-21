@@ -10,11 +10,15 @@ import {
 } from 'redux-json-api';
 
 // actions
-import * as TaskActions from 'state/tasks/task.actions';
+import * as api_actions from 'state/api.actions';
+import * as task_actions from 'state/tasks/task.actions';
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Project } from 'data/models/crud/jsonapi/project.model';
+
+// store
+import { store } from 'state/store';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -33,6 +37,8 @@ import * as constants from './project.constants';
 export function destroyProject (project, user) {
     return function (dispatch) {
 
+        const _state = store.getState();
+
         return StorageUtils.validate(project).then(() => {
 
             const _resource_object = project.resource_object;
@@ -46,22 +52,20 @@ export function destroyProject (project, user) {
                 });
 
                 // if user is not authenticated
-                if (!user.is_authenticated) {
-                    return;
+                if (!_state.user.is_authenticated) {
+                    return Promise.resolve();
                 }
 
-                // // destroy on server
-                // dispatch(deleteResource(project.resource_identifier_object))
-                //     .catch(() => {
-                //         dispatch(API_DELETE_FAILED);
-                //     });
+                // destroy on server
+                return dispatch(deleteResource(project.resource_identifier_object))
+                    .catch((error) => dispatch(api_actions.apiError(error)));
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function storeOrUpdateProject (project, user) {
+export function storeOrUpdateProject (project) {
     return function (dispatch) {
 
         return StorageUtils.validate(project).then(() => {
@@ -73,58 +77,66 @@ export function storeOrUpdateProject (project, user) {
                 // is not in storage
 
                 if (typeof response === 'undefined') {
-                    return dispatch(storeProject(project, user));
+                    return dispatch(storeProject(project));
                 }
 
                 // is in storage
 
-                return dispatch(updateProject(project));
+                return dispatch(updateProject(project, {}));
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function storeProject (project, user) {
+export function storeProject (project, suppress_server_call = false) {
     return function (dispatch) {
+
+        const _state = store.getState();
 
         return StorageUtils.validate(project).then(() => {
 
             // store in local storage
-            const _relationships = { user_uuid: user.uuid };
-            return StorageUtils.store(project, _relationships).then((uuid) => {
+            const _project = new Project(Object.assign({}, project, { user_uuid: _state.user.uuid }));
+            return StorageUtils.store(_project).then((uuid) => {
 
                 dispatch({
                     type: constants.ACTION_STORED_PROJECT,
-                    project
+                    project: _project
                 });
 
-                // if user is not authenticated
-                if (!user.is_authenticated) {
-                    return;
+                // if user is not authenticated or server call is suppressed
+                if (!_state.user.is_authenticated || suppress_server_call) {
+                    return Promise.resolve();
                 }
 
                 // store on server
-                // dispatch(createResource(project.resource_object))
-                //     .then((response) => {
-                //         let _data = Object.assign({}, response.data.attributes, { local_id: project_local_id }, { id: response.data.id });
-                //         dispatch(selectProject(_data));
-                //         dispatch(TaskActions.fetchTasks(response.data.id));
-                //     })
-                //     .catch(() => {
-                //         dispatch(API_CREATE_FAILED);
-                //     });
+                return dispatch(createResource(_project.resource_object)).then((response) => {
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+                    // update in local storage with server id
+                    return dispatch(updateProject(_project, { server_id: parseInt(response.data.id) }, _state.user, true)).then((response) => {
+
+                        // select project
+                        dispatch(selectProject(_project));
+
+                        return Promise.resolve(_project);
+
+                    }).catch((message) => console.error(message));
+
+                }).catch((error) => dispatch(api_actions.apiError(error)));
+
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function updateProject (project, data = {}, user) {
+export function updateProject (project, data = {}, suppress_server_call = false) {
     return function (dispatch) {
 
+        const _state = store.getState();
+
         // update in local storage
-        Promise.all([ StorageUtils.validate(project), StorageUtils.update(project, data) ]).then((uuid) => {
+        return Promise.all([ StorageUtils.validate(project), StorageUtils.update(project, data) ]).then((uuid) => {
 
             dispatch({
                 type: constants.ACTION_UPDATED_PROJECT,
@@ -132,18 +144,16 @@ export function updateProject (project, data = {}, user) {
                 data
             });
 
-            // if user is not authenticated
-            if (!user.is_authenticated) {
-                return;
+            // if user is not authenticated or server call is suppressed
+            if (!_state.user.is_authenticated || suppress_server_call) {
+                return Promise.resolve();
             }
 
             // update on server
-            // dispatch(updateResource(project.resource_object))
-            //     .catch(() => {
-            //         dispatch(API_UPDATE_FAILED);
-            //     });
+            return dispatch(updateResource(project.resource_object))
+                .catch((error) => dispatch(api_actions.apiError(error)));
 
-        }).catch(Promise.reject);
+        }).catch((message) => console.error(message));
     };
 }
 
@@ -151,12 +161,14 @@ export function updateProject (project, data = {}, user) {
 // collection
 // --------------------------
 
-export function refreshProjects (user) {
-    return fetchProjects(user);
+export function refreshProjects () {
+    return indexProjects();
 }
 
-export function fetchProjects (user) {
+export function indexProjects () {
     return function (dispatch) {
+
+        const _state = store.getState();
 
         // index from local storage
         return StorageUtils.index('projects').then ((projects) => {
@@ -167,31 +179,25 @@ export function fetchProjects (user) {
             });
 
             // if user is not authenticated
-            if (!user.is_authenticated) {
-                return;
+            if (!_state.user.is_authenticated) {
+                return Promise.resolve();
             }
 
-            // // index from server
-            // const _endpoint = `users/${user.uuid}/projects`;
-            //
-            // dispatch(readEndpoint(_endpoint))
-            //     .then(
-            //         (response) => {
-            //
-            //             const _data = response.payload.data;
-            //
-            //             // update many in local storage
-            //             return StorageUtils.updateMany('projects').then ((projects) => {
-            //
-            //             });
-            //         }
-            //     )
-            //     .catch(() => {
-            //         dispatch(API_READ_FAILED);
-            //     });
+            // index from server
+            const _endpoint = `users/${_state.user.server_id}/projects`;
+            dispatch(readEndpoint(_endpoint)).then((response) => {
 
+                // update or store many in local storage
+                const _data = response.data.map((item) => {
+                    return new Project(Object.assign({}, item.attributes, { server_id: item.id }));
+                });
+                return StorageUtils.storeMany(_data).then((projects) => {
+                    console.log(projects);
+                });
 
-        }).catch(Promise.reject);
+            }).catch((error) => dispatch(api_actions.apiError(error)));
+
+        }).catch((message) => console.error(message));
     };
 }
 
@@ -231,6 +237,6 @@ export function selectProject (project) {
             data:   project
         });
 
-        dispatch(TaskActions.fetchTasks(project));
+        dispatch(task_actions.indexTasks(project));
     };
 }

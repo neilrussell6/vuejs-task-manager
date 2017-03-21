@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 
 // local
 const DB_NAME = 'neilrussell6-vuejs-task-manager';
-const DB_VERSION = 8;
+const DB_VERSION = 9;
 
 // create db
 

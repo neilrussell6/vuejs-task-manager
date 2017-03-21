@@ -12,8 +12,6 @@ export const ENDPOINT_UPDATE = 'ENDPOINT_UPDATE';
 export const ENDPOINT_VIEW = 'ENDPOINT_VIEW';
 export const ENDPOINT_VIEW_RELATED = 'ENDPOINT_VIEW_RELATED';
 
-export const LOCAL = 'STORAGE_LOCAL';
-
 export const DELETE = 'REQUEST_DELETE';
 export const GET = 'REQUEST_GET';
 export const PATCH = 'REQUEST_PATCH';
@@ -85,11 +83,11 @@ export function index (resource_type) {
         validate().then(() => {
 
             db[ resource_type ].toArray().then((response) => {
+
                 resolve(response);
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+
+            }).catch(reject);
+        }).catch(reject);
     });
 }
 
@@ -102,16 +100,17 @@ export function indexRelated (related_type, related_key, related_value) {
                 .where(related_key).equals(related_value)
                 .toArray()
                 .then((response) => {
+
                     resolve(response);
-                })
-                .catch(reject);
-        })
-        .catch(reject);
+
+                }).catch(reject);
+        }).catch(reject);
     });
 }
 
 export function store (resource) {
     return new Promise((resolve, reject) => {
+        console.log(resource);
 
         validate(resource).then(() => {
 
@@ -119,11 +118,22 @@ export function store (resource) {
             const _data = resource;
 
             db[ _resource_object.type ].add(_data).then((response) => {
+
                 resolve(response);
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+
+            }).catch(reject);
+        }).catch(reject);
+    });
+}
+
+export function storeMany (collection = []) {
+    return new Promise((resolve, reject) => {
+
+        Promise.all(collection.map((resource) => store(resource))).then((responses) => {
+
+            console.log(responses);
+
+        }).catch(reject);
     });
 }
 
@@ -133,14 +143,14 @@ export function update (resource, data = {}) {
         validate(resource).then(() => {
 
             const _resource_object = resource.resource_object;
-            const _data = Object.assign({}, _resource_object.attributes, { uuid: resource.uuid }, data);
+            const _data = Object.assign({}, resource, data);
 
             db[ _resource_object.type ].put(_data).then((response) => {
+
                 resolve(response);
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+
+            }).catch(reject);
+        }).catch(reject);
     });
 }
 
@@ -150,11 +160,11 @@ export function view (resource_type, resource_uuid) {
         validate().then(() => {
 
             db[ resource_type ].get(resource_uuid).then((response) => {
+
                 resolve(response);
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+
+            }).catch(reject);
+        }).catch(reject);
     });
 }
 
@@ -165,10 +175,9 @@ export function destroy (resource_type, resource_uuid) {
 
             db[ resource_type ].delete(resource_uuid).then((response) => {
                 resolve(response);
-            })
-            .catch(reject);
-        })
-        .catch(reject);
+
+            }).catch(reject);
+        }).catch(reject);
     });
 }
 
@@ -177,8 +186,8 @@ export function destroyAll (resource_type) {
 
         validate().then(() => {
             db[ resource_type ].clear().then(resolve).catch(reject);
-        })
-        .catch(reject);
+
+        }).catch(reject);
     });
 }
 

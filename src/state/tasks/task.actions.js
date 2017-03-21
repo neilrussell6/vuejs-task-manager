@@ -9,10 +9,16 @@ import {
     updateResource
 } from 'redux-json-api';
 
+// actions
+import * as api_actions from 'state/api.actions';
+
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Task } from 'data/models/crud/jsonapi/task.model';
 import * as TaskActions from 'state/tasks/task.actions';
+
+// store
+import { store } from 'state/store';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -28,8 +34,10 @@ import * as constants from './task.constants';
 // item
 // --------------------------
 
-export function destroyTask (task) {
+export function destroyTask (task, suppress_server_call = false) {
     return function (dispatch) {
+
+        const _state = store.getState();
 
         return StorageUtils.validate(task).then(() => {
 
@@ -42,12 +50,21 @@ export function destroyTask (task) {
                     task
                 });
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+                // if user is not authenticated
+                if (!_state.user.is_authenticated) {
+                    return Promise.resolve();
+                }
+
+                // destroy on server
+                return dispatch(deleteResource(task.resource_identifier_object))
+                    .catch((error) => dispatch(api_actions.apiError(error)));
+
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function storeOrUpdateTask (task, project, user) {
+export function storeOrUpdateTask (task, project) {
     return function (dispatch) {
 
         return StorageUtils.validate(task).then(() => {
@@ -59,24 +76,26 @@ export function storeOrUpdateTask (task, project, user) {
                 // is not in storage
 
                 if (typeof response === 'undefined') {
-                    return dispatch(storeTask(task, project, user));
+                    return dispatch(storeTask(task, project));
                 }
 
                 // is in storage
 
-                return dispatch(updateTask(task));
+                return dispatch(updateTask(task, {}));
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function storeTask (task, project, user) {
+export function storeTask (task, project, suppress_server_call = false) {
     return function (dispatch) {
+
+        const _state = store.getState();
 
         return StorageUtils.validate(task).then(() => {
 
-            const _task = new Task(Object.assign({}, task, { project_uuid: project.uuid, user_uuid: user.uuid }));
+            const _task = new Task(Object.assign({}, task, { project_uuid: project.uuid, user_uuid: _state.user.uuid }));
             return StorageUtils.store(_task).then((uuid) => {
 
                 dispatch({
@@ -84,13 +103,29 @@ export function storeTask (task, project, user) {
                     task: _task
                 });
 
-            }).catch(Promise.reject);
-        }).catch(Promise.reject);
+                // if user is not authenticated or server call is suppressed
+                if (!_state.user.is_authenticated || suppress_server_call) {
+                    return Promise.resolve();
+                }
+
+                // store on server
+                return dispatch(createResource(_task.resource_object)).then((response) => {
+
+                    // update in local storage with server id
+                    return dispatch(updateTask(_task, { server_id: parseInt(response.data.id) }, _state.user, true));
+
+                }).catch((error) => dispatch(api_actions.apiError(error)));
+
+
+            }).catch((message) => console.error(message));
+        }).catch((message) => console.error(message));
     };
 }
 
-export function updateTask (task, data = {}) {
+export function updateTask (task, data = {}, suppress_server_call = false) {
     return function (dispatch) {
+
+        const _state = store.getState();
 
         Promise.all([ StorageUtils.validate(task), StorageUtils.update(task, data) ]).then((responses) => {
 
@@ -100,7 +135,16 @@ export function updateTask (task, data = {}) {
                 data
             });
 
-        }).catch(Promise.reject);
+            // if user is not authenticated or server call is suppressed
+            if (!_state.user.is_authenticated || suppress_server_call) {
+                return Promise.resolve();
+            }
+
+            // update on server
+            return dispatch(updateResource(task.resource_object))
+                .catch((error) => dispatch(api_actions.apiError(error)));
+
+        }).catch((message) => console.error(message));
     };
 }
 
@@ -127,11 +171,13 @@ export function undoTrashTask (task) {
 // --------------------------
 
 export function refreshTasks (project) {
-    return fetchTasks(project);
+    return indexTasks(project);
 }
 
-export function fetchTasks (project) {
+export function indexTasks (project) {
     return function (dispatch) {
+
+        console.log(project);
 
         return StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
 
@@ -140,7 +186,7 @@ export function fetchTasks (project) {
                 tasks
             });
 
-        }).catch(Promise.reject);
+        }).catch((message) => console.error(message));
     };
 }
 

@@ -16,7 +16,7 @@ import { setEndpointHost, setEndpointPath, setHeaders } from 'redux-json-api';
 import './view/main';
 
 // local
-const USE_SERVICE_WORKER = true;
+const USE_SERVICE_WORKER = false;
 
 // ----------------------------------------------------------------
 // API
@@ -36,7 +36,7 @@ if (!USE_SERVICE_WORKER) {
     // ----------------------------------------------------------------
 
     store.dispatch(UserActions.viewOrStoreUser()).then((user) => {
-        store.dispatch(ProjectActions.fetchProjects(user));
+        store.dispatch(ProjectActions.indexProjects());
     })
     .catch((message) => {
         console.error(message);
@@ -72,9 +72,8 @@ if (!USE_SERVICE_WORKER) {
 
             console.log('[Service Worker] Registered');
 
-            // fetch projects
-            const _user = responses[1];
-            store.dispatch(ProjectActions.fetchProjects(_user));
+            // index projects
+            store.dispatch(ProjectActions.indexProjects());
         })
         .catch((message) => {
             console.error(message);

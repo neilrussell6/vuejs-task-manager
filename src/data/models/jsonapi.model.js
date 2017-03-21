@@ -34,7 +34,7 @@ export class JsonApiModel extends CRUDModel {
         };
 
         if (typeof this.server_id !== 'undefined' && this.server_id !== null) {
-            Object.assign(result, { id: this.id });
+            Object.assign(result, { id: this.server_id });
         }
 
         return result;
@@ -51,7 +51,7 @@ export class JsonApiModel extends CRUDModel {
         };
 
         if (typeof this.server_id !== 'undefined' && this.server_id !== null) {
-            Object.assign(result, { id: this.id });
+            Object.assign(result, { id: this.server_id });
         }
 
         return result;

@@ -198,7 +198,7 @@
                     return;
                 }
 
-                store.dispatch(TaskActions.refreshTasks(this.selected_project.server_id));
+                store.dispatch(TaskActions.refreshTasks(this.selected_project));
             },
 
             // ------------------------------------

@@ -81,6 +81,16 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
         // user
         // ---------------------------
 
+        case user_constants.ACTION_TOKEN_EXPIRED:
+            _data = {
+                label: "access to server is expired please login",
+                style: MESSAGE_STYLE.WARNING,
+                icon: {
+                    class: 'fa fa-exclamation-triangle fa-2x'
+                }
+            };
+            break;
+
         case user_constants.ACTION_WILL_LOGIN_USER:
             _data = {
                 label: "authenticating your credentials",
