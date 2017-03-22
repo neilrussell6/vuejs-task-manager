@@ -4,6 +4,9 @@ import uuidV1 from 'uuid/v1';
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import db from 'data/local.database';
 
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
+
 export const ENDPOINT_DESTROY = 'ENDPOINT_DESTROY';
 export const ENDPOINT_INDEX = 'ENDPOINT_INDEX';
 export const ENDPOINT_INDEX_RELATED = 'ENDPOINT_INDEX_RELATED';
@@ -110,7 +113,6 @@ export function indexRelated (related_type, related_key, related_value) {
 
 export function store (resource) {
     return new Promise((resolve, reject) => {
-        console.log(resource);
 
         validate(resource).then(() => {
 
@@ -133,7 +135,8 @@ export function storeMany (collection = []) {
 
             console.log(responses);
 
-        }).catch(reject);
+        }).catch((message) => console.error(message));
+        // }).catch(reject);
     });
 }
 

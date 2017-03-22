@@ -22,6 +22,12 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
         case app_constants.ACTION_TOGGLE_SHOW_LOGIN:
             return Object.assign({}, state, { show_login: state.show_login ? false : true });
 
+        case user_constants.ACTION_TOKEN_EXPIRED:
+            return Object.assign({}, state, { show_login: true });
+
+        case user_constants.ACTION_WORK_OFFLINE:
+            return Object.assign({}, state, { is_offline: true });
+
         // case app_constants.ACTION_TOGGLE_ARTIFICIAL_DELAY:
         //     if (state.artificial_delay > 0) {
         //         return Object.assign({}, state, { artificial_delay: 0 });

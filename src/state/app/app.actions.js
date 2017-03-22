@@ -20,3 +20,9 @@ export function toggleMinimalMessage () {
         type: constants.ACTION_TOGGLE_MESSAGE_MINIMAL
     };
 }
+
+export function workOffline () {
+    return {
+        type: constants.ACTION_WORK_OFFLINE
+    };
+}

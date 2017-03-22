@@ -2,9 +2,14 @@ import deepFreeze from 'deep-freeze';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-// app
-import { API_READ } from 'state/redux-json-api.constants';
+// data
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
+
+// state
+import { API_READ } from 'state/redux-json-api.constants';
+
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
 
 // local
 import * as task_constants from '../task.constants';
@@ -13,11 +18,11 @@ import * as Reducer from './tasks.reducer';
 describe("tasks reducer", () => {
 
     before(() => {
-        sinon.stub(LocalStorageUtils, 'getUniqueLocalId').returns(123456);
+        sinon.stub(StorageUtils, 'makeUUID').returns(123456);
     });
 
     after(() => {
-        LocalStorageUtils.getUniqueLocalId.restore(); // Unwraps the spy
+        StorageUtils.makeUUID.restore(); // Unwraps the spy
     });
 
     it("should return before state by default", () => {

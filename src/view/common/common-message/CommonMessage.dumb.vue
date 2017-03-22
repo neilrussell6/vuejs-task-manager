@@ -65,6 +65,7 @@
             // ------------------------------------
 
             _onButtonClick: function (message, button) {
+
                 if (!message.hasOwnProperty('onClick')) {
                     return;
                 }

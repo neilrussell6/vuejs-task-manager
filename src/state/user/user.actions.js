@@ -12,6 +12,8 @@ import { User } from 'data/models/crud/jsonapi/user.model';
 
 // state
 import * as api_actions from 'state/api.actions';
+import * as app_actions from 'state/app/app.actions';
+import * as message_constants from 'state/message/message.constants';
 
 // store
 import { store } from 'state/store';
@@ -103,7 +105,13 @@ export function viewOrStoreUser() {
 
                     dispatch({
                         type: constants.ACTION_TOKEN_EXPIRED,
-                        user: _state.user
+                        user: _state.user,
+                        // work offline button handler
+                        callback: () => {
+                            dispatch({ type: message_constants.ACTION_CLEAR_MESSAGE });
+                            dispatch(app_actions.workOffline());
+                            dispatch(app_actions.toggleShowLogin());
+                        }
                     });
 
                     return dispatch(updateUser(_state.user, { is_authenticated: false }, true)).then((response) => {

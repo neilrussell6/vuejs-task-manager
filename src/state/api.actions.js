@@ -25,6 +25,6 @@ export function apiError (error) {
             }
 
             dispatch({ type: api_constants.ACTION_API_ERROR_UNKNOWN });
-        })
+        });
     };
 }

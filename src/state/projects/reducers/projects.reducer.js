@@ -13,7 +13,7 @@ import * as StorageUtils from 'utils/storage/storage.utils';
 import * as project_constants from '../project.constants';
 
 // ---------------------------
-// private
+// item
 // ---------------------------
 
 function project (state, action) {
@@ -42,7 +42,7 @@ function project (state, action) {
 }
 
 // ---------------------------
-// public
+// collection
 // ---------------------------
 
 export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, action = {}) {
@@ -51,6 +51,24 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
     let _item;
 
     switch (action.type) {
+
+        // ---------------------------
+        // server
+        // ---------------------------
+
+        case project_constants.ACTION_SERVER_INDEXED_PROJECTS:
+            //
+            // console.log(state);
+            // console.log(action.data);
+            //
+            //
+            // return new Project(Object.assign({}, item.attributes, {
+                            //         server_id: item.id,
+                            //         uuid: StorageUtils.makeUUID(),
+                            //         user_uuid: _state.user.uuid
+                            //     }));
+
+            return state;
 
         // ---------------------------
         // local storage

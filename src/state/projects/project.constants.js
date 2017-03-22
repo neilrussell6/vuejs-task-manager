@@ -2,6 +2,9 @@
 // actions
 // --------------------------
 
+// projects : server
+export const ACTION_SERVER_INDEXED_PROJECTS    = 'SERVER_INDEXED_PROJECTS';
+
 // projects : local storage
 export const ACTION_DESTROYED_PROJECT   = 'DESTROYED_PROJECT';
 export const ACTION_INDEXED_PROJECTS    = 'INDEXED_PROJECTS';

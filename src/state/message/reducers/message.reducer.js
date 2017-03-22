@@ -40,7 +40,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             break;
 
         case api_constants.ACTION_API_ERROR_UNKNOWN:
-            _label = "an unknown error occured";
+            _label = "an unknown error occurred";
             break;
 
         // ---------------------------
@@ -83,11 +83,13 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
 
         case user_constants.ACTION_TOKEN_EXPIRED:
             _data = {
+                action: action,
                 label: "access to server is expired please login",
                 style: MESSAGE_STYLE.WARNING,
                 icon: {
                     class: 'fa fa-exclamation-triangle fa-2x'
-                }
+                },
+                buttons: [ {label: 'WORK OFFLINE'} ]
             };
             break;
 
@@ -133,6 +135,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             break;
 
         case task_constants.ACTION_DESTROYED_TASK:
+        case message_constants.ACTION_CLEAR_MESSAGE:
         case message_constants.ACTION_CANCEL_DELETE:
             return null;
     }

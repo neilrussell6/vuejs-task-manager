@@ -34,7 +34,7 @@ import * as constants from './project.constants';
 // item
 // --------------------------
 
-export function destroyProject (project, user) {
+export function destroyProject (project, suppress_server_call = false) {
     return function (dispatch) {
 
         const _state = store.getState();
@@ -52,7 +52,9 @@ export function destroyProject (project, user) {
                 });
 
                 // if user is not authenticated
-                if (!_state.user.is_authenticated) {
+                // ... or server call is suppressed
+                // ... or app is offline
+                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                     return Promise.resolve();
                 }
 
@@ -105,8 +107,10 @@ export function storeProject (project, suppress_server_call = false) {
                     project: _project
                 });
 
-                // if user is not authenticated or server call is suppressed
-                if (!_state.user.is_authenticated || suppress_server_call) {
+                // if user is not authenticated
+                // ... or server call is suppressed
+                // ... or app is offline
+                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                     return Promise.resolve();
                 }
 
@@ -144,8 +148,10 @@ export function updateProject (project, data = {}, suppress_server_call = false)
                 data
             });
 
-            // if user is not authenticated or server call is suppressed
-            if (!_state.user.is_authenticated || suppress_server_call) {
+            // if user is not authenticated
+            // ... or server call is suppressed
+            // ... or app is offline
+            if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                 return Promise.resolve();
             }
 
@@ -165,7 +171,7 @@ export function refreshProjects () {
     return indexProjects();
 }
 
-export function indexProjects () {
+export function indexProjects (suppress_server_call = false) {
     return function (dispatch) {
 
         const _state = store.getState();
@@ -179,7 +185,9 @@ export function indexProjects () {
             });
 
             // if user is not authenticated
-            if (!_state.user.is_authenticated) {
+            // ... or server call is suppressed
+            // ... or app is offline
+            if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                 return Promise.resolve();
             }
 
@@ -187,13 +195,27 @@ export function indexProjects () {
             const _endpoint = `users/${_state.user.server_id}/projects`;
             dispatch(readEndpoint(_endpoint)).then((response) => {
 
-                // update or store many in local storage
-                const _data = response.data.map((item) => {
-                    return new Project(Object.assign({}, item.attributes, { server_id: item.id }));
+                dispatch({
+                    type: constants.ACTION_SERVER_INDEXED_PROJECTS,
+                    data: response.data
                 });
-                return StorageUtils.storeMany(_data).then((projects) => {
-                    console.log(projects);
-                });
+
+                const _state = store.getState();
+
+                console.log(_state.projects);
+                
+                // // update or store many in local storage
+                // const _data = response.data.map((item) => {
+                //     return new Project(Object.assign({}, item.attributes, {
+                //         server_id: item.id,
+                //         uuid: StorageUtils.makeUUID(),
+                //         user_uuid: _state.user.uuid
+                //     }));
+                // });
+                //
+                // return StorageUtils.storeMany(_data).then((projects) => {
+                //     console.log(projects);
+                // });
 
             }).catch((error) => dispatch(api_actions.apiError(error)));
 

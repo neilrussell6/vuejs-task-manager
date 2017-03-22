@@ -8,6 +8,9 @@ import { User } from 'data/models/crud/jsonapi/user.model';
 // state
 import * as api_constants from 'state/redux-json-api.constants';
 
+// utils
+import * as StorageUtils from 'utils/storage/storage.utils';
+
 // local
 import * as Reducer from './user.reducer';
 import * as user_constants from '../user.constants';
@@ -15,11 +18,11 @@ import * as user_constants from '../user.constants';
 describe("user reducer", () => {
 
     afterEach(() => {
-        if ('restore' in LocalStorageUtils.view) {
-            LocalStorageUtils.view.restore(); // Unwraps the spy
+        if ('restore' in StorageUtils.view) {
+            StorageUtils.view.restore(); // Unwraps the spy
         }
-        if ('restore' in LocalStorageUtils.view) {
-            LocalStorageUtils.store.restore(); // Unwraps the spy
+        if ('restore' in StorageUtils.view) {
+            StorageUtils.store.restore(); // Unwraps the spy
         }
     });
 
@@ -92,7 +95,7 @@ describe("user reducer", () => {
 
             it("should return existing user from state", () => {
 
-                sinon.stub(LocalStorageUtils, 'view').returns(null);
+                sinon.stub(StorageUtils, 'view').returns(null);
 
                 const _state_before = new User({ uuid: '1234', first_name: 'AAA' });
                 const _action = {
@@ -114,8 +117,8 @@ describe("user reducer", () => {
 
             it("should create new default user with unique local_id", () => {
 
-                sinon.stub(LocalStorageUtils, 'view').returns(null);
-                sinon.stub(LocalStorageUtils, 'store');
+                sinon.stub(StorageUtils, 'view').returns(null);
+                sinon.stub(StorageUtils, 'store');
 
                 const _state_before = user_constants.DEFAULT_STATE;
                 const _action = {
@@ -138,7 +141,7 @@ describe("user reducer", () => {
 
             it("should return new user instance based on data from localStorage", () => {
 
-                sinon.stub(LocalStorageUtils, 'view').returns('{"first_name": "AAA", "is_authenticated": false, "local_id": "1234"}');
+                sinon.stub(StorageUtils, 'view').returns('{"first_name": "AAA", "is_authenticated": false, "local_id": "1234"}');
 
                 const _state_before = user_constants.DEFAULT_STATE;
                 const _action = {
@@ -155,7 +158,7 @@ describe("user reducer", () => {
                 expect(_result.access_token).to.be.null;
                 expect(_result.local_id).to.equal('1234');
 
-                LocalStorageUtils.view.restore(); // Unwraps the spy
+                StorageUtils.view.restore(); // Unwraps the spy
             });
         });
     });

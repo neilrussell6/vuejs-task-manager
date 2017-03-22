@@ -51,7 +51,9 @@ export function destroyTask (task, suppress_server_call = false) {
                 });
 
                 // if user is not authenticated
-                if (!_state.user.is_authenticated) {
+                // ... or server call is suppressed
+                // ... or app is offline
+                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                     return Promise.resolve();
                 }
 
@@ -103,8 +105,10 @@ export function storeTask (task, project, suppress_server_call = false) {
                     task: _task
                 });
 
-                // if user is not authenticated or server call is suppressed
-                if (!_state.user.is_authenticated || suppress_server_call) {
+                // if user is not authenticated
+                // ... or server call is suppressed
+                // ... or app is offline
+                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                     return Promise.resolve();
                 }
 
@@ -135,8 +139,10 @@ export function updateTask (task, data = {}, suppress_server_call = false) {
                 data
             });
 
-            // if user is not authenticated or server call is suppressed
-            if (!_state.user.is_authenticated || suppress_server_call) {
+            // if user is not authenticated
+            // ... or server call is suppressed
+            // ... or app is offline
+            if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
                 return Promise.resolve();
             }
 
@@ -176,8 +182,6 @@ export function refreshTasks (project) {
 
 export function indexTasks (project) {
     return function (dispatch) {
-
-        console.log(project);
 
         return StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
 
