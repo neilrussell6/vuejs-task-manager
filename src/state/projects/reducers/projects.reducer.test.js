@@ -18,7 +18,7 @@ import * as project_constants from '../project.constants';
 describe("projects.reducer", () => {
 
     before(() => {
-        sinon.stub(StorageUtils, 'makeUUID').returns(123456);
+        sinon.stub(StorageUtils, 'makeUUID').returns("123456");
     });
 
     after(() => {
@@ -29,8 +29,132 @@ describe("projects.reducer", () => {
     // local storage
     // ---------------------------
 
-    describe("state", () => {
+    describe("local storage", () => {
 
+        describe("ACTION_INDEXED_PROJECTS", () => {
+
+            it("should return a list of projects, ignoring existing state", () => {
+
+                const _state_before = [
+                    new Project({ server_id: 1, uuid: 111, text: 'AAAA' })
+                ];
+                const _action = {
+                    type: project_constants.ACTION_INDEXED_PROJECTS,
+                    projects: [
+                        new Project({ server_id: 2, uuid: 222, text: 'BBBB' }),
+                        new Project({ server_id: 3, uuid: 333, text: 'CCCC' })
+                    ]
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                const _result = Reducer.projects(_state_before, _action);
+
+                const _result_uuids = _result.map((item) => item.uuid);
+
+                expect(_result_uuids).to.not.include(111);
+                expect(_result_uuids).to.include(222);
+                expect(_result_uuids).to.include(333);
+            });
+        });
+
+        describe("ACTION_STORED_PROJECT", () => {
+
+            it("should update project data using provided project and state data", () => {
+
+                let _project1 = new Project({ server_id: 1, uuid: 1, text: 'AAAA' });
+                let _project2 = new Project({ server_id: 2, uuid: 2, text: 'BBBB' });
+
+                const _state_before = [ _project1, _project2 ];
+                const _action = {
+                    type: project_constants.ACTION_UPDATED_PROJECT,
+                    project: _project2,
+                    data: {text: 'XXXX'}
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                let _result = Reducer.projects(_state_before, _action);
+
+                expect(_result).to.have.length(2);
+                expect(_result[1].text).to.equal('XXXX');
+            });
+        });
+
+        describe("ACTION_UPDATED_PROJECT", () => {
+
+            it("should update project data using provided project and state data", () => {
+
+                let _project1 = new Project({ server_id: 1, uuid: 1, text: 'AAAA' });
+                let _project2 = new Project({ server_id: 2, uuid: 2, text: 'BBBB' });
+
+                const _state_before = [ _project1, _project2 ];
+                const _action = {
+                    type: project_constants.ACTION_UPDATED_PROJECT,
+                    project: _project2,
+                    data: {text: 'XXXX'}
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                let _result = Reducer.projects(_state_before, _action);
+
+                expect(_result).to.have.length(2);
+                expect(_result[1].text).to.equal('XXXX');
+            });
+        });
+    });
+
+    // ---------------------------
+    // serverm
+    // ---------------------------
+
+    describe("server", () => {
+
+        describe("ACTION_SERVER_INDEXED_PROJECTS", () => {
+
+            it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
+
+                const _state_before = [
+                    new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
+                    new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
+                ];
+                const _action = {
+                    type: project_constants.ACTION_SERVER_INDEXED_PROJECTS,
+                    data: [
+                        { id: 2, name: 'BBBB2222' },
+                        { id: 1, name: 'CCCC' }
+                    ],
+                    user: {
+                        uuid: 123
+                    }
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                const _result = Reducer.projects(_state_before, _action);
+
+                expect(_result).to.have.length(3);
+
+                expect(_result[2]).to.have.property('server_id', 3);
+                expect(_result[2]).to.have.property('uuid', 111);
+                expect(_result[2]).to.have.property('name', 'AAAA');
+
+                expect(_result[1]).to.have.property('server_id', 2);
+                expect(_result[1]).to.have.property('uuid', 222);
+                expect(_result[1]).to.have.property('name', 'BBBB2222');
+
+                console.log(_result[0]);
+                expect(_result[0]).to.have.property('server_id', 1);
+                expect(_result[0]).to.have.property('uuid', '123456');
+                expect(_result[0]).to.have.property('name', 'CCCC');
+                expect(_result[0]).to.have.property('user_uuid', 123);
+            });
+        });
     });
 
     // ---------------------------
@@ -92,28 +216,6 @@ describe("projects.reducer", () => {
             });
         });
 
-        // describe("ACTION_UPDATE_PROJECT_LOCALLY", () => {
-        //
-        //     it("should update project data using provided uuid and data", () => {
-        //
-        //         let _project1 = new Project({ server_id: 1, uuid: 1, text: 'AAAA' });
-        //         let _project2 = new Project({ server_id: 2, uuid: 2, text: 'BBBB' });
-        //
-        //         const _state_before = [ _project1, _project2 ];
-        //         const _action = {
-        //             type: project_constants.ACTION_UPDATE_PROJECT_LOCALLY, project: _project2, data: {text: 'XXXX'}
-        //         };
-        //
-        //         deepFreeze(_state_before);
-        //         deepFreeze(_action);
-        //         deepFreeze(_action.data);
-        //
-        //         let _result = Reducer.projects(_state_before, _action);
-        //
-        //         expect(_result[1].text).to.equal('XXXX');
-        //     });
-        // });
-        //
         // describe("redux-json-api", () => {
         //
         //     describe("API_READ", () => {

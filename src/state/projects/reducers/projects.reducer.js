@@ -32,6 +32,24 @@ function project (state, action) {
             return new Project(Object.assign({}, state, action.data));
 
         // ---------------------------
+        // server
+        // ---------------------------
+
+        case project_constants.ACTION_SERVER_INDEXED_PROJECTS:
+
+            // update existing item
+            if (state !== null) {
+                const _server_item = action.data.reduce((result, item) => item.id === state.server_id ? item : result, {});
+                return new Project(Object.assign({}, state, _server_item));
+            }
+
+            // create new item
+            return new Project(Object.assign({}, action.data, {
+                uuid: StorageUtils.makeUUID(),
+                user_uuid: action.user.uuid
+            }));
+
+        // ---------------------------
         // state
         // ---------------------------
 
@@ -51,24 +69,6 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
     let _item;
 
     switch (action.type) {
-
-        // ---------------------------
-        // server
-        // ---------------------------
-
-        case project_constants.ACTION_SERVER_INDEXED_PROJECTS:
-            //
-            // console.log(state);
-            // console.log(action.data);
-            //
-            //
-            // return new Project(Object.assign({}, item.attributes, {
-                            //         server_id: item.id,
-                            //         uuid: StorageUtils.makeUUID(),
-                            //         user_uuid: _state.user.uuid
-                            //     }));
-
-            return state;
 
         // ---------------------------
         // local storage
@@ -95,6 +95,27 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
                 ...[ _item ],
                 ...state.slice(_index + 1)
             ];
+
+        // ---------------------------
+        // server
+        // ---------------------------
+
+        case project_constants.ACTION_SERVER_INDEXED_PROJECTS:
+            // return action.data.map((item) => project({}, Object.assign({}, action, { data: item })));
+
+            // update existing items
+            const _existing_items = state.map((item) => project(item, action));
+            const _existing_item_server_ids = _existing_items.map((item) => item.server_id);
+
+            // add new items
+            const _new_items = action.data.reduce((result, item) => {
+                return _existing_item_server_ids.indexOf(item.id) > -1 ? result : [ ...result, project(null, Object.assign({}, action, { data: item })) ];
+            }, []);
+
+            // merge & sort by server_id
+            return [ ..._existing_items, ... _new_items ].sort(function(a, b) {
+                return parseInt(a.server_id) - parseInt(b.server_id);
+            });
 
         // ---------------------------
         // state
