@@ -35,7 +35,7 @@
         }
 
         button {
-            &:disabled {
+            &.disabled {
                 color: $text-color-med;
             }
         }

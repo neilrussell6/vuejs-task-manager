@@ -15,7 +15,7 @@
     // smart component (this means it interacts with application state)
 
     // actions
-    import * as TaskActions from 'state/tasks/task.actions';
+    import * as task_actions from 'state/tasks/task.actions';
 
     // components
     import ProjectList from './project-list/ProjectList.smart';

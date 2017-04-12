@@ -95,3 +95,53 @@ export function splitEndpoint (endpoint, endpoint_type) {
             return null;
     }
 }
+
+export function makeResourceObject (resource, relationships = {}) {
+
+    if (resource.type === null) {
+        return null;
+    }
+
+    let _result = {
+        type: resource.type,
+        attributes: resource.attributes
+    };
+
+    if (typeof resource.server_id !== 'undefined' && resource.server_id !== null) {
+        Object.assign(_result, { id: resource.server_id });
+    }
+
+    if (Object.keys(relationships).length !== 0) {
+
+        _result.relationships = Object.keys(relationships).reduce((result, relationship) => {
+            const _entity = relationships[ relationship ];
+            return Object.assign({}, result, {
+                [ relationship ]: {
+                    'data': {
+                        'type': _entity.type,
+                        'id': _entity.server_id
+                    }
+                }
+            });
+        }, {});
+    }
+
+    return _result;
+}
+
+export function makeResourceIdentifierObject (resource) {
+
+    if (resource.type === null) {
+        return null;
+    }
+
+    let _result = {
+        type: resource.type
+    };
+
+    if (typeof resource.server_id !== 'undefined' && resource.server_id !== null) {
+        Object.assign(_result, { id: resource.server_id });
+    }
+
+    return _result;
+}

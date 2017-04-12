@@ -5,7 +5,7 @@ import { JsonApiModel } from 'data/models/jsonapi.model';
 import db from 'data/local.database';
 
 // utils
-import * as StorageUtils from 'utils/storage/storage.utils';
+import * as JsonApiUtils from 'utils/json-api/json-api.utils';
 
 export const ENDPOINT_DESTROY = 'ENDPOINT_DESTROY';
 export const ENDPOINT_INDEX = 'ENDPOINT_INDEX';
@@ -22,7 +22,7 @@ export const POST = 'REQUEST_POST';
 
 const ERROR_MESSAGE_UNSUPPORTED_STORAGE = 'Storage is not supported by your browser';
 const ERROR_MESSAGE_UNSUPPORTED_INDEXED_DB = 'INDEXED_DB is not supported by your browser';
-const ERROR_MESSAGE_INVALID_MODEL = 'Provided resource is invalid';
+export const ERROR_MESSAGE_INVALID_MODEL = 'Provided resource is invalid';
 const ERROR_MESSAGE_USER_DENIED_INDEXED_DB = 'User denied the usage of INDEXED_DB';
 
 // ---------------------------------
@@ -32,14 +32,14 @@ const ERROR_MESSAGE_USER_DENIED_INDEXED_DB = 'User denied the usage of INDEXED_D
 export function isStored (resource) {
     return new Promise((resolve, reject) => {
 
-        validate(resource).then(() => {
-
-            view(resource.type, resource.uuid).then((response) => {
-                resolve(typeof response !== 'undefined');
-            }).catch(reject);
-
+        view(resource.type, resource.uuid).then((response) => {
+            resolve(typeof response !== 'undefined');
         }).catch(reject);
     });
+}
+
+export function isResourceValid (resource) {
+    return resource !== null && resource.type !== null;
 }
 
 export function makeEndpoint (request_type, primary_resource, relationship = null) {
@@ -63,135 +63,50 @@ export function makeUUID () {
     return uuidV1();
 }
 
-export function validate (resource = null) {
-
-    if (resource !== null && (!(resource instanceof JsonApiModel) || resource.resource_object === null)) {
-        return Promise.reject(ERROR_MESSAGE_INVALID_MODEL);
-    }
-
-    if (!indexedDB) {
-        return Promise.reject(ERROR_MESSAGE_UNSUPPORTED_INDEXED_DB);
-    }
-
-    return Promise.resolve();
-}
-
 // ---------------------------------
 // CRUD
 // ---------------------------------
 
 export function index (resource_type) {
-    return new Promise((resolve, reject) => {
-
-        validate().then(() => {
-
-            db[ resource_type ].toArray().then((response) => {
-
-                resolve(response);
-
-            }).catch(reject);
-        }).catch(reject);
-    });
+    return db[ resource_type ].toArray();
 }
 
 export function indexRelated (related_type, related_key, related_value) {
-    return new Promise((resolve, reject) => {
-
-        validate().then(() => {
-
-            db[ related_type ]
-                .where(related_key).equals(related_value)
-                .toArray()
-                .then((response) => {
-
-                    resolve(response);
-
-                }).catch(reject);
-        }).catch(reject);
-    });
+    return db[ related_type ].where(related_key).equals(related_value).toArray();
 }
 
 export function store (resource) {
-    return new Promise((resolve, reject) => {
-
-        validate(resource).then(() => {
-
-            const _resource_object = resource.resource_object;
-            const _data = resource;
-
-            db[ _resource_object.type ].add(_data).then((response) => {
-
-                resolve(response);
-
-            }).catch(reject);
-        }).catch(reject);
-    });
+    return db[ resource.type ].add(resource);
 }
 
-export function storeMany (collection = []) {
-    return new Promise((resolve, reject) => {
+export function updateOrStoreMany (collection = []) {
+    return Promise.all(
 
-        Promise.all(collection.map((resource) => store(resource))).then((responses) => {
-
-            console.log(responses);
-
-        }).catch((message) => console.error(message));
-        // }).catch(reject);
-    });
+        collection.map((resource) => {
+            if (isStored(resource)) {
+                return update(resource);
+            }
+            return store(resource);
+        })
+    );
 }
 
 export function update (resource, data = {}) {
-    return new Promise((resolve, reject) => {
 
-        validate(resource).then(() => {
-
-            const _resource_object = resource.resource_object;
-            const _data = Object.assign({}, resource, data);
-
-            db[ _resource_object.type ].put(_data).then((response) => {
-
-                resolve(response);
-
-            }).catch(reject);
-        }).catch(reject);
-    });
+    const _data = Object.assign({}, resource, data);
+    return db[ resource.type ].put(_data);
 }
 
 export function view (resource_type, resource_uuid) {
-    return new Promise((resolve, reject) => {
-
-        validate().then(() => {
-
-            db[ resource_type ].get(resource_uuid).then((response) => {
-
-                resolve(response);
-
-            }).catch(reject);
-        }).catch(reject);
-    });
+    return db[ resource_type ].get(resource_uuid);
 }
 
-export function destroy (resource_type, resource_uuid) {
-    return new Promise((resolve, reject) => {
-
-        validate().then(() => {
-
-            db[ resource_type ].delete(resource_uuid).then((response) => {
-                resolve(response);
-
-            }).catch(reject);
-        }).catch(reject);
-    });
+export function destroy (resource_type, resource_pk) {
+    return db[ resource_type ].delete(resource_pk);
 }
 
 export function destroyAll (resource_type) {
-    return new Promise((resolve, reject) => {
-
-        validate().then(() => {
-            db[ resource_type ].clear().then(resolve).catch(reject);
-
-        }).catch(reject);
-    });
+    return db[ resource_type ].clear();
 }
 
 export function viewRelated (resource, relationship) {

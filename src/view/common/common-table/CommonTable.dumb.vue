@@ -25,7 +25,7 @@
                             <td class="cell-button" :class="'cell-'+key">
 
                                 <button v-on:click="_onButtonClick(row, key)"
-                                        :disabled="_isDisabled(row, key)">
+                                        :class="{'disabled': _isDisabled(row, key)}">
 
                                     <!-- icon -->
                                     <template v-if="cellConfigs[key].icon_class">
@@ -156,14 +156,10 @@
                         return;
                     }
 
-                    // check if item is in storage
-                    StorageUtils.isStored(_new_item).then((is_stored) => {
+                    // if item is new
+                    // ... focus for editing
+                    if (_new_item.is_new) {
 
-                        if (is_stored) {
-                            return;
-                        }
-
-                        // focus item for editing
                         this.editing_item = _new_item;
                         this.editing_item_before_value = _new_item[ this.defaultEditingColumnKey ];
                         this.editing_item_uuid = _new_item.uuid;
@@ -172,10 +168,7 @@
                         if (this.cellConfigs[ this.editing_column_key ].hasOwnProperty('onEdit')) {
                             this.cellConfigs[ this.editing_column_key ].onEdit(this.editing_item);
                         }
-                    })
-                    .catch((message) => {
-                        console.error(message);
-                    });
+                    }
                 }
             }
         },

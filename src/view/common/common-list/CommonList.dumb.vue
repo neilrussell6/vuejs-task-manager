@@ -102,14 +102,10 @@
                         return;
                     }
 
-                    // check if item is in storage
-                    StorageUtils.isStored(_new_item).then((is_stored) => {
+                    // if item is new
+                    // ... focus for editing
+                    if (_new_item.is_new) {
 
-                        if (is_stored) {
-                            return;
-                        }
-
-                        // focus item for editing
                         this.editing_item = _new_item;
                         this.editing_item_before_value = _new_item[ this.labelField ];
                         this.editing_item_uuid = _new_item.uuid;
@@ -118,10 +114,7 @@
                         if (typeof this.onEdit !== 'undefined') {
                             this.onEdit(this.editing_item);
                         }
-                    })
-                    .catch((message) => {
-                        console.error(message);
-                    });
+                    }
                 }
             },
             selectedUuid: function (value) {

@@ -1,8 +1,8 @@
 import {
-    API_CREATE_FAILED,
-    API_DELETE_FAILED,
-    API_READ_FAILED,
-    API_UPDATE_FAILED,
+    STORAGE_CREATE_FAILED,
+    STORAGE_DELETE_FAILED,
+    STORAGE_READ_FAILED,
+    STORAGE_UPDATE_FAILED,
     createResource,
     deleteResource,
     readEndpoint,
@@ -10,12 +10,12 @@ import {
 } from 'redux-json-api';
 
 // actions
-import * as api_actions from 'state/api.actions';
+import * as storage_actions from 'state/storage/storage.actions';
 
 // data
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Task } from 'data/models/crud/jsonapi/task.model';
-import * as TaskActions from 'state/tasks/task.actions';
+import * as task_actions from 'state/tasks/task.actions';
 
 // store
 import { store } from 'state/store';
@@ -27,148 +27,28 @@ import * as StorageUtils from 'utils/storage/storage.utils';
 import * as constants from './task.constants';
 
 // ==============================================
-// local storage
+// local storage & server
 // ==============================================
 
 // --------------------------
 // item
 // --------------------------
 
-export function destroyTask (task, suppress_server_call = false) {
-    return function (dispatch) {
-
-        const _state = store.getState();
-
-        return StorageUtils.validate(task).then(() => {
-
-            const _resource_object = task.resource_object;
-
-            return StorageUtils.destroy(_resource_object.type, task.uuid).then(() => {
-
-                dispatch({
-                    type: constants.ACTION_DESTROYED_TASK,
-                    task
-                });
-
-                // if user is not authenticated
-                // ... or server call is suppressed
-                // ... or app is offline
-                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
-                    return Promise.resolve();
-                }
-
-                // destroy on server
-                return dispatch(deleteResource(task.resource_identifier_object))
-                    .catch((error) => dispatch(api_actions.apiError(error)));
-
-            }).catch((message) => console.error(message));
-        }).catch((message) => console.error(message));
-    };
-}
-
-export function storeOrUpdateTask (task, project) {
-    return function (dispatch) {
-
-        return StorageUtils.validate(task).then(() => {
-
-            const _resource_object = task.resource_object;
-
-            return StorageUtils.view(_resource_object.type, task.uuid).then((response) => {
-
-                // is not in storage
-
-                if (typeof response === 'undefined') {
-                    return dispatch(storeTask(task, project));
-                }
-
-                // is in storage
-
-                return dispatch(updateTask(task, {}));
-
-            }).catch((message) => console.error(message));
-        }).catch((message) => console.error(message));
-    };
-}
-
-export function storeTask (task, project, suppress_server_call = false) {
-    return function (dispatch) {
-
-        const _state = store.getState();
-
-        return StorageUtils.validate(task).then(() => {
-
-            const _task = new Task(Object.assign({}, task, { project_uuid: project.uuid, user_uuid: _state.user.uuid }));
-            return StorageUtils.store(_task).then((uuid) => {
-
-                dispatch({
-                    type: constants.ACTION_STORED_TASK,
-                    task: _task
-                });
-
-                // if user is not authenticated
-                // ... or server call is suppressed
-                // ... or app is offline
-                if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
-                    return Promise.resolve();
-                }
-
-                // store on server
-                return dispatch(createResource(_task.resource_object)).then((response) => {
-
-                    // update in local storage with server id
-                    return dispatch(updateTask(_task, { server_id: parseInt(response.data.id) }, _state.user, true));
-
-                }).catch((error) => dispatch(api_actions.apiError(error)));
-
-
-            }).catch((message) => console.error(message));
-        }).catch((message) => console.error(message));
-    };
-}
-
-export function updateTask (task, data = {}, suppress_server_call = false) {
-    return function (dispatch) {
-
-        const _state = store.getState();
-
-        Promise.all([ StorageUtils.validate(task), StorageUtils.update(task, data) ]).then((responses) => {
-
-            dispatch({
-                type: constants.ACTION_UPDATED_TASK,
-                task,
-                data
-            });
-
-            // if user is not authenticated
-            // ... or server call is suppressed
-            // ... or app is offline
-            if (!_state.user.is_authenticated || suppress_server_call || _state.app.is_offline) {
-                return Promise.resolve();
-            }
-
-            // update on server
-            return dispatch(updateResource(task.resource_object))
-                .catch((error) => dispatch(api_actions.apiError(error)));
-
-        }).catch((message) => console.error(message));
-    };
-}
-
 export function toggleTaskComplete (task) {
     return function (dispatch) {
-        dispatch(updateTask(task, task.toggleStatusComplete()));
+        dispatch(storage_actions.update(task, task.toggleStatusComplete()));
     };
 }
 
 export function trashTask (task) {
     return function (dispatch) {
-        dispatch(updateTask(task, task.trash()));
+        dispatch(storage_actions.update(task, task.trash()));
     };
 }
 
 export function undoTrashTask (task) {
     return function (dispatch) {
-        dispatch(updateTask(task, task.undoTrash()));
+        dispatch(storage_actions.update(task, task.undoTrash()));
     };
 }
 
@@ -183,13 +63,40 @@ export function refreshTasks (project) {
 export function indexTasks (project) {
     return function (dispatch) {
 
-        return StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
+        let _state = store.getState();
+
+        // index from local storage
+        StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
 
             dispatch({
-                type: constants.ACTION_INDEXED_TASKS,
+                type: constants.ACTION_STORAGE_LOCAL_INDEXED_TASKS,
                 tasks
             });
 
+            // if user is not authenticated
+            // ... or app is offline
+            if (!_state.user.is_authenticated || _state.app.is_offline) {
+                return;
+            }
+
+            // index from server
+            const _endpoint = `projects/${project.server_id}/tasks`;
+            dispatch(readEndpoint(_endpoint)).then((response) => {
+
+                let _state = store.getState();
+
+                dispatch({
+                    type: constants.ACTION_STORAGE_SERVER_INDEXED_TASKS,
+                    data: response.data,
+                    user: _state.user,
+                    project
+                });
+
+                _state = store.getState();
+
+                StorageUtils.updateOrStoreMany(_state.tasks);
+
+            }).catch((error) => dispatch(storage_actions.serverError(error)));
         }).catch((message) => console.error(message));
     };
 }
@@ -264,6 +171,6 @@ export function selectTask (task) {
             data:   task
         });
 
-        dispatch(TaskActions.fetchTasks(task));
+        dispatch(task_actions.fetchTasks(task));
     };
 }

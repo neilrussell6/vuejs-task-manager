@@ -1,6 +1,6 @@
 // actions
-import * as UserActions from 'state/user/user.actions';
-import * as ProjectActions from 'state/projects/project.actions';
+import * as user_actions from 'state/user/user.actions';
+import * as project_actions from 'state/projects/project.actions';
 
 // data
 import * as app_settings from 'data/app.settings';
@@ -35,12 +35,9 @@ if (!USE_SERVICE_WORKER) {
     // without Service Worker
     // ----------------------------------------------------------------
 
-    store.dispatch(UserActions.viewOrStoreUser()).then((user) => {
-        store.dispatch(ProjectActions.indexProjects());
-    })
-    .catch((message) => {
-        console.error(message);
-    });
+    store.dispatch(user_actions.viewOrStoreUser()).then(() => {
+        store.dispatch(project_actions.indexProjects());
+    }).catch((message) => console.error(message));
 
 } else {
 
@@ -51,12 +48,8 @@ if (!USE_SERVICE_WORKER) {
     // if ('serviceWorker' in navigator) {
     //     navigator.serviceWorker
     //         .register('./service-worker.js')
-    //         .then(function() {
-    //             console.log('[Service Worker] Registered');
-    //         })
-    //         .catch((message) => {
-    //             console.error(message);
-    //         });
+    //         .then(() => console.log('[Service Worker] Registered'))
+    //         .catch((message) => console.error(message));
     // }
 
     // ----------------------------------------------------------------
@@ -67,16 +60,14 @@ if (!USE_SERVICE_WORKER) {
 
         Promise.all([
             runtime.register(),
-            store.dispatch(UserActions.viewOrStoreUser())
+            store.dispatch(user_actions.viewOrStoreUser())
         ]).then((responses) => {
 
             console.log('[Service Worker] Registered');
 
             // index projects
-            store.dispatch(ProjectActions.indexProjects());
+            store.dispatch(project_actions.indexProjects());
         })
-        .catch((message) => {
-            console.error(message);
-        });
+        .catch((message) => console.error(message));
     }
 }

@@ -2,14 +2,11 @@
 // actions
 // --------------------------
 
-// projects : server
-export const ACTION_SERVER_INDEXED_PROJECTS    = 'SERVER_INDEXED_PROJECTS';
-
 // projects : local storage
-export const ACTION_DESTROYED_PROJECT   = 'DESTROYED_PROJECT';
-export const ACTION_INDEXED_PROJECTS    = 'INDEXED_PROJECTS';
-export const ACTION_STORED_PROJECT      = 'STORED_PROJECT';
-export const ACTION_UPDATED_PROJECT     = 'UPDATED_PROJECT';
+export const ACTION_STORAGE_LOCAL_INDEXED_PROJECTS    = 'STORAGE_LOCAL_INDEXED_PROJECTS';
+
+// projects : server
+export const ACTION_STORAGE_SERVER_INDEXED_PROJECTS    = 'STORAGE_SERVER_INDEXED_PROJECTS';
 
 // projects : state
 export const ACTION_DESELECT_PROJECT    = 'DESELECT_PROJECT';

@@ -3,8 +3,8 @@ import { Message, MESSAGE_STYLE } from 'data/models/basic/message.model';
 import * as message_settings from 'data/message.settings';
 
 // state
-import * as api_constants from 'state/api.constants';
-import * as task_constants from 'state/tasks/task.constants';
+import * as app_constants from 'state/app/app.constants';
+import * as storage_constants from 'state/storage/storage.constants';
 import * as user_constants from 'state/user/user.constants';
 
 // utils
@@ -27,19 +27,19 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
         // API
         // ---------------------------
 
-        case api_constants.ACTION_API_ERROR_CONNECTION:
+        case storage_constants.ACTION_STORAGE_ERROR_CONNECTION:
             _label = "could not connect to server";
             break;
 
-        case api_constants.ACTION_API_ERROR_INTERNAL_SERVER:
+        case storage_constants.ACTION_STORAGE_ERROR_STORAGE_SERVER_INTERNAL:
             _label = "there was an internal error on the server";
             break;
 
-        case api_constants.ACTION_API_ERROR_BAD_REQUEST:
+        case storage_constants.ACTION_STORAGE_ERROR_BAD_REQUEST:
             _label = action.error.detail;
             break;
 
-        case api_constants.ACTION_API_ERROR_UNKNOWN:
+        case storage_constants.ACTION_STORAGE_ERROR_UNKNOWN:
             _label = "an unknown error occurred";
             break;
 
@@ -60,13 +60,52 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
     switch (action.type) {
 
         // ---------------------------
+        // app
+        // ---------------------------
+
+        case app_constants.ACTION_WILL_CONNECT:
+            _data = {
+                label: "reconnecting",
+                style: MESSAGE_STYLE.INFO,
+                icon: {
+                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
+                }
+            };
+            break;
+
+            case app_constants.ACTION_CONNECTED:
+            _data = {
+                label: "connection successful",
+                style: MESSAGE_STYLE.SUCCESS
+            };
+            break;
+
+        // ---------------------------
         // API
         // ---------------------------
 
-        case api_constants.ACTION_API_ERROR_CONNECTION:
-        case api_constants.ACTION_API_ERROR_INTERNAL_SERVER:
-        case api_constants.ACTION_API_ERROR_BAD_REQUEST:
-        case api_constants.ACTION_API_ERROR_UNKNOWN:
+        case storage_constants.ACTION_STORAGE_WILL_SYNC:
+            _data = {   
+                label: "syncing data",
+                style: MESSAGE_STYLE.INFO,
+                icon: {
+                    class: 'fa fa-cog fa-spin fa-2x fa-fw'
+                }
+            };
+            break;
+
+        case storage_constants.ACTION_STORAGE_SYNCED:
+            _data = {
+                label: "sync complete",
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
+            };
+            break;
+
+        case storage_constants.ACTION_STORAGE_ERROR_CONNECTION:
+        case storage_constants.ACTION_STORAGE_ERROR_STORAGE_SERVER_INTERNAL:
+        case storage_constants.ACTION_STORAGE_ERROR_BAD_REQUEST:
+        case storage_constants.ACTION_STORAGE_ERROR_UNKNOWN:
             _data = {
                 label: _label,
                 style: MESSAGE_STYLE.WARNING,
@@ -84,7 +123,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
         case user_constants.ACTION_TOKEN_EXPIRED:
             _data = {
                 action: action,
-                label: "access to server is expired please login",
+                label: "access to server is expired please login again",
                 style: MESSAGE_STYLE.WARNING,
                 icon: {
                     class: 'fa fa-exclamation-triangle fa-2x'
@@ -134,7 +173,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             _data = action.data;
             break;
 
-        case task_constants.ACTION_DESTROYED_TASK:
+        case storage_constants.ACTION_STORAGE_LOCAL_DESTROYED:
         case message_constants.ACTION_CLEAR_MESSAGE:
         case message_constants.ACTION_CANCEL_DELETE:
             return null;

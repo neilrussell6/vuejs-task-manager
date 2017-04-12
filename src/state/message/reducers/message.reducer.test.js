@@ -5,7 +5,7 @@
 // import { MESSAGE_STYLE } from 'data/models/basic/message.model';
 //
 // // state
-// import * as api_constants from 'state/redux-json-api.constants';
+// import * as storage_constants from 'state/storage/storage.constants';
 //
 // // local
 // import * as Reducer from './message.reducer';
@@ -27,13 +27,13 @@
 //         expect(_result).to.equal(_state_before);
 //     });
 //
-//     describe("API_WILL_READ", () => {
+//     describe("STORAGE_WILL_READ", () => {
 //
 //         it("should return INFO Message with icon, no expire & label", () => {
 //
 //             const _state_before = 'AAA';
 //             const _action = {
-//                 type: api_constants.API_WILL_READ, payload: 'users/1'
+//                 type: storage_constants.STORAGE_WILL_READ, payload: 'users/1'
 //             };
 //
 //             deepFreeze(_action);
@@ -51,7 +51,7 @@
 //
 //             const _state_before = 'AAA';
 //             const _action = {
-//                 type: api_constants.API_WILL_READ, payload: 'users/1'
+//                 type: storage_constants.STORAGE_WILL_READ, payload: 'users/1'
 //             };
 //
 //             deepFreeze(_action);
@@ -62,13 +62,13 @@
 //         });
 //     });
 //
-//     describe("API_READ", () => {
+//     describe("STORAGE_READ", () => {
 //
 //         it("should return SUCCESS Message with no icon, correct expire & label", () => {
 //
 //             const _state_before = 'AAA';
 //             const _action = {
-//                 type: api_constants.API_READ, payload: {endpoint: 'users/1'}
+//                 type: storage_constants.STORAGE_READ, payload: {endpoint: 'users/1'}
 //             };
 //
 //             deepFreeze(_action);
@@ -84,7 +84,7 @@
 //
 //             const _state_before = 'AAA';
 //             const _action = {
-//                 type: api_constants.API_READ, payload: {endpoint: 'users/1'}
+//                 type: storage_constants.STORAGE_READ, payload: {endpoint: 'users/1'}
 //             };
 //
 //             deepFreeze(_action);

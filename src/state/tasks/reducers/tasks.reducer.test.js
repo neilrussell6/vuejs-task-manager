@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { Task, TASK_STATUS } from 'data/models/crud/jsonapi/task.model';
 
 // state
-import { API_READ } from 'state/redux-json-api.constants';
+import { STORAGE_READ } from 'state/redux-json-api.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -78,7 +78,7 @@ describe("tasks reducer", () => {
         });
     });
 
-    describe("ACTION_UPDATE_TASK_LOCALLY", () => {
+    describe("ACTION_UPDATE_STORAGE_LOCAL_TASKLY", () => {
 
         it("should update task data using provided local_id and data", () => {
 
@@ -87,7 +87,7 @@ describe("tasks reducer", () => {
 
             const _state_before = [ _task1, _task2 ];
             const _action = {
-                type: task_constants.ACTION_UPDATE_TASK_LOCALLY, task: _task2, data: {text: 'XXXX'}
+                type: task_constants.ACTION_UPDATE_STORAGE_LOCAL_TASKLY, task: _task2, data: {text: 'XXXX'}
             };
 
             deepFreeze(_state_before);
@@ -102,13 +102,13 @@ describe("tasks reducer", () => {
 
     describe("redux-json-api", () => {
 
-        describe("API_READ", () => {
+        describe("STORAGE_READ", () => {
 
             it("should return array of Task model instances", () => {
 
                 const _state_before = [];
                 const _action = {
-                    type: API_READ,
+                    type: STORAGE_READ,
                     payload: {
                         data: [
                             {
@@ -135,7 +135,7 @@ describe("tasks reducer", () => {
 
                 const _state_before = [];
                 const _action = {
-                    type: API_READ,
+                    type: STORAGE_READ,
                     payload: {
                         data: [
                             {

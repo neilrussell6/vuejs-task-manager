@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import deepFreeze from 'deep-freeze';
 
-import * as Util from './collection.utils';
+import * as utils from './collection.utils';
 
-describe("Collection Util", () => {
+describe("collection utils", () => {
 
     describe("indexOfKeyValue", () => {
 
@@ -18,7 +18,7 @@ describe("Collection Util", () => {
 
             deepFreeze(_arr);
 
-            let _result = Util.indexOfKeyValue(_arr, "id", 102);
+            let _result = utils.indexOfKeyValue(_arr, "id", 102);
 
             expect(_result).to.equal(1);
         });
@@ -37,7 +37,7 @@ describe("Collection Util", () => {
 
             deepFreeze(_arr);
 
-            let _result = Util.lastIndexOfKeyValue(_arr, "type", "BBB");
+            let _result = utils.lastIndexOfKeyValue(_arr, "type", "BBB");
 
             expect(_result).to.equal(2);
         });

@@ -15,16 +15,32 @@ export class Task extends JsonApiModel {
             user_uuid: null,
             project_uuid: null,
             name: '',
-            status: TASK_STATUS.INCOMPLETE
+            status: TASK_STATUS.INCOMPLETE,
+            is_new: false
         };
     }
 
     get exclude_attributes () {
-        return ['server_id', 'uuid', 'project_uuid', 'user_uuid', 'created_at', 'updated_at'];
+        return ['server_id', 'uuid', 'project_uuid', 'user_uuid', 'created_at', 'updated_at', 'is_new'];
     }
 
     get type () {
         return 'tasks';
+    }
+
+    makeRelatedUuids (relationships) {
+
+        let _result = {};
+
+        if (relationships.hasOwnProperty('owner')) {
+            _result['user_uuid'] = relationships['owner'].uuid;
+        }
+
+        if (relationships.hasOwnProperty('project')) {
+            _result['project_uuid'] = relationships['project'].uuid;
+        }
+
+        return _result;
     }
     
     toggleStatusComplete () {

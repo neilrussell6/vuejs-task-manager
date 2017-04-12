@@ -67,6 +67,18 @@ a {
 // forms
 // ----------------------------------
 
+@keyframes button-active {
+    0% {
+        color: $light-green;
+    }
+    70% {
+        color: $light-green;
+    }
+    100% {
+        color: $link-color;
+    }
+}
+
 button {
     background-color: transparent;
     border: 0;
@@ -77,19 +89,29 @@ button {
     padding: $small-v-pad $small-h-pad;
     text-align: center;
     text-transform: uppercase;
-    transition: background-color .1s ease-out, color .1s ease-out;
+    transition: background-color .1s ease-out;
 
+    &.disabled:hover,
+    &.disabled {
+        background-color: transparent;
+        //color: $text-color-dark;
+        color: $text-color-med;
+        cursor: default;
+        pointer-events: none;
+    }
+
+    &.active {
+        animation-name: button-active;
+        animation-duration: 0.8s;
+        animation-timing-function: ease-out;
+        color: $link-color;
+    }
+
+    &.active:hover,
     &:hover {
         background-color: $link-color-hover;
         color: $text-color-dark;
         transition: background-color 0s linear, color 0s linear;
-    }
-
-    &:disabled {
-        background-color: transparent;
-        color: $text-color-dark;
-        cursor: default;
-        pointer-events: none;
     }
 }
 
@@ -206,10 +228,35 @@ input {
 
         .authenticated {
             padding: $small-v-pad $small-h-pad;
+            text-transform: none;
+            pointer-events: none;
+
+            &.offline {
+                pointer-events: all;
+
+                &:hover {
+                    .label {
+                        color: $text-color-dark;
+                    }
+
+                    i {
+                        color: $text-color-dark;
+                    }
+                }
+
+                .label {
+                    color: $light-grey;
+                }
+
+                i {
+                    color: $light-grey;
+                }
+            }
 
             .label {
                 color: $light-yellow;
             }
+
             i {
                 color: $light-green;
             }

@@ -1,11 +1,5 @@
 import { expect } from 'chai';
 
-// local
-import {
-    local_id_SERVER_KEY,
-    local_id_LOCAL_KEY
-} from './crud.model';
-
 // SUT
 import { CRUDModel } from './crud.model';
 

@@ -1,10 +1,6 @@
 // local
 import { BasicModel } from './basic.model';
 
-// class
-export const local_id_SERVER_KEY = 's';
-export const local_id_LOCAL_KEY = 'l';
-
 export class CRUDModel extends BasicModel {
 
     constructor (data) {

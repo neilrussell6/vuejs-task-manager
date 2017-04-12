@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { User } from 'data/models/crud/jsonapi/user.model';
 
 // state
-import * as api_constants from 'state/redux-json-api.constants';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -38,13 +38,13 @@ describe("user reducer", () => {
         expect(_result).to.equal(_state_before);
     });
 
-    describe("API_CREATED", () => {
+    describe("STORAGE_CREATED", () => {
 
         it("should return INFO Message with icon, no expire & label", () => {
 
             const _state_before = [];
             const _action = {
-                type: api_constants.API_CREATED,
+                type: storage_constants.STORAGE_CREATED,
                 payload: {
                     data: {
                         type: 'access_tokens',
@@ -64,13 +64,13 @@ describe("user reducer", () => {
         });
     });
 
-    describe("ACTION_UPDATE_LOCAL_USER", () => {
+    describe("ACTION_STORAGE_LOCAL_UPDATE_USER", () => {
 
         it("should update user with given data", () => {
 
             const _state_before = new User({ first_name: 'AAA', last_name: 'BBB' });
             const _action = {
-                type: user_constants.ACTION_UPDATE_LOCAL_USER,
+                type: user_constants.ACTION_STORAGE_LOCAL_UPDATE_USER,
                 data: {
                     last_name: 'BBB222',
                     ccc: 'CCC'
@@ -89,7 +89,7 @@ describe("user reducer", () => {
         });
     });
 
-    describe("ACTION_FETCH_OR_CREATE_LOCAL_USER", () => {
+    describe("ACTION_FETCH_OR_STORAGE_LOCAL_CREATE_USER", () => {
 
         describe("given an existing user in state", () => {
 
@@ -99,7 +99,7 @@ describe("user reducer", () => {
 
                 const _state_before = new User({ uuid: '1234', first_name: 'AAA' });
                 const _action = {
-                    type: user_constants.ACTION_FETCH_OR_CREATE_LOCAL_USER
+                    type: user_constants.ACTION_FETCH_OR_STORAGE_LOCAL_CREATE_USER
                 };
 
                 deepFreeze(_state_before);
@@ -122,7 +122,7 @@ describe("user reducer", () => {
 
                 const _state_before = user_constants.DEFAULT_STATE;
                 const _action = {
-                    type: user_constants.ACTION_FETCH_OR_CREATE_LOCAL_USER
+                    type: user_constants.ACTION_FETCH_OR_STORAGE_LOCAL_CREATE_USER
                 };
 
                 deepFreeze(_action);
@@ -145,7 +145,7 @@ describe("user reducer", () => {
 
                 const _state_before = user_constants.DEFAULT_STATE;
                 const _action = {
-                    type: user_constants.ACTION_FETCH_OR_CREATE_LOCAL_USER
+                    type: user_constants.ACTION_FETCH_OR_STORAGE_LOCAL_CREATE_USER
                 };
 
                 deepFreeze(_action);

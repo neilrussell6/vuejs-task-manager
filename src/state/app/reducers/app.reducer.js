@@ -2,7 +2,9 @@
 import { ARTIFICIAL_DELAY } from 'data/app.settings';
 
 // state
-import * as api_constants from 'state/redux-json-api.constants';
+import * as storage_constants from 'state/storage/storage.constants';
+import * as project_constants from 'state/projects/project.constants';
+import * as task_constants from 'state/tasks/task.constants';
 import * as user_constants from 'state/user/user.constants';
 
 // local
@@ -16,44 +18,58 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
 
     switch (action.type) {
 
-        case user_constants.ACTION_LOGGED_IN_USER:
-            return Object.assign({}, state, { show_login: false });
+        // ---------------------------
+        // app
+        // ---------------------------
 
         case app_constants.ACTION_TOGGLE_SHOW_LOGIN:
             return Object.assign({}, state, { show_login: state.show_login ? false : true });
+
+        // ---------------------------
+        // API
+        // ---------------------------
+
+        case storage_constants.ACTION_STORAGE_WILL_SYNC:
+            return Object.assign({}, state, { is_disabled: true });
+
+        case storage_constants.ACTION_STORAGE_SYNCED:
+            return Object.assign({}, state, { is_disabled: false });
+
+        case storage_constants.ACTION_STORAGE_ERROR_CONNECTION:
+            return Object.assign({}, state, { is_refreshing_projects: false, is_offline: true });
+
+        // ---------------------------
+        // projects
+        // ---------------------------
+
+        // case project_constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS:
+        //     return Object.assign({}, state, { is_refreshing_projects: true });
+
+        case project_constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS:
+            return Object.assign({}, state, { is_refreshing_projects: false });
+
+        // ---------------------------
+        // tasks
+        // ---------------------------
+
+        case task_constants.ACTION_INDEXED_TASKS:
+            return Object.assign({}, state, { is_refreshing_tasks: true });
+
+        case task_constants.STORAGE_SERVER_ACTION_INDEXED_TASKS:
+            return Object.assign({}, state, { is_refreshing_tasks: false });
+
+        // ---------------------------
+        // user
+        // ---------------------------
+
+        case user_constants.ACTION_LOGGED_IN_USER:
+            return Object.assign({}, state, { show_login: false });
 
         case user_constants.ACTION_TOKEN_EXPIRED:
             return Object.assign({}, state, { show_login: true });
 
         case user_constants.ACTION_WORK_OFFLINE:
             return Object.assign({}, state, { is_offline: true });
-
-        // case app_constants.ACTION_TOGGLE_ARTIFICIAL_DELAY:
-        //     if (state.artificial_delay > 0) {
-        //         return Object.assign({}, state, { artificial_delay: 0 });
-        //     }
-        //     return Object.assign({}, state, { artificial_delay: ARTIFICIAL_DELAY });
-        //
-        // case app_constants.ACTION_TOGGLE_MESSAGE_MINIMAL:
-        //     return Object.assign({}, state, { is_message_minimal: state.is_message_minimal ? false : true });
-        //
-        // case redux_jsonapi_constants.API_CREATE_FAILED:
-        // case redux_jsonapi_constants.API_CREATED:
-        // case redux_jsonapi_constants.API_DELETE_FAILED:
-        // case redux_jsonapi_constants.API_DELETED:
-        // case redux_jsonapi_constants.API_READ_FAILED:
-        // case redux_jsonapi_constants.API_READ:
-        // case redux_jsonapi_constants.API_UPDATE_FAILED:
-        // case redux_jsonapi_constants.API_UPDATED:
-        // case user_constants.ACTION_USER_LOGGED_OUT:
-        //     return Object.assign({}, state, { is_disabled: false });
-        //
-        // case redux_jsonapi_constants.API_WILL_CREATE:
-        // case redux_jsonapi_constants.API_WILL_DELETE:
-        // case redux_jsonapi_constants.API_WILL_READ:
-        // // case redux_jsonapi_constants.API_WILL_UPDATE:
-        // case user_constants.ACTION_WILL_LOGOUT_USER:
-        //     return Object.assign({}, state, { is_disabled: true });
 
         default:
             return state;

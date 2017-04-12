@@ -13,10 +13,12 @@
                 <div class="control">
 
                     <template v-if="is_user_authenticated">
-                        <div class="authenticated">
+                        <button class="authenticated"
+                                :class="{ 'offline': is_offline }"
+                                v-on:click="_onConnect()">
                             <span class="label">{{user.first_name}} {{user.last_name}}</span>
                             <i class="fa fa-user" aria-hidden="true"></i>
-                        </div>
+                        </button>
                     </template>
 
                     <template v-else>
@@ -95,9 +97,10 @@
     import { MESSAGE_STYLE } from 'data/models/basic/message.model';
 
     // actions
-    import * as MessageActions from 'state/message/message.actions';
-    import * as AppActions from 'state/app/app.actions';
-    import * as UserActions from 'state/user/user.actions';
+    import * as message_actions from 'state/message/message.actions';
+    import * as app_actions from 'state/app/app.actions';
+    import * as user_actions from 'state/user/user.actions';
+    import * as project_actions from 'state/projects/project.actions';
 
     // components
     import CommonMessage from 'view/common/common-message/CommonMessage.dumb';
@@ -128,6 +131,7 @@
                 is_artificially_delayed: app_settings.ARTIFICIAL_DELAY_DEFAULT,
                 is_disabled: false,
                 is_message_minimal: app_settings.MINIMAL_MESSAGE_DEFAULT,
+                is_offline: false,
                 is_user_authenticated: false,
                 message: null,
                 previous_message: null,
@@ -152,11 +156,11 @@
             },
 
             _onToggleArtificialDelay: function () {
-                store.dispatch(AppActions.toggleArtificialDelay());
+                store.dispatch(app_actions.toggleArtificialDelay());
             },
 
             _onToggleMinimalMessage: function () {
-                store.dispatch(AppActions.toggleMinimalMessage());
+                store.dispatch(app_actions.toggleMinimalMessage());
             },
 
             // ------------------------------------
@@ -164,21 +168,25 @@
             // ------------------------------------
 
             _onToggleShowLogin: function () {
-                store.dispatch(AppActions.toggleShowLogin());
+                store.dispatch(app_actions.toggleShowLogin());
+            },
+
+            _onConnect: function () {
+                store.dispatch(app_actions.connect());
             },
 
             _onUserLogin: function (credentials) {
 
                 // TODO: fix this, credentials are strings for some reason
                 if ((credentials.username === null && credentials.email === null) || credentials.password === null) {
-                    return store.dispatch(MessageActions.setMessage({
+                    return store.dispatch(message_actions.setMessage({
                         label: "Please provide all required credentials",
                         style: MESSAGE_STYLE.WARNING,
                         expire: message_settings.MESSAGE_DEFAULT_EXPIRE * 2
                     }));
                 }
 
-                store.dispatch(UserActions.loginUser(this.user, credentials));
+                store.dispatch(user_actions.loginUser(this.user, credentials));
             },
 
             // ------------------------------------
@@ -186,7 +194,7 @@
             // ------------------------------------
 
             _onUserLogout: function () {
-                store.dispatch(UserActions.logoutUser(this.user));
+                store.dispatch(user_actions.logoutUser(this.user));
             },
 
             // ------------------------------------
@@ -205,6 +213,7 @@
 
                 this.is_artificially_delayed = _state.app.artificial_delay > 0;
                 this.is_disabled = _state.app.is_disabled;
+                this.is_offline = _state.app.is_offline;
                 this.is_message_minimal = _state.app.is_message_minimal;
                 this.show_login = _state.app.show_login;
 

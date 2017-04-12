@@ -47,7 +47,7 @@
                 <div class="control control-right">
 
                     <button v-on:click="_onRefreshTasks()"
-                            :disabled="selected_project === null">
+                            :class="{ 'disabled': selected_project === null || is_refreshing === true, 'active': selected_project !== null && is_refreshing === false }">
                         <span class="label">REFRESH TASKS</span>
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                     </button>
@@ -76,9 +76,10 @@
     // smart component (this means it interacts with application state)
 
     // actions
-    import * as MessageActions from 'state/message/message.actions';
-    import * as TaskActions from 'state/tasks/task.actions';
-    import * as ProjectActions from 'state/projects/project.actions';
+    import * as message_actions from 'state/message/message.actions';
+    import * as task_actions from 'state/tasks/task.actions';
+    import * as project_actions from 'state/projects/project.actions';
+    import * as storage_actions from 'state/storage/storage.actions';
 
     // components
     import CommonCycleButton from 'view/common/common-cycle-button/CommonCycleButton.dumb';
@@ -121,6 +122,7 @@
                 filtered_tasks: [],
                 has_tasks: false,
                 is_editing_task: false,
+                is_refreshing: null,
                 selected_project: null,
                 status_filter: '',
                 tasks: [],
@@ -131,10 +133,7 @@
                         iconClassIndex: function (data) {
                             return data.status === TASK_STATUS.COMPLETE ? 0 : 1;
                         },
-                        onClick: this._onToggleTaskComplete,
-                        isDisabled: function (data) {
-                            return false;
-                        }
+                        onClick: this._onToggleTaskComplete
                     },
                     name: {
                         type: 'inline-edit',
@@ -183,13 +182,13 @@
             // ------------------------------------
 
             _onBack: function () {
-                store.dispatch(ProjectActions.deselectProject());
+                store.dispatch(project_actions.deselectProject());
             },
 
             _onNewTask: function () {
-                store.dispatch(TaskActions.resetTextFilter());
-                store.dispatch(TaskActions.resetStatusFilter());
-                store.dispatch(TaskActions.makeTask());
+                store.dispatch(task_actions.resetTextFilter());
+                store.dispatch(task_actions.resetStatusFilter());
+                store.dispatch(task_actions.makeTask());
             },
 
             _onRefreshTasks: function () {
@@ -198,7 +197,7 @@
                     return;
                 }
 
-                store.dispatch(TaskActions.refreshTasks(this.selected_project));
+                store.dispatch(task_actions.refreshTasks(this.selected_project));
             },
 
             // ------------------------------------
@@ -218,11 +217,11 @@
 
                     // ... and no valid previous value is available remove item before it is stored
                     if (prev_value === "") {
-                        return store.dispatch(TaskActions.removeTask(task.uuid));
+                        return store.dispatch(task_actions.removeTask(task.uuid));
                     }
                     // ... but a valid previous value is available, then revert to previous value
                     else {
-                        return store.dispatch(TaskActions.updateTask(task, { [ key ]: prev_value }));
+                        return store.dispatch(storage_actions.update(task, { [ key ]: prev_value }));
                     }
                 }
 
@@ -233,15 +232,15 @@
                 }
 
                 // edited value is valid
-                store.dispatch(TaskActions.storeOrUpdateTask(task, this.selected_project, this.user));
+                store.dispatch(storage_actions.storeOrUpdate(task, { 'project': this.selected_project, 'owner': this.user }));
             },
 
             _onToggleTaskComplete: function (task) {
-                store.dispatch(TaskActions.toggleTaskComplete(task));
+                store.dispatch(task_actions.toggleTaskComplete(task));
             },
 
             _onTrashTask: function (task) {
-                store.dispatch(TaskActions.trashTask(task));
+                store.dispatch(task_actions.trashTask(task));
             },
 
             // ------------------------------------
@@ -249,17 +248,17 @@
             // ------------------------------------
 
             _onDeleteTask: function (task) {
-                store.dispatch(MessageActions.requestDeleteConfirmation(task, (is_confirmed) => {
+                store.dispatch(message_actions.requestDeleteConfirmation(task, (is_confirmed) => {
                     if (is_confirmed) {
-                        store.dispatch(TaskActions.destroyTask(task));
+                        store.dispatch(storage_actions.destroy(task));
                     } else {
-                        store.dispatch(MessageActions.cancelDelete());
+                        store.dispatch(message_actions.cancelDelete());
                     }
                 }));
             },
 
             _onUndoTrashTask: function (task) {
-                store.dispatch(TaskActions.undoTrashTask(task));
+                store.dispatch(task_actions.undoTrashTask(task));
             },
 
             // ------------------------------------
@@ -267,7 +266,7 @@
             // ------------------------------------
 
             _onTextFilterUpdate: function (term) {
-                store.dispatch(TaskActions.setTextFilter(term));
+                store.dispatch(task_actions.setTextFilter(term));
             },
 
             // ------------------------------------
@@ -275,7 +274,7 @@
             // ------------------------------------
 
             _onStatusFilterSelection: function (filter_type) {
-                store.dispatch(TaskActions.setStatusFilter(filter_type));
+                store.dispatch(task_actions.setStatusFilter(filter_type));
             },
 
             // ----------------------

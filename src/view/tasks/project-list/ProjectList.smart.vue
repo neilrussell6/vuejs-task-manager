@@ -16,9 +16,10 @@
                 </div>
                 <div class="control control-right">
 
-                    <button v-on:click="_onRefreshProjects()">
+                    <button v-on:click="_onRefreshProjects()"
+                            :class="{ 'disabled': is_refreshing, 'active': !is_refreshing }">
                         <span class="label">REFRESH PROJECTS</span>
-                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        <i class="fa fa-refresh" :class="{ 'fa-spin': is_refreshing }" aria-hidden="true"></i>
                     </button>
 
                 </div>
@@ -43,8 +44,9 @@
     // smart component (this means it interacts with application state)
 
     // actions
-    import * as ProjectActions from 'state/projects/project.actions';
-    import * as TaskActions from 'state/tasks/task.actions';
+    import * as project_actions from 'state/projects/project.actions';
+    import * as task_actions from 'state/tasks/task.actions';
+    import * as storage_actions from 'state/storage/storage.actions';
 
     // store
     import { store } from 'state/store';
@@ -60,6 +62,7 @@
             return {
                 has_projects: false,
                 is_editing_project: false,
+                is_refreshing: false,
                 projects: [],
                 selected_project: null,
                 selected_project_uuid: null,
@@ -74,15 +77,15 @@
             // ------------------------------------
 
             _onNewProject: function () {
-                store.dispatch(TaskActions.resetTextFilter());
-                store.dispatch(TaskActions.resetStatusFilter());
-                store.dispatch(ProjectActions.makeProject());
+                store.dispatch(task_actions.resetTextFilter());
+                store.dispatch(task_actions.resetStatusFilter());
+                store.dispatch(project_actions.makeProject());
             },
 
             _onProjectSelection: function (project) {
-                store.dispatch(TaskActions.resetTextFilter());
-                store.dispatch(TaskActions.resetStatusFilter());
-                store.dispatch(ProjectActions.selectProject(project));
+                store.dispatch(task_actions.resetTextFilter());
+                store.dispatch(task_actions.resetStatusFilter());
+                store.dispatch(project_actions.selectProject(project));
             },
 
             _onProjectEdit: function (project) {
@@ -98,11 +101,11 @@
 
                     // ... and no valid previous value is available remove item before it is stored
                     if (prev_value === "") {
-                        return store.dispatch(ProjectActions.removeProject(project.uuid));
+                        return store.dispatch(project_actions.removeProject(project.uuid));
                     }
                     // ... but a valid previous value is available, then revert to previous value
                     else {
-                        return store.dispatch(ProjectActions.updateProject(project, { [ key ]: prev_value }));
+                        return store.dispatch(storage_actions.update(project, { [ key ]: prev_value }));
                     }
                 }
 
@@ -114,14 +117,15 @@
 
                 // edited value is valid
                 // ... store or update project
-                store.dispatch(ProjectActions.storeOrUpdateProject(project, this.user));
+                store.dispatch(storage_actions.storeOrUpdate(project, { 'owner': this.user }));
 
                 // select project
-                store.dispatch(ProjectActions.selectProject(project));
+//                store.dispatch(project_actions.selectProject(project));
             },
 
             _onRefreshProjects: function () {
-                store.dispatch(ProjectActions.refreshProjects(this.user.server_id));
+                this.is_refreshing = true;
+                store.dispatch(project_actions.refreshProjects(this.user.server_id));
             },
 
             // ----------------------
@@ -136,6 +140,8 @@
                 this.projects           = _state.projects;
                 this.selected_project   = _state.selected_project;
                 this.user               = _state.user;
+
+                this.is_refreshing      = _state.app.is_refreshing_projects;
 
                 // computed data
                 this.selected_project_uuid = this.selected_project !== null ? this.selected_project.uuid : null;
