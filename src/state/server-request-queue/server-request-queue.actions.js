@@ -19,7 +19,7 @@ export function dequeueRequest (request) {
 
         // destroy in local storage
         return dispatch(storage_actions.destroyLocal(request));
-    }
+    };
 }
 
 export function enqueueRequest (request) {
@@ -48,7 +48,7 @@ export function enqueueRequest (request) {
                 });
             });
         });
-    }
+    };
 }
 
 export function indexQueue () {
