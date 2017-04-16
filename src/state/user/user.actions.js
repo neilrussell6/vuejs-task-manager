@@ -60,7 +60,7 @@ export function updateUser (user, data = {}) {
     };
 }
 
-export function viewOrStoreUser() {
+export function viewOrStoreUser () {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 

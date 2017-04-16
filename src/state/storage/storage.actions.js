@@ -419,6 +419,8 @@ export function serverSync () {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 
+            console.log("serverSync");
+
             // process request queue
             dispatch(request_queue_actions.processQueue()).then((response) => {
 
