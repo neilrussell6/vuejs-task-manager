@@ -21,14 +21,26 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
 
         // local
 
-        case storage_constants.ACTION_STORAGE_LOCAL_STORED_USER:
-        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED_USER:
+        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
+        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
+            if (action.data.type !== 'users') {
+                return state;
+            }
+
             return new User(Object.assign({}, state, action.resource, action.data));
 
-        case user_constants.ACTION_STORAGE_LOCAL_VIEWED_USER:
+        case storage_constants.ACTION_STORAGE_LOCAL_VIEWED:
+            if (action.data.type !== 'users') {
+                return state;
+            }
+
             return new User(action.data);
 
-        case user_constants.ACTION_STORAGE_SERVER_VIEWED_USER:
+        case storage_constants.ACTION_STORAGE_SERVER_VIEWED:
+            if (action.data.type !== 'users') {
+                return state;
+            }
+
             return new User(Object.assign({}, state, action.data.attributes, { server_id: action.data.id }));
 
         case user_constants.ACTION_USER_AUTHENTICATED:

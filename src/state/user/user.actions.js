@@ -15,6 +15,7 @@ import * as app_actions from 'state/app/app.actions';
 import * as message_constants from 'state/message/message.constants';
 import * as project_actions from 'state/projects/project.actions';
 import * as storage_actions from 'state/storage/storage.actions';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // store
 import { store } from 'state/store';
@@ -37,7 +38,7 @@ export function updateUser (user, data = {}) {
             StorageUtils.update(user, data).then((responses) => {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_UPDATED_USER,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
                     user,
                     data
                 });
@@ -71,7 +72,7 @@ export function viewOrStoreUser () {
             if (_state.user !== null && typeof _state.user.uuid !== 'undefined') {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_VIEWED_USER,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
                     data: _state.user
                 });
 
@@ -86,15 +87,22 @@ export function viewOrStoreUser () {
                     _user = new User(users[0]);
 
                     dispatch({
-                        type: constants.ACTION_STORAGE_LOCAL_VIEWED_USER,
+                        type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
                         data: _user
                     });
 
                     _state = store.getState();
 
+
+                    // ... if no user
+
+                    if (_state.user === null) {
+                        return resolve(_state.user);
+                    }
+
                     // ... if user has no access token
 
-                    if (_state.user === null || _state.user.access_token === null) {
+                    if (_state.user.access_token === null) {
                         return resolve(_state.user);
                     }
 
@@ -141,7 +149,7 @@ export function viewOrStoreUser () {
                     StorageUtils.store(_user).then(() => {
 
                         dispatch({
-                            type: constants.ACTION_STORAGE_LOCAL_STORED_USER,
+                            type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
                             data: _user
                         });
 
@@ -276,3 +284,4 @@ export function userAuthenticated (access_token) {
         });
     }
 }
+
