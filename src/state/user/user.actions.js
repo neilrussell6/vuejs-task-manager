@@ -15,6 +15,7 @@ import * as app_actions from 'state/app/app.actions';
 import * as message_constants from 'state/message/message.constants';
 import * as project_actions from 'state/projects/project.actions';
 import * as storage_actions from 'state/storage/storage.actions';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // store
 import { store } from 'state/store';
@@ -37,7 +38,7 @@ export function updateUser (user, data = {}) {
             StorageUtils.update(user, data).then((responses) => {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_UPDATED_USER,
+                    type: storage_actions.ACTION_STORAGE_LOCAL_UPDATED,
                     user,
                     data
                 });
@@ -71,11 +72,12 @@ export function viewOrStoreUser () {
             if (_state.user !== null && typeof _state.user.uuid !== 'undefined') {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_VIEWED_USER,
+                    type: storage_actions.ACTION_STORAGE_LOCAL_VIEWED,
                     data: _state.user
                 });
 
                 _state = store.getState();
+                console.log("USER ACTIONS ::: got user from state");
                 return resolve(_state.user);
             }
 
@@ -86,7 +88,7 @@ export function viewOrStoreUser () {
                     _user = new User(users[0]);
 
                     dispatch({
-                        type: constants.ACTION_STORAGE_LOCAL_VIEWED_USER,
+                        type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
                         data: _user
                     });
 
@@ -95,6 +97,7 @@ export function viewOrStoreUser () {
                     // ... if user has no access token
 
                     if (_state.user === null || _state.user.access_token === null) {
+                        console.log("USER ACTIONS ::: user has no access token");
                         return resolve(_state.user);
                     }
 
@@ -120,6 +123,7 @@ export function viewOrStoreUser () {
                         return dispatch(updateUser(_state.user, { is_authenticated: false }, true)).then((response) => {
 
                             _state = store.getState();
+                            console.log("USER ACTIONS ::: access token is expired");
                             resolve(_state.user);
 
                         }).catch((message) => console.error(message));
@@ -128,6 +132,7 @@ export function viewOrStoreUser () {
                     // ... if access token is not expired
 
                     return dispatch(userAuthenticated(_state.user.access_token)).then((response) => {
+                        console.log("USER ACTIONS ::: access token is not expired");
                         return resolve(_state.user);
                     });
                 }
@@ -141,11 +146,13 @@ export function viewOrStoreUser () {
                     StorageUtils.store(_user).then(() => {
 
                         dispatch({
-                            type: constants.ACTION_STORAGE_LOCAL_STORED_USER,
+                            type: storage_constants.ACTION_STORAGE_LOCAL_STORED,
                             data: _user
                         });
 
                         _state = store.getState();
+                        console.log("USER ACTIONS ::: make new user");
+                        console.log(_state.user);
                         resolve(_state.user);
                     });
                 }).catch((message) => console.error(message));
@@ -227,7 +234,7 @@ export function userAuthenticated (access_token) {
                 });
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_SERVER_VIEWED_USER,
+                    type: storage_constants.ACTION_STORAGE_SERVER_VIEWED,
                     data: response.data
                 });
 

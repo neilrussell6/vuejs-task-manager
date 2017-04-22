@@ -19,6 +19,7 @@ import * as task_actions from 'state/tasks/task.actions';
 
 // store
 import { store } from 'state/store';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -69,7 +70,7 @@ export function indexTasks (project) {
         StorageUtils.indexRelated('tasks', 'project_uuid', project.uuid).then((tasks) => {
 
             dispatch({
-                type: constants.ACTION_STORAGE_LOCAL_INDEXED_TASKS,
+                type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
                 tasks
             });
 
@@ -86,7 +87,7 @@ export function indexTasks (project) {
                 let _state = store.getState();
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_SERVER_INDEXED_TASKS,
+                    type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
                     data: response.data,
                     user: _state.user,
                     project

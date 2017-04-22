@@ -70,10 +70,11 @@ describe("user reducer", () => {
 
             const _state_before = new User({ first_name: 'AAA', last_name: 'BBB' });
             const _action = {
-                type: user_constants.ACTION_STORAGE_LOCAL_UPDATE_USER,
+                type: user_constants.ACTION_STORAGE_LOCAL_UPDATE,
                 data: {
                     last_name: 'BBB222',
-                    ccc: 'CCC'
+                    ccc: 'CCC',
+                    type: 'users'
                 }
             };
 

@@ -45,7 +45,7 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
         // case project_constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS:
         //     return Object.assign({}, state, { is_refreshing_projects: true });
 
-        case project_constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS:
+        case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
             return Object.assign({}, state, { is_refreshing_projects: false });
 
         // ---------------------------

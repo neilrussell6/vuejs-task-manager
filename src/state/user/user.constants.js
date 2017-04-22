@@ -2,14 +2,6 @@
 // actions
 // --------------------------
 
-// user : local storage
-export const ACTION_STORAGE_LOCAL_VIEWED_USER     = 'STORAGE_LOCAL_VIEWED_USER';
-export const ACTION_STORAGE_LOCAL_STORED_USER     = 'STORAGE_LOCAL_STORED_USER';
-export const ACTION_STORAGE_LOCAL_UPDATED_USER    = 'STORAGE_LOCAL_UPDATED_USER';
-
-// user : server
-export const ACTION_STORAGE_SERVER_VIEWED_USER    = 'STORAGE_SERVER_VIEWED_USER';
-
 // user : authentication
 export const ACTION_USER_AUTHENTICATED  = 'USER_AUTHENTICATED';
 export const ACTION_TOKEN_EXPIRED       = 'TOKEN_EXPIRED';

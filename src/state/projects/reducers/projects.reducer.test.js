@@ -7,6 +7,7 @@ import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // state
 import { STORAGE_READ } from 'state/redux-json-api.constants';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -31,7 +32,7 @@ describe("projects.reducer", () => {
 
     describe("local storage", () => {
 
-        describe("ACTION_STORAGE_LOCAL_INDEXED_PROJECTS", () => {
+        describe("ACTION_STORAGE_LOCAL_INDEXED", () => {
 
             it("should return a list of projects, ignoring existing state", () => {
 
@@ -39,7 +40,7 @@ describe("projects.reducer", () => {
                     new Project({ server_id: 1, uuid: 111, text: 'AAAA' })
                 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
                     projects: [
                         new Project({ server_id: 2, uuid: 222, text: 'BBBB' }),
                         new Project({ server_id: 3, uuid: 333, text: 'CCCC' })
@@ -59,7 +60,7 @@ describe("projects.reducer", () => {
             });
         });
 
-        describe("ACTION_STORAGE_LOCAL_STORED_PROJECT", () => {
+        describe("ACTION_STORAGE_LOCAL_STORED", () => {
 
             it("should update project data using provided project and state data", () => {
 
@@ -68,9 +69,9 @@ describe("projects.reducer", () => {
 
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_UPDATED_PROJECT,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
                     project: _project2,
-                    data: {text: 'XXXX'}
+                    data: {text: 'XXXX', type: 'projects'}
                 };
 
                 deepFreeze(_state_before);
@@ -83,7 +84,7 @@ describe("projects.reducer", () => {
             });
         });
 
-        describe("ACTION_STORAGE_LOCAL_UPDATED_PROJECT", () => {
+        describe("ACTION_STORAGE_LOCAL_UPDATED", () => {
 
             it("should update project data using provided project and state data", () => {
 
@@ -92,9 +93,9 @@ describe("projects.reducer", () => {
 
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_UPDATED_PROJECT,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
                     project: _project2,
-                    data: {text: 'XXXX'}
+                    data: {text: 'XXXX', type: 'projects'}
                 };
 
                 deepFreeze(_state_before);
@@ -114,7 +115,7 @@ describe("projects.reducer", () => {
 
     describe("server", () => {
 
-        describe("ACTION_STORAGE_SERVER_INDEXED_PROJECTS", () => {
+        describe("ACTION_STORAGE_SERVER_INDEXED", () => {
 
             it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
 
@@ -123,10 +124,10 @@ describe("projects.reducer", () => {
                     new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
                 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS,
+                    type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
                     data: [
-                        { id: 2, attributes: { name: 'BBBB2222' }},
-                        { id: 1, attributes: { name: 'CCCC' }}
+                        { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
+                        { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
                     ],
                     user: {
                         uuid: 123

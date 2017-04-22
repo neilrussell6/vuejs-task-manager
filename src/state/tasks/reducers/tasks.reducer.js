@@ -11,7 +11,7 @@ import * as storage_constants from 'state/storage/storage.constants';
 import * as task_constants from '../task.constants';
 
 // ---------------------------
-// private
+// private`
 // ---------------------------
 
 function task (state, action) {
@@ -22,14 +22,40 @@ function task (state, action) {
         // tasks
         // ---------------------------
 
+        // state
+
+        case task_constants.ACTION_MAKE_TASK:
+            return new Task(Object.assign({}, action.data, { uuid: StorageUtils.makeUUID(), is_new: true }));
+
+        // ---------------------------
+        // storage
+        // ---------------------------
+
         // local
 
-        case task_constants.ACTION_STORAGE_LOCAL_INDEXED_TASKS:
+        case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
+
+            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+                return state;
+            }
+
             return new Task(action.data);
+
+        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
+        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
+
+            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+                return state;
+            }
+
+            return new Task(Object.assign({}, state, action.data));
 
         // server
 
-        case task_constants.ACTION_STORAGE_SERVER_INDEXED_TASKS:
+        case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
+
+            console.log("ACTION_STORAGE_SERVER_INDEXED ::: tasks");
+            console.log(action);
 
             // update existing item
             if (state !== null) {
@@ -47,20 +73,6 @@ function task (state, action) {
                 project_uuid: action.project.uuid
             }));
 
-        // state
-
-        case task_constants.ACTION_MAKE_TASK:
-            return new Task(Object.assign({}, action.data, { uuid: StorageUtils.makeUUID(), is_new: true }));
-
-        // ---------------------------
-        // storage
-        // ---------------------------
-
-        // local
-
-        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
-        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
-            return new Task(Object.assign({}, state, action.data));
     }
 }
 
@@ -78,29 +90,6 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
         // ---------------------------
         // tasks
         // ---------------------------
-
-        // local
-
-        case task_constants.ACTION_STORAGE_LOCAL_INDEXED_TASKS:
-            return action.tasks.map((item) => task({}, Object.assign({}, action, { data: item })));
-
-        // server
-
-        case task_constants.ACTION_STORAGE_SERVER_INDEXED_TASKS:
-
-            // update existing items
-            const _existing_items = state.map((item) => task(item, action));
-            const _existing_STORAGE_SERVER_item_ids = _existing_items.map((item) => item.server_id);
-
-            // add new items
-            const _new_items = action.data.reduce((result, item) => {
-                return _existing_STORAGE_SERVER_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, task(null, Object.assign({}, action, { data: item })) ];
-            }, []);
-
-            // merge & sort by server_id
-            return [ ..._existing_items, ... _new_items ].sort(function(a, b) {
-                return parseInt(a.server_id) - parseInt(b.server_id);
-            });
 
         // state
 
@@ -124,10 +113,21 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
         // local
 
+        case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
+
+            console.log("ACTION_STORAGE_LOCAL_INDEXED ::: tasks");
+            console.log(action);
+
+            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+                return state;
+            }
+
+            return action.tasks.map((item) => task({}, Object.assign({}, action, { data: item })));
+
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
 
-            if (!(action.resource instanceof Task)) {
+            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
                 return state;
             }
 
@@ -149,22 +149,43 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
         case storage_constants.ACTION_STORAGE_LOCAL_DESTROYED:
 
-            if (!(action.resource instanceof Task)) {
+            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
                 return state;
             }
 
             // get index
             _index = state.reduce((val, item, i) => (item.uuid === action.resource.uuid) ? i : val, 0);
-        
+
             if (_index === null) {
                 return state;
             }
-        
+
             // return a new collection excluding destroyed item
             return [
                 ...state.slice(0, _index),
                 ...state.slice(_index + 1)
             ];
+
+        // server
+
+        case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
+
+            console.log("ACTION_STORAGE_SERVER_INDEXED ::: tasks");
+            console.log(action);
+
+            // update existing items
+            const _existing_items = state.map((item) => task(item, action));
+            const _existing_STORAGE_SERVER_item_ids = _existing_items.map((item) => item.server_id);
+
+            // add new items
+            const _new_items = action.data.reduce((result, item) => {
+                return _existing_STORAGE_SERVER_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, task(null, Object.assign({}, action, { data: item })) ];
+            }, []);
+
+            // merge & sort by server_id
+            return [ ..._existing_items, ... _new_items ].sort(function(a, b) {
+                return parseInt(a.server_id) - parseInt(b.server_id);
+            });
 
         // ---------------------------
 

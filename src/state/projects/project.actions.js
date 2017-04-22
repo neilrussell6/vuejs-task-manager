@@ -17,8 +17,9 @@ import * as task_actions from 'state/tasks/task.actions';
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
-// store
+// state
 import { store } from 'state/store';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -48,7 +49,7 @@ export function indexProjects () {
             StorageUtils.index('projects').then((projects) => {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS,
+                    type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
                     projects
                 });
 
@@ -66,7 +67,7 @@ export function indexProjects () {
                     let _state = store.getState();
 
                     dispatch({
-                        type: constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS,
+                        type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
                         data: response.data,
                         user: _state.user
                     });

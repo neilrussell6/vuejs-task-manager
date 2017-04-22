@@ -12,12 +12,6 @@ export const ACTION_RESET_TEXT_FILTER       = 'RESET_TEXT_FILTER';
 export const ACTION_SET_COMPLETE_FILTER     = 'SET_COMPLETE_FILTER';
 export const ACTION_RESET_COMPLETE_FILTER   = 'RESET_COMPLETE_FILTER';
 
-// tasks : local storage
-export const ACTION_STORAGE_LOCAL_INDEXED_TASKS    = 'STORAGE_SERVER_INDEXED_TASKS';
-
-// tasks : server
-export const ACTION_STORAGE_SERVER_INDEXED_TASKS    = 'STORAGE_SERVER_INDEXED_TASKS';
-
 // tasks : state
 export const ACTION_DESELECT_TASK    = 'DESELECT_TASK';
 export const ACTION_MAKE_TASK        = 'MAKE_TASK';
