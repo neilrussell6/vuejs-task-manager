@@ -3,7 +3,7 @@ import { expect } from 'chai';
 // SUT
 import { CRUDModel } from './crud.model';
 
-describe("CRUD model", () => {
+describe("crud.model", () => {
 
     describe("properties (instance)", () => {
 

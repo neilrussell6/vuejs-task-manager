@@ -50,7 +50,8 @@ export function indexProjects () {
 
                 dispatch({
                     type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
-                    projects
+                    resource_type: 'projects',
+                    resources: projects
                 });
 
                 // if user is not authenticated
@@ -68,8 +69,11 @@ export function indexProjects () {
 
                     dispatch({
                         type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
-                        data: response.data,
-                        user: _state.user
+                        resource_type: 'projects',
+                        resources: response.data,
+                        related: {
+                            user: _state.user
+                        }
                     });
 
                     _state = store.getState();

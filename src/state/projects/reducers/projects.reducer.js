@@ -6,6 +6,7 @@ import * as StorageUtils from 'utils/storage/storage.utils';
 
 // state
 import * as storage_constants from 'state/storage/storage.constants';
+import * as storage_reducer from 'state/storage/reducers/storage.reducer';
 
 // local
 import * as project_constants from '../project.constants';
@@ -31,10 +32,8 @@ function project (state, action) {
         // storage
         // ---------------------------
 
-        // local
-
         case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
-            return new Project(action.data);
+            return new Project(action.resource);
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
@@ -46,17 +45,17 @@ function project (state, action) {
 
             // update existing item
             if (state !== null) {
-                const _server_item = action.data.reduce((result, item) => {
+                const _server_item = action.resource.reduce((result, item) => {
                     return parseInt(item.id) === state.server_id ? item : result;
                 }, {});
                 return new Project(Object.assign({}, state, _server_item.attributes));
             }
 
             // create new item
-            return new Project(Object.assign({}, action.data.attributes, {
-                server_id: parseInt(action.data.id),
+            return new Project(Object.assign({}, action.resource.attributes, {
+                server_id: parseInt(action.resource.id),
                 uuid: StorageUtils.makeUUID(),
-                user_uuid: action.user.uuid
+                user_uuid: action.related.user.uuid
             }));
     }
 }
@@ -98,24 +97,46 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
 
         // local
 
-        case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
+        case storage_constants.ACTION_STORAGE_LOCAL_DESTROYED:
 
-            console.log("ACTION_STORAGE_LOCAL_INDEXED ::: projects");
-            console.log(action);
-
-            if (!action.hasOwnProperty('data') || action.data.type !== 'projects') {
+            if (action.resource_type !== 'projects') {
                 return state;
             }
 
-            return action.projects.map((item) => project({}, Object.assign({}, action, { data: item })));
+            // get index
+            _index = state.reduce((val, item, i) => (item.uuid === action.resource.uuid) ? i : val, 0);
+
+            if (_index === null) {
+                return state;
+            }
+
+            // return a new collection excluding destroyed item
+            return [
+                ...state.slice(0, _index),
+                ...state.slice(_index + 1)
+            ];
+
+        case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
+
+            // console.log("ACTION_STORAGE_LOCAL_INDEXED ::: projects");
+            // console.log(action.resources);
+
+            if (action.resource_type !== 'projects') {
+                return state;
+            }
+
+            return action.resources.map((item) => project({}, Object.assign({}, {
+                type: action.type,
+                resource: item
+            })));
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
 
-            console.log("ACTION_STORAGE_LOCAL_STORED/UPDATED ::: projects");
-            console.log(action);
+            // console.log("ACTION_STORAGE_LOCAL_STORED/UPDATED ::: projects");
+            // console.log(action.resources);
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'projects') {
+            if (action.resource_type !== 'projects') {
                 return state;
             }
 
@@ -140,15 +161,14 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
 
             console.log("ACTION_STORAGE_SERVER_INDEXED ::: projects");
-            console.log(action);
 
             // update existing items
             const _existing_items = state.map((item) => project(item, action));
-            const _existing_STORAGE_SERVER_item_ids = _existing_items.map((item) => item.server_id);
+            const _existing_storage_server_item_ids = _existing_items.map((item) => item.server_id);
 
             // add new items
-            const _new_items = action.data.reduce((result, item) => {
-                return _existing_STORAGE_SERVER_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, project(null, Object.assign({}, action, { data: item })) ];
+            const _new_items = action.resources.reduce((result, item) => {
+                return _existing_storage_server_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, project(null, Object.assign({}, action, { resource: item })) ];
             }, []);
 
             // merge & sort by server_id

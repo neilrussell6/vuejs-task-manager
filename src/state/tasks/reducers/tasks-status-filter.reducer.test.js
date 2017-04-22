@@ -8,7 +8,7 @@ import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 import * as task_constants from '../task.constants';
 import * as Reducer from './tasks-status-filter.reducer';
 
-describe("tasks_status_filter reducer", () => {
+describe("tasks_status_filter.reducer", () => {
 
     it("should return before state by default", () => {
 

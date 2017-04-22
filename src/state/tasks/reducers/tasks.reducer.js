@@ -35,20 +35,20 @@ function task (state, action) {
 
         case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+            if (action.resource_type !== 'tasks') {
                 return state;
             }
 
-            return new Task(action.data);
+            return new Task(action.resource);
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+            if (action.resource_type !== 'tasks') {
                 return state;
             }
 
-            return new Task(Object.assign({}, state, action.data));
+            return new Task(Object.assign({}, state, action.resource, action.data));
 
         // server
 
@@ -59,7 +59,7 @@ function task (state, action) {
 
             // update existing item
             if (state !== null) {
-                const _server_item = action.data.reduce((result, item) => {
+                const _server_item = action.resources.reduce((result, item) => {
                     return parseInt(item.id) === state.server_id ? item : result;
                 }, {});
                 return new Task(Object.assign({}, state, _server_item.attributes));
@@ -113,21 +113,43 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
         // local
 
+        case storage_constants.ACTION_STORAGE_LOCAL_DESTROYED:
+
+            if (action.resource_type !== 'tasks') {
+                return state;
+            }
+
+            // get index
+            _index = state.reduce((val, item, i) => (item.uuid === action.resource.uuid) ? i : val, 0);
+
+            if (_index === null) {
+                return state;
+            }
+
+            // return a new collection excluding destroyed item
+            return [
+                ...state.slice(0, _index),
+                ...state.slice(_index + 1)
+            ];
+
         case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
 
             console.log("ACTION_STORAGE_LOCAL_INDEXED ::: tasks");
             console.log(action);
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+            if (action.resource_type !== 'tasks') {
                 return state;
             }
 
-            return action.tasks.map((item) => task({}, Object.assign({}, action, { data: item })));
+            return action.tasks.map((item) => task({}, Object.assign({}, action, {
+                type: action.type,
+                resource: item
+            })));
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
+            if (action.resource_type !== 'tasks') {
                 return state;
             }
 
@@ -144,25 +166,6 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
             return [
                 ...state.slice(0, _index),
                 ...[ _item ],
-                ...state.slice(_index + 1)
-            ];
-
-        case storage_constants.ACTION_STORAGE_LOCAL_DESTROYED:
-
-            if (!action.hasOwnProperty('data') || action.data.type !== 'tasks') {
-                return state;
-            }
-
-            // get index
-            _index = state.reduce((val, item, i) => (item.uuid === action.resource.uuid) ? i : val, 0);
-
-            if (_index === null) {
-                return state;
-            }
-
-            // return a new collection excluding destroyed item
-            return [
-                ...state.slice(0, _index),
                 ...state.slice(_index + 1)
             ];
 

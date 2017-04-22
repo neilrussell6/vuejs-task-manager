@@ -6,7 +6,6 @@ import sinon from 'sinon';
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // state
-import { STORAGE_READ } from 'state/redux-json-api.constants';
 import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
@@ -30,7 +29,40 @@ describe("projects.reducer", () => {
     // local storage
     // ---------------------------
 
-    describe("local storage", () => {
+    describe("projects.reducer.storage.local", () => {
+
+        describe("ACTION_STORAGE_LOCAL_DESTROYED", () => {
+
+            it("should remove item from existing state", () => {
+
+
+                const _project1 = new Project({ server_id: 1, uuid: 111, text: 'AAAA' });
+                const _project2 = new Project({ server_id: 2, uuid: 222, text: 'BBBB' });
+                const _project3 = new Project({ server_id: 3, uuid: 333, text: 'CCCC' });
+
+                const _state_before = [
+                    _project1,
+                    _project2,
+                    _project3
+                ];
+                const _action = {
+                    type: storage_constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                    resource_type: 'projects',
+                    resource: _project2
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                const _result = Reducer.projects(_state_before, _action);
+
+                const _result_uuids = _result.map((item) => item.uuid);
+
+                expect(_result_uuids).to.not.include(_project2.uuid);
+                expect(_result_uuids).to.include(_project1.uuid);
+                expect(_result_uuids).to.include(_project3.uuid);
+            });
+        });
 
         describe("ACTION_STORAGE_LOCAL_INDEXED", () => {
 
@@ -41,7 +73,8 @@ describe("projects.reducer", () => {
                 ];
                 const _action = {
                     type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
-                    projects: [
+                    resource_type: 'projects',
+                    resources: [
                         new Project({ server_id: 2, uuid: 222, text: 'BBBB' }),
                         new Project({ server_id: 3, uuid: 333, text: 'CCCC' })
                     ]
@@ -69,9 +102,10 @@ describe("projects.reducer", () => {
 
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
-                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
-                    project: _project2,
-                    data: {text: 'XXXX', type: 'projects'}
+                    type: storage_constants.ACTION_STORAGE_LOCAL_STORED,
+                    resource_type: 'projects',
+                    resource: _project2,
+                    data: { text: 'XXXX' }
                 };
 
                 deepFreeze(_state_before);
@@ -94,8 +128,9 @@ describe("projects.reducer", () => {
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
                     type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
-                    project: _project2,
-                    data: {text: 'XXXX', type: 'projects'}
+                    resource_type: 'projects',
+                    resource: _project2,
+                    data: { text: 'XXXX' }
                 };
 
                 deepFreeze(_state_before);
@@ -110,51 +145,51 @@ describe("projects.reducer", () => {
     });
 
     // ---------------------------
-    // serverm
+    // server
     // ---------------------------
 
-    describe("server", () => {
+    describe("projects.reducer.storage.server", () => {
 
-        describe("ACTION_STORAGE_SERVER_INDEXED", () => {
-
-            it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
-
-                const _state_before = [
-                    new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
-                    new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
-                ];
-                const _action = {
-                    type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
-                    data: [
-                        { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
-                        { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
-                    ],
-                    user: {
-                        uuid: 123
-                    }
-                };
-
-                deepFreeze(_state_before);
-                deepFreeze(_action);
-
-                const _result = Reducer.projects(_state_before, _action);
-
-                expect(_result).to.have.length(3);
-
-                expect(_result[2]).to.have.property('server_id', 3);
-                expect(_result[2]).to.have.property('uuid', 111);
-                expect(_result[2]).to.have.property('name', 'AAAA');
-
-                expect(_result[1]).to.have.property('server_id', 2);
-                expect(_result[1]).to.have.property('uuid', 222);
-                expect(_result[1]).to.have.property('name', 'BBBB2222');
-
-                expect(_result[0]).to.have.property('server_id', 1);
-                expect(_result[0]).to.have.property('uuid', '123456');
-                expect(_result[0]).to.have.property('name', 'CCCC');
-                expect(_result[0]).to.have.property('user_uuid', 123);
-            });
-        });
+        // describe("ACTION_STORAGE_SERVER_INDEXED", () => {
+        //
+        //     it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
+        //
+        //         const _state_before = [
+        //             new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
+        //             new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
+        //         ];
+        //         const _action = {
+        //             type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
+        //             data: [
+        //                 { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
+        //                 { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
+        //             ],
+        //             user: {
+        //                 uuid: 123
+        //             }
+        //         };
+        //
+        //         deepFreeze(_state_before);
+        //         deepFreeze(_action);
+        //
+        //         const _result = Reducer.projects(_state_before, _action);
+        //
+        //         expect(_result).to.have.length(3);
+        //
+        //         expect(_result[2]).to.have.property('server_id', 3);
+        //         expect(_result[2]).to.have.property('uuid', 111);
+        //         expect(_result[2]).to.have.property('name', 'AAAA');
+        //
+        //         expect(_result[1]).to.have.property('server_id', 2);
+        //         expect(_result[1]).to.have.property('uuid', 222);
+        //         expect(_result[1]).to.have.property('name', 'BBBB2222');
+        //
+        //         expect(_result[0]).to.have.property('server_id', 1);
+        //         expect(_result[0]).to.have.property('uuid', '123456');
+        //         expect(_result[0]).to.have.property('name', 'CCCC');
+        //         expect(_result[0]).to.have.property('user_uuid', 123);
+        //     });
+        // });
     });
 
     // ---------------------------

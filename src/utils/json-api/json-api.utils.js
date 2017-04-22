@@ -98,7 +98,7 @@ export function splitEndpoint (endpoint, endpoint_type) {
 
 export function makeResourceObject (resource, relationships = {}) {
 
-    if (resource.type === null) {
+    if (!resource.hasOwnProperty('type') || resource.type === null) {
         return null;
     }
 
@@ -131,7 +131,7 @@ export function makeResourceObject (resource, relationships = {}) {
 
 export function makeResourceIdentifierObject (resource) {
 
-    if (resource.type === null) {
+    if (!resource.hasOwnProperty('type') || resource.type === null) {
         return null;
     }
 

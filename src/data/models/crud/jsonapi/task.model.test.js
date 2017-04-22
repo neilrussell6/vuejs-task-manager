@@ -4,7 +4,7 @@ import { expect } from 'chai';
 // data
 import { Task, TASK_STATUS } from './task.model';
 
-describe("Task model", () => {
+describe("task.model", () => {
 
     describe("toggleStatusComplete", () => {
 

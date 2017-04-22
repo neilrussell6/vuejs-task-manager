@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze';
 
 import { BasicModel } from './basic.model';
 
-describe("basic model", () => {
+describe("basic.model", () => {
 
     describe("constructor: property assignment", () => {
 

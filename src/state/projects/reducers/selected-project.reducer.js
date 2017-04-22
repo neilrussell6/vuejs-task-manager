@@ -29,7 +29,7 @@ export function selected_project (state = constants.DEFAULT_SELECTED_PROJECT_STA
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'projects') {
+            if (action.resource_type !== 'projects') {
                 return state;
             }
 

@@ -34,7 +34,7 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'users') {
+            if (action.resource_type !== 'users') {
                 return state;
             }
 
@@ -42,20 +42,11 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
 
         case storage_constants.ACTION_STORAGE_LOCAL_VIEWED:
 
-            if (!action.hasOwnProperty('data') || action.data.type !== 'users') {
+            if (action.resource_type !== 'users') {
                 return state;
             }
 
-            return new User(action.data);
-
-        // case storage_constants.ACTION_STORAGE_LOCAL_STORED:
-        // case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
-        //
-        //     if (!(action.resource instanceof User)) {
-        //         return state;
-        //     }
-        //
-        //     return new User(Object.assign({}, state, action.resource, action.data));
+            return new User(action.resource);
 
         // server
 

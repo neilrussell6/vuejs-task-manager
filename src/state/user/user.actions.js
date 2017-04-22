@@ -39,7 +39,8 @@ export function updateUser (user, data = {}) {
 
                 dispatch({
                     type: storage_actions.ACTION_STORAGE_LOCAL_UPDATED,
-                    user,
+                    resource_type: 'users',
+                    resource: user,
                     data
                 });
 
@@ -73,7 +74,8 @@ export function viewOrStoreUser () {
 
                 dispatch({
                     type: storage_actions.ACTION_STORAGE_LOCAL_VIEWED,
-                    data: _state.user
+                    resource_type: 'users',
+                    resource: _state.user
                 });
 
                 _state = store.getState();
@@ -89,7 +91,8 @@ export function viewOrStoreUser () {
 
                     dispatch({
                         type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
-                        data: _user
+                        resource_type: 'users',
+                        resource: _user
                     });
 
                     _state = store.getState();
@@ -147,7 +150,8 @@ export function viewOrStoreUser () {
 
                         dispatch({
                             type: storage_constants.ACTION_STORAGE_LOCAL_STORED,
-                            data: _user
+                            resource_type: 'users',
+                            resource: _user
                         });
 
                         _state = store.getState();
@@ -235,7 +239,8 @@ export function userAuthenticated (access_token) {
 
                 dispatch({
                     type: storage_constants.ACTION_STORAGE_SERVER_VIEWED,
-                    data: response.data
+                    resource_type: 'users',
+                    resource: response.data
                 });
 
                 const _state = store.getState();
@@ -281,5 +286,5 @@ export function userAuthenticated (access_token) {
                 dispatch(storage_actions.serverError(error));
             });
         });
-    }
+    };
 }

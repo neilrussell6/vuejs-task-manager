@@ -8,7 +8,7 @@ import { Project } from 'data/models/crud/jsonapi/project.model';
 import * as Reducer from './selected-project.reducer';
 import * as constants from '../project.constants';
 
-describe("selected_project reducer", () => {
+describe("selected_project.reducer", () => {
 
     it("should return before state by default", () => {
 

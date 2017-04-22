@@ -49,6 +49,7 @@ export function destroy (resource) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                resource_type: resource.type,
                 resource
             });
             console.log('destroyed local');
@@ -159,6 +160,7 @@ export function destroyLocal (resource) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                resource_type: resource.type,
                 resource
             });
 
@@ -217,6 +219,7 @@ export function storeLocal (resource, relationships = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_STORED,
+                resource_type: _resource.type,
                 resource: _resource
             });
 
@@ -246,6 +249,7 @@ export function updateLocal (resource, data = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_UPDATED,
+                resource_type: resource.type,
                 resource,
                 data
             });
@@ -275,6 +279,7 @@ export function destroyServer (resource) {
 
            dispatch({
                type: constants.ACTION_STORAGE_SERVER_DESTROYED,
+               resource_type: resource.type,
                resource
            });
 
@@ -317,6 +322,7 @@ export function storeServer (resource, relationships = {}) {
 
                 dispatch({
                     type: constants.ACTION_STORAGE_SERVER_STORED,
+                    resource_type: resource.type,
                     resource: resource
                 });
 
@@ -339,6 +345,7 @@ export function updateServer (resource, data = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_SERVER_UPDATED,
+                resource_type: resource.type,
                 resource,
                 data
             });
