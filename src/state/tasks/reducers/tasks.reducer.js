@@ -134,9 +134,6 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
         case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
 
-            console.log("ACTION_STORAGE_LOCAL_INDEXED ::: tasks");
-            console.log(action);
-
             if (action.resource_type !== 'tasks') {
                 return state;
             }
@@ -172,9 +169,6 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
         // server
 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
-
-            console.log("ACTION_STORAGE_SERVER_INDEXED ::: tasks");
-            console.log(action);
 
             // update existing items
             const _existing_items = state.map((item) => task(item, action));

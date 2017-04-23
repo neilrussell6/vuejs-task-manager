@@ -36,7 +36,6 @@ if (!USE_SERVICE_WORKER) {
     // ----------------------------------------------------------------
 
     store.dispatch(user_actions.viewOrStoreUser()).then(() => {
-        console.log("indexProjects");
         store.dispatch(project_actions.indexProjects());
     }).catch((message) => console.error(message));
 

@@ -16,26 +16,11 @@ export function selected_project (state = constants.DEFAULT_SELECTED_PROJECT_STA
         // ---------------------------
 
         case constants.ACTION_SELECT_PROJECT:
-            return new Project(action.data);
+            return new Project(action.resource);
 
         case constants.ACTION_DESELECT_PROJECT:
             return constants.DEFAULT_SELECTED_PROJECT_STATE;
-
-        // ---------------------------
-        // storage
-        // ---------------------------
-
-        // local
-
-        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
-
-            if (action.resource_type !== 'projects') {
-                return state;
-            }
-
-            return action.resource;
-
-
+        
         // ---------------------------
 
         default:

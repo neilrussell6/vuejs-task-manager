@@ -118,9 +118,6 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
 
         case storage_constants.ACTION_STORAGE_LOCAL_INDEXED:
 
-            // console.log("ACTION_STORAGE_LOCAL_INDEXED ::: projects");
-            // console.log(action.resources);
-
             if (action.resource_type !== 'projects') {
                 return state;
             }
@@ -132,9 +129,6 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
 
         case storage_constants.ACTION_STORAGE_LOCAL_STORED:
         case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
-
-            // console.log("ACTION_STORAGE_LOCAL_STORED/UPDATED ::: projects");
-            // console.log(action.resources);
 
             if (action.resource_type !== 'projects') {
                 return state;
@@ -161,6 +155,7 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
 
             console.log("ACTION_STORAGE_SERVER_INDEXED ::: projects");
+            console.log(action);
 
             // update existing items
             const _existing_items = state.map((item) => project(item, action));

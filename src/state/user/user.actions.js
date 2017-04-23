@@ -50,10 +50,10 @@ export function updateUser (user, data = {}) {
                 }
 
                 // update on server
-                // dispatch(updateResource(project.resource_object))
-                //     .catch(() => {
-                //         dispatch(STORAGE_UPDATE_FAILED);
-                //     });
+                dispatch(updateResource(project.resource_object))
+                    .catch(() => {
+                        dispatch(STORAGE_UPDATE_FAILED);
+                    });
 
                 resolve();
 

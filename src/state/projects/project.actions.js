@@ -119,8 +119,8 @@ export function selectProject (project) {
     return function (dispatch) {
 
         dispatch({
-            type:   constants.ACTION_SELECT_PROJECT,
-            data:   project
+            type: constants.ACTION_SELECT_PROJECT,
+            resource: project
         });
 
         dispatch(task_actions.indexTasks(project));
