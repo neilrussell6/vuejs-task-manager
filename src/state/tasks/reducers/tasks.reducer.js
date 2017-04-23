@@ -141,7 +141,7 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
                 return state;
             }
 
-            return action.tasks.map((item) => task({}, Object.assign({}, action, {
+            return action.resources.map((item) => task({}, Object.assign({}, action, {
                 type: action.type,
                 resource: item
             })));

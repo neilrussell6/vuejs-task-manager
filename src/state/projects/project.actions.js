@@ -55,7 +55,6 @@ export function indexProjects () {
                 });
 
                 // if user is not authenticated
-                // ... or server call is suppressed
                 // ... or app is offline
                 if (!_state.user.is_authenticated || _state.app.is_offline) {
                     return resolve();
