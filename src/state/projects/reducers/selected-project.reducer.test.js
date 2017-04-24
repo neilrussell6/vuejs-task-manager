@@ -8,7 +8,7 @@ import { Project } from 'data/models/crud/jsonapi/project.model';
 import * as Reducer from './selected-project.reducer';
 import * as constants from '../project.constants';
 
-describe("selected_project reducer", () => {
+describe("selected_project.reducer", () => {
 
     it("should return before state by default", () => {
 
@@ -29,7 +29,7 @@ describe("selected_project reducer", () => {
             const _state_before = {};
             const _action = {
                 type: constants.ACTION_SELECT_PROJECT,
-                data: {
+                resource: {
                     id: 101,
                     name: 'AAA'
                 }

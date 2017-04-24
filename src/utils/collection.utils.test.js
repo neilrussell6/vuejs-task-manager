@@ -3,7 +3,7 @@ import deepFreeze from 'deep-freeze';
 
 import * as utils from './collection.utils';
 
-describe("collection utils", () => {
+describe("collection.utils", () => {
 
     describe("indexOfKeyValue", () => {
 

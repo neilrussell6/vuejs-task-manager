@@ -61,7 +61,8 @@ export function indexQueue () {
 
 export function processQueue () {
     return function (dispatch) {
-        console.log("~~~ process ~~~");
+        console.log("server-request.actions.processQueue");
+        return Promise.resolve();
 
         // index queue from local storage
         return dispatch(indexQueue()).then((response) => {

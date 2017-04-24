@@ -49,6 +49,7 @@ export function destroy (resource) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                resource_type: resource.type,
                 resource
             });
             console.log('destroyed local');
@@ -159,6 +160,7 @@ export function destroyLocal (resource) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                resource_type: resource.type,
                 resource
             });
 
@@ -217,6 +219,7 @@ export function storeLocal (resource, relationships = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_STORED,
+                resource_type: _resource.type,
                 resource: _resource
             });
 
@@ -246,6 +249,7 @@ export function updateLocal (resource, data = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_LOCAL_UPDATED,
+                resource_type: resource.type,
                 resource,
                 data
             });
@@ -275,6 +279,7 @@ export function destroyServer (resource) {
 
            dispatch({
                type: constants.ACTION_STORAGE_SERVER_DESTROYED,
+               resource_type: resource.type,
                resource
            });
 
@@ -295,10 +300,12 @@ export function storeOrUpdateServer (resource, relationships = {}) {
 
         // store
         if (resource.server_id === null) {
+            console.log("storage.actions.storeOrUpdateServer ::: STORE", resource);
             return dispatch(storeServer(resource, relationships));
         }
 
         // update
+        console.log("storage.actions.storeOrUpdateServer ::: UPDATE", resource);
         return dispatch(updateServer(resource));
     };
 }
@@ -317,6 +324,7 @@ export function storeServer (resource, relationships = {}) {
 
                 dispatch({
                     type: constants.ACTION_STORAGE_SERVER_STORED,
+                    resource_type: resource.type,
                     resource: resource
                 });
 
@@ -339,6 +347,7 @@ export function updateServer (resource, data = {}) {
 
             dispatch({
                 type: constants.ACTION_STORAGE_SERVER_UPDATED,
+                resource_type: resource.type,
                 resource,
                 data
             });
@@ -419,7 +428,7 @@ export function serverSync () {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 
-            console.log("serverSync");
+            console.log("storage.actions.serverSync");
 
             // process request queue
             dispatch(request_queue_actions.processQueue()).then((response) => {
@@ -431,6 +440,9 @@ export function serverSync () {
                 // projects
                 // ... index from local storage
                 StorageUtils.index('projects').then((local_projects) => {
+
+                    console.log("storage.actions.serverSync ::: get local projects");
+                    console.log(local_projects);
 
                     // projects
                     // ... store or update

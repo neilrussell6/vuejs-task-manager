@@ -9,9 +9,9 @@ import { STATUS_FILTER_TYPE } from 'data/models/basic/status-filter.model';
 import { Task } from 'data/models/crud/jsonapi/task.model';
 
 // SUT
-import * as Utils from './status-filter.utils';
+import * as utils from './status-filter.utils';
 
-describe("complete filter utils", () => {
+describe("status-filter.utils", () => {
 
     describe("filterTasks", () => {
 
@@ -26,7 +26,7 @@ describe("complete filter utils", () => {
 
             deepFreeze(_tasks);
 
-            const _result = Utils.filterTasks(_tasks, STATUS_FILTER_TYPE.COMPLETE);
+            const _result = utils.filterTasks(_tasks, STATUS_FILTER_TYPE.COMPLETE);
             const _filtered_task_ids = _result.map((task) => task.server_id);
 
             expect(_filtered_task_ids).to.include(111);
@@ -46,7 +46,7 @@ describe("complete filter utils", () => {
 
             deepFreeze(_tasks);
 
-            const _result = Utils.filterTasks(_tasks, STATUS_FILTER_TYPE.INCOMPLETE);
+            const _result = utils.filterTasks(_tasks, STATUS_FILTER_TYPE.INCOMPLETE);
             const _filtered_task_ids = _result.map((task) => task.server_id);
 
             expect(_filtered_task_ids).to.not.include(111);
@@ -66,7 +66,7 @@ describe("complete filter utils", () => {
 
             deepFreeze(_tasks);
 
-            const _result = Utils.filterTasks(_tasks, STATUS_FILTER_TYPE.TRASH);
+            const _result = utils.filterTasks(_tasks, STATUS_FILTER_TYPE.TRASH);
             const _filtered_task_ids = _result.map((task) => task.server_id);
 
             expect(_filtered_task_ids).to.not.include(111);
@@ -86,7 +86,7 @@ describe("complete filter utils", () => {
 
             deepFreeze(_tasks);
 
-            const _result = Utils.filterTasks(_tasks, STATUS_FILTER_TYPE.ALL);
+            const _result = utils.filterTasks(_tasks, STATUS_FILTER_TYPE.ALL);
             const _filtered_task_ids = _result.map((task) => task.server_id);
 
             expect(_filtered_task_ids).to.include(111);

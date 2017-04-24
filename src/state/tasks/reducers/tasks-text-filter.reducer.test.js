@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import * as task_constants from '../task.constants';
 import * as Reducer from './tasks-text-filter.reducer';
 
-describe("tasks_text_filter reducer", () => {
+describe("tasks_text_filter.reducer", () => {
 
     it("should return before state by default", () => {
 

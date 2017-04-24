@@ -2,7 +2,7 @@
 // actions
 // --------------------------
 
-// authentication
+// user : authentication
 export const ACTION_USER_AUTHENTICATED  = 'USER_AUTHENTICATED';
 export const ACTION_TOKEN_EXPIRED       = 'TOKEN_EXPIRED';
 export const ACTION_WILL_LOGIN_USER     = 'WILL_LOGIN_USER';

@@ -34,29 +34,30 @@ export function updateUser (user, data = {}) {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 
-            // update in local storage
-            StorageUtils.update(user, data).then((responses) => {
-
-                dispatch({
-                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
-                    user,
-                    data
-                });
-
-                // if user is not authenticated
-                if (!user.is_authenticated) {
-                    return resolve();
-                }
-
-                // update on server
-                // dispatch(updateResource(project.resource_object))
-                //     .catch(() => {
-                //         dispatch(STORAGE_UPDATE_FAILED);
-                //     });
-
-                resolve();
-
-            }).catch((message) => console.error(message));
+            // // update in local storage
+            // StorageUtils.update(user, data).then((responses) => {
+            //
+            //     dispatch({
+            //         type: storage_actions.ACTION_STORAGE_LOCAL_UPDATED,
+            //         resource_type: 'users',
+            //         resource: user,
+            //         data
+            //     });
+            //
+            //     // if user is not authenticated
+            //     if (!user.is_authenticated) {
+            //         return resolve();
+            //     }
+            //
+            //     // update on server
+            //     dispatch(updateResource(project.resource_object))
+            //         .catch(() => {
+            //             dispatch(STORAGE_UPDATE_FAILED);
+            //         });
+            //
+            //     resolve();
+            //
+            // }).catch((message) => console.error(message));
         });
     };
 }
@@ -72,11 +73,13 @@ export function viewOrStoreUser () {
             if (_state.user !== null && typeof _state.user.uuid !== 'undefined') {
 
                 dispatch({
-                    type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
-                    data: _state.user
+                    type: storage_actions.ACTION_STORAGE_LOCAL_VIEWED,
+                    resource_type: 'users',
+                    resource: _state.user
                 });
 
                 _state = store.getState();
+                console.log("USER ACTIONS ::: got user from state");
                 return resolve(_state.user);
             }
 
@@ -88,7 +91,8 @@ export function viewOrStoreUser () {
 
                     dispatch({
                         type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
-                        data: _user
+                        resource_type: 'users',
+                        resource: _user
                     });
 
                     _state = store.getState();
@@ -101,8 +105,8 @@ export function viewOrStoreUser () {
                     }
 
                     // ... if user has no access token
-
                     if (_state.user.access_token === null) {
+                        console.log("USER ACTIONS ::: user has no access token");
                         return resolve(_state.user);
                     }
 
@@ -128,6 +132,7 @@ export function viewOrStoreUser () {
                         return dispatch(updateUser(_state.user, { is_authenticated: false }, true)).then((response) => {
 
                             _state = store.getState();
+                            console.log("USER ACTIONS ::: access token is expired");
                             resolve(_state.user);
 
                         }).catch((message) => console.error(message));
@@ -136,6 +141,7 @@ export function viewOrStoreUser () {
                     // ... if access token is not expired
 
                     return dispatch(userAuthenticated(_state.user.access_token)).then((response) => {
+                        console.log("USER ACTIONS ::: access token is not expired");
                         return resolve(_state.user);
                     });
                 }
@@ -149,11 +155,14 @@ export function viewOrStoreUser () {
                     StorageUtils.store(_user).then(() => {
 
                         dispatch({
-                            type: storage_constants.ACTION_STORAGE_LOCAL_VIEWED,
-                            data: _user
+                            type: storage_constants.ACTION_STORAGE_LOCAL_STORED,
+                            resource_type: 'users',
+                            resource: _user
                         });
 
                         _state = store.getState();
+                        console.log("USER ACTIONS ::: make new user");
+                        console.log(_state.user);
                         resolve(_state.user);
                     });
                 }).catch((message) => console.error(message));
@@ -194,9 +203,6 @@ export function loginUser (user, credentials) {
                             // index user's projects
                             dispatch(project_actions.indexProjects()).then((response) => {
 
-                                console.log(_state);
-                                console.log("~~~~~ serverSync ~~~~~");
-
                                 window.setTimeout(() => {
 
                                     dispatch(storage_actions.serverSync())
@@ -235,8 +241,9 @@ export function userAuthenticated (access_token) {
                 });
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_SERVER_VIEWED_USER,
-                    data: response.data
+                    type: storage_constants.ACTION_STORAGE_SERVER_VIEWED,
+                    resource_type: 'users',
+                    resource: response.data
                 });
 
                 const _state = store.getState();
@@ -282,6 +289,6 @@ export function userAuthenticated (access_token) {
                 dispatch(storage_actions.serverError(error));
             });
         });
-    }
+    };
 }
 

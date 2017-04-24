@@ -4,9 +4,9 @@ import { expect } from 'chai';
 import { ENDPOINT_TYPES } from 'utils/json-api/json-api.constants';
 
 // local
-import * as Utils from './message.utils';
+import * as utils from './message.utils';
 
-describe("Message Utils", () => {
+describe("message.utils", () => {
 
     describe("makeMessageLabel", () => {
 
@@ -21,7 +21,7 @@ describe("Message Utils", () => {
                 let _endpoint_type = ENDPOINT_TYPES.PRIMARY;
                 let _config = {};
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('projects');
             });
@@ -41,7 +41,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'id'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('project 123');
             });
@@ -58,7 +58,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'none'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('project');
             });
@@ -76,7 +76,7 @@ describe("Message Utils", () => {
                     MESSAGE_EXCLUDE_USER: true
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('user 123');
             });
@@ -93,7 +93,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'template'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('project {projects 123}');
             });
@@ -114,7 +114,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'id'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('tasks for project 123');
             });
@@ -132,7 +132,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'none'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('tasks');
             });
@@ -151,7 +151,7 @@ describe("Message Utils", () => {
                     MESSAGE_EXCLUDE_USER: true
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('tasks');
             });
@@ -169,7 +169,7 @@ describe("Message Utils", () => {
                     MESSAGE_IDENTIFIER: 'template'
                 };
 
-                let _result = Utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
+                let _result = utils.makeMessageLabel(_endpoint_data, _endpoint_type, _config, _singularize);
 
                 expect(_result).to.equal('tasks for project {projects 123}');
             });
@@ -189,7 +189,7 @@ describe("Message Utils", () => {
             };
             let property = 'name';
 
-            let _result = Utils.populateMessageLabelVars(_message_label, _data, property);
+            let _result = utils.populateMessageLabelVars(_message_label, _data, property);
 
             expect(_result).to.equal('fetching tasks for project');
         });
@@ -205,7 +205,7 @@ describe("Message Utils", () => {
             };
             let property = 'name';
 
-            let _result = Utils.populateMessageLabelVars(_message_label, _data, property);
+            let _result = utils.populateMessageLabelVars(_message_label, _data, property);
 
             expect(_result).to.equal('fetching tasks for project');
         });
@@ -221,7 +221,7 @@ describe("Message Utils", () => {
             };
             let property = 'name';
 
-            let _result = Utils.populateMessageLabelVars(_message_label, _data, property);
+            let _result = utils.populateMessageLabelVars(_message_label, _data, property);
 
             expect(_result).to.equal('fetching tasks for project "My Project Twenty Two"');
         });
@@ -240,7 +240,7 @@ describe("Message Utils", () => {
             };
             let property = 'name';
 
-            let _result = Utils.populateMessageLabelVars(_message_label, _data, property);
+            let _result = utils.populateMessageLabelVars(_message_label, _data, property);
 
             expect(_result).to.equal('welcome "Benny B", fetching tasks for project "My Project Eleven"');
         });

@@ -6,7 +6,7 @@ import sinon from 'sinon';
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
 // state
-import { STORAGE_READ } from 'state/redux-json-api.constants';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -29,9 +29,42 @@ describe("projects.reducer", () => {
     // local storage
     // ---------------------------
 
-    describe("local storage", () => {
+    describe("projects.reducer.storage.local", () => {
 
-        describe("ACTION_STORAGE_LOCAL_INDEXED_PROJECTS", () => {
+        describe("ACTION_STORAGE_LOCAL_DESTROYED", () => {
+
+            it("should remove item from existing state", () => {
+
+
+                const _project1 = new Project({ server_id: 1, uuid: 111, text: 'AAAA' });
+                const _project2 = new Project({ server_id: 2, uuid: 222, text: 'BBBB' });
+                const _project3 = new Project({ server_id: 3, uuid: 333, text: 'CCCC' });
+
+                const _state_before = [
+                    _project1,
+                    _project2,
+                    _project3
+                ];
+                const _action = {
+                    type: storage_constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                    resource_type: 'projects',
+                    resource: _project2
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                const _result = Reducer.projects(_state_before, _action);
+
+                const _result_uuids = _result.map((item) => item.uuid);
+
+                expect(_result_uuids).to.not.include(_project2.uuid);
+                expect(_result_uuids).to.include(_project1.uuid);
+                expect(_result_uuids).to.include(_project3.uuid);
+            });
+        });
+
+        describe("ACTION_STORAGE_LOCAL_INDEXED", () => {
 
             it("should return a list of projects, ignoring existing state", () => {
 
@@ -39,8 +72,9 @@ describe("projects.reducer", () => {
                     new Project({ server_id: 1, uuid: 111, text: 'AAAA' })
                 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS,
-                    projects: [
+                    type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
+                    resource_type: 'projects',
+                    resources: [
                         new Project({ server_id: 2, uuid: 222, text: 'BBBB' }),
                         new Project({ server_id: 3, uuid: 333, text: 'CCCC' })
                     ]
@@ -59,7 +93,7 @@ describe("projects.reducer", () => {
             });
         });
 
-        describe("ACTION_STORAGE_LOCAL_STORED_PROJECT", () => {
+        describe("ACTION_STORAGE_LOCAL_STORED", () => {
 
             it("should update project data using provided project and state data", () => {
 
@@ -68,9 +102,10 @@ describe("projects.reducer", () => {
 
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_UPDATED_PROJECT,
-                    project: _project2,
-                    data: {text: 'XXXX'}
+                    type: storage_constants.ACTION_STORAGE_LOCAL_STORED,
+                    resource_type: 'projects',
+                    resource: _project2,
+                    data: { text: 'XXXX' }
                 };
 
                 deepFreeze(_state_before);
@@ -83,7 +118,7 @@ describe("projects.reducer", () => {
             });
         });
 
-        describe("ACTION_STORAGE_LOCAL_UPDATED_PROJECT", () => {
+        describe("ACTION_STORAGE_LOCAL_UPDATED", () => {
 
             it("should update project data using provided project and state data", () => {
 
@@ -92,9 +127,10 @@ describe("projects.reducer", () => {
 
                 const _state_before = [ _project1, _project2 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_LOCAL_UPDATED_PROJECT,
-                    project: _project2,
-                    data: {text: 'XXXX'}
+                    type: storage_constants.ACTION_STORAGE_LOCAL_UPDATED,
+                    resource_type: 'projects',
+                    resource: _project2,
+                    data: { text: 'XXXX' }
                 };
 
                 deepFreeze(_state_before);
@@ -109,27 +145,30 @@ describe("projects.reducer", () => {
     });
 
     // ---------------------------
-    // serverm
+    // server
     // ---------------------------
 
-    describe("server", () => {
+    describe("projects.reducer.storage.server", () => {
 
-        describe("ACTION_STORAGE_SERVER_INDEXED_PROJECTS", () => {
+        describe("ACTION_STORAGE_SERVER_INDEXED", () => {
 
-            it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
+            it("should return a list of projects, merging action data into state, updating local items with server data and assigning uuids to server items not already in state", () => {
 
                 const _state_before = [
                     new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
                     new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
                 ];
                 const _action = {
-                    type: project_constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS,
-                    data: [
-                        { id: 2, attributes: { name: 'BBBB2222' }},
-                        { id: 1, attributes: { name: 'CCCC' }}
+                    type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
+                    resource_type: 'projects',
+                    resources: [
+                        { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
+                        { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
                     ],
-                    user: {
-                        uuid: 123
+                    related: {
+                        user: {
+                            uuid: 123
+                        }
                     }
                 };
 

@@ -126,12 +126,15 @@ export function makeResourceObject (resource, relationships = {}) {
         }, {});
     }
 
+    console.log("ZZZ");
+    console.log(_result);
+
     return _result;
 }
 
 export function makeResourceIdentifierObject (resource) {
 
-    if (resource.type === null) {
+    if (!resource.hasOwnProperty('type') || resource.type === null) {
         return null;
     }
 

@@ -17,8 +17,9 @@ import * as task_actions from 'state/tasks/task.actions';
 import { JsonApiModel } from 'data/models/jsonapi.model';
 import { Project } from 'data/models/crud/jsonapi/project.model';
 
-// store
+// state
 import { store } from 'state/store';
+import * as storage_constants from 'state/storage/storage.constants';
 
 // utils
 import * as StorageUtils from 'utils/storage/storage.utils';
@@ -48,12 +49,12 @@ export function indexProjects () {
             StorageUtils.index('projects').then((projects) => {
 
                 dispatch({
-                    type: constants.ACTION_STORAGE_LOCAL_INDEXED_PROJECTS,
-                    projects
+                    type: storage_constants.ACTION_STORAGE_LOCAL_INDEXED,
+                    resource_type: 'projects',
+                    resources: projects
                 });
 
                 // if user is not authenticated
-                // ... or server call is suppressed
                 // ... or app is offline
                 if (!_state.user.is_authenticated || _state.app.is_offline) {
                     return resolve();
@@ -66,9 +67,12 @@ export function indexProjects () {
                     let _state = store.getState();
 
                     dispatch({
-                        type: constants.ACTION_STORAGE_SERVER_INDEXED_PROJECTS,
-                        data: response.data,
-                        user: _state.user
+                        type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
+                        resource_type: 'projects',
+                        resources: response.data,
+                        related: {
+                            user: _state.user
+                        }
                     });
 
                     _state = store.getState();
@@ -115,8 +119,8 @@ export function selectProject (project) {
     return function (dispatch) {
 
         dispatch({
-            type:   constants.ACTION_SELECT_PROJECT,
-            data:   project
+            type: constants.ACTION_SELECT_PROJECT,
+            resource: project
         });
 
         dispatch(task_actions.indexTasks(project));

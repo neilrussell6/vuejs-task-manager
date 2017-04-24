@@ -120,7 +120,7 @@
                 store.dispatch(storage_actions.storeOrUpdate(project, { 'owner': this.user }));
 
                 // select project
-//                store.dispatch(project_actions.selectProject(project));
+                store.dispatch(project_actions.selectProject(project));
             },
 
             _onRefreshProjects: function () {

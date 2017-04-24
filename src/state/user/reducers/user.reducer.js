@@ -19,30 +19,6 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
         // user
         // ---------------------------
 
-        // local
-
-        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
-        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
-            if (action.hasOwnProperty('data') && action.data.type !== 'users') {
-                return state;
-            }
-
-            return new User(Object.assign({}, state, action.resource, action.data));
-
-        case storage_constants.ACTION_STORAGE_LOCAL_VIEWED:
-            if (action.hasOwnProperty('data') && action.data.type !== 'users') {
-                return state;
-            }
-
-            return new User(action.data);
-
-        case storage_constants.ACTION_STORAGE_SERVER_VIEWED:
-            if (action.hasOwnProperty('data') && action.data.type !== 'users') {
-                return state;
-            }
-
-            return new User(Object.assign({}, state, action.data.attributes, { server_id: action.data.id }));
-
         case user_constants.ACTION_USER_AUTHENTICATED:
             return new User(Object.assign({}, state, {
                 access_token: action.access_token,
@@ -55,14 +31,32 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
 
         // local
 
-        // case storage_constants.ACTION_STORAGE_LOCAL_STORED:
-        // case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
-        //
-        //     if (!(action.resource instanceof User)) {
-        //         return state;
-        //     }
-        //
-        //     return new User(Object.assign({}, state, action.resource, action.data));
+        case storage_constants.ACTION_STORAGE_LOCAL_STORED:
+        case storage_constants.ACTION_STORAGE_LOCAL_UPDATED:
+
+            if (action.resource_type !== 'users') {
+                return state;
+            }
+
+            return new User(Object.assign({}, state, action.resource, action.data));
+
+        case storage_constants.ACTION_STORAGE_LOCAL_VIEWED:
+
+            if (action.resource_type !== 'users') {
+                return state;
+            }
+
+            return new User(action.resource);
+
+        // server
+
+        case storage_constants.ACTION_STORAGE_SERVER_VIEWED:
+
+            if (action.resource_type !== 'users') {
+                return state;
+            }
+
+            return new User(Object.assign({}, state, action.resource.attributes, { server_id: action.resource.id }));
 
         // ---------------------------
 

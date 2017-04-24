@@ -5,9 +5,9 @@ import { expect } from 'chai';
 import { Task } from 'data/models/crud/jsonapi/task.model';
 
 // SUT
-import * as Utils from './text-filter.utils';
+import * as utils from './text-filter.utils';
 
-describe("text filter utils", () => {
+describe("text-filter.utils", () => {
 
     describe("filterTasks", () => {
 
@@ -23,7 +23,7 @@ describe("text filter utils", () => {
 
             deepFreeze(_tasks);
 
-            let _result = Utils.filterTasks(_tasks, _text_term);
+            let _result = utils.filterTasks(_tasks, _text_term);
             let _ids = _result.map((item) => item.server_id );
 
             expect(_ids).to.include(11);
@@ -41,7 +41,7 @@ describe("text filter utils", () => {
 
             deepFreeze(_tasks);
 
-            let _result = Utils.filterTasks(_tasks, _text_term);
+            let _result = utils.filterTasks(_tasks, _text_term);
             let _ids = _result.map((item) => item.server_id );
 
             expect(_ids).to.include(11);
