@@ -16,7 +16,13 @@
                         <button class="authenticated"
                                 :class="{ 'offline': is_offline }"
                                 v-on:click="_onConnect()">
-                            <span class="label">{{user.first_name}} {{user.last_name}}</span>
+
+                            <span class="label">
+                                <template v-if="is_offline">reconnect</template>
+                                <template v-else>{{user.first_name}} {{user.last_name}}
+                                </template>
+                            </span>
+
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </button>
                     </template>
