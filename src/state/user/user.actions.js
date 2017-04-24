@@ -34,30 +34,30 @@ export function updateUser (user, data = {}) {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 
-            // update in local storage
-            StorageUtils.update(user, data).then((responses) => {
-
-                dispatch({
-                    type: storage_actions.ACTION_STORAGE_LOCAL_UPDATED,
-                    resource_type: 'users',
-                    resource: user,
-                    data
-                });
-
-                // if user is not authenticated
-                if (!user.is_authenticated) {
-                    return resolve();
-                }
-
-                // update on server
-                dispatch(updateResource(project.resource_object))
-                    .catch(() => {
-                        dispatch(STORAGE_UPDATE_FAILED);
-                    });
-
-                resolve();
-
-            }).catch((message) => console.error(message));
+            // // update in local storage
+            // StorageUtils.update(user, data).then((responses) => {
+            //
+            //     dispatch({
+            //         type: storage_actions.ACTION_STORAGE_LOCAL_UPDATED,
+            //         resource_type: 'users',
+            //         resource: user,
+            //         data
+            //     });
+            //
+            //     // if user is not authenticated
+            //     if (!user.is_authenticated) {
+            //         return resolve();
+            //     }
+            //
+            //     // update on server
+            //     dispatch(updateResource(project.resource_object))
+            //         .catch(() => {
+            //             dispatch(STORAGE_UPDATE_FAILED);
+            //         });
+            //
+            //     resolve();
+            //
+            // }).catch((message) => console.error(message));
         });
     };
 }
@@ -196,9 +196,6 @@ export function loginUser (user, credentials) {
 
                             // index user's projects
                             dispatch(project_actions.indexProjects()).then((response) => {
-
-                                console.log(_state);
-                                console.log("~~~~~ serverSync ~~~~~");
 
                                 window.setTimeout(() => {
 

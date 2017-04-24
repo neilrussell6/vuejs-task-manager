@@ -29,7 +29,7 @@ describe("selected_project.reducer", () => {
             const _state_before = {};
             const _action = {
                 type: constants.ACTION_SELECT_PROJECT,
-                data: {
+                resource: {
                     id: 101,
                     name: 'AAA'
                 }

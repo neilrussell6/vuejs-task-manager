@@ -300,10 +300,12 @@ export function storeOrUpdateServer (resource, relationships = {}) {
 
         // store
         if (resource.server_id === null) {
+            console.log("storage.actions.storeOrUpdateServer ::: STORE", resource);
             return dispatch(storeServer(resource, relationships));
         }
 
         // update
+        console.log("storage.actions.storeOrUpdateServer ::: UPDATE", resource);
         return dispatch(updateServer(resource));
     };
 }
@@ -426,7 +428,7 @@ export function serverSync () {
     return function (dispatch) {
         return new Promise((resolve, reject) => {
 
-            console.log("serverSync");
+            console.log("storage.actions.serverSync");
 
             // process request queue
             dispatch(request_queue_actions.processQueue()).then((response) => {
@@ -438,6 +440,9 @@ export function serverSync () {
                 // projects
                 // ... index from local storage
                 StorageUtils.index('projects').then((local_projects) => {
+
+                    console.log("storage.actions.serverSync ::: get local projects");
+                    console.log(local_projects);
 
                     // projects
                     // ... store or update

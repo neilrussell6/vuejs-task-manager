@@ -126,20 +126,6 @@ describe("json-api.utils", () => {
 
     describe("makeResourceObject", () => {
 
-        it("should return null, if no type", () => {
-
-            const _resource = {
-                uuid: '1234',
-                a: "A"
-            };
-
-            deepFreeze(_resource);
-
-            const _result = utils.makeResourceObject(_resource);
-
-            expect(_result).to.be.null;
-        });
-
         it("should return null, if type is null", () => {
 
             const _resource = {
@@ -237,20 +223,6 @@ describe("json-api.utils", () => {
     });
 
     describe("makeResourceIdentifierObject", () => {
-
-        it("should return null, if no type", () => {
-
-            const _resource = {
-                uuid: '1234',
-                a: "A"
-            };
-
-            deepFreeze(_resource);
-
-            const _result = utils.makeResourceIdentifierObject(_resource);
-
-            expect(_result).to.be.null;
-        });
 
         it("should return null, if type is null", () => {
 

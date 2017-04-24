@@ -98,7 +98,7 @@ export function splitEndpoint (endpoint, endpoint_type) {
 
 export function makeResourceObject (resource, relationships = {}) {
 
-    if (!resource.hasOwnProperty('type') || resource.type === null) {
+    if (resource.type === null) {
         return null;
     }
 
@@ -125,6 +125,9 @@ export function makeResourceObject (resource, relationships = {}) {
             });
         }, {});
     }
+
+    console.log("ZZZ");
+    console.log(_result);
 
     return _result;
 }

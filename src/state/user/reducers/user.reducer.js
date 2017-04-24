@@ -52,10 +52,11 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
 
         case storage_constants.ACTION_STORAGE_SERVER_VIEWED:
 
-            console.log("ACTION_STORAGE_SERVER_VIEWED ::: user");
-            console.log(action);
+            if (action.resource_type !== 'users') {
+                return state;
+            }
 
-            return new User(Object.assign({}, state, action.data.attributes, { server_id: action.data.id }));
+            return new User(Object.assign({}, state, action.resource.attributes, { server_id: action.resource.id }));
 
         // ---------------------------
 

@@ -43,20 +43,21 @@ function project (state, action) {
 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
 
-            // update existing item
-            if (state !== null) {
-                const _server_item = action.resource.reduce((result, item) => {
-                    return parseInt(item.id) === state.server_id ? item : result;
-                }, {});
-                return new Project(Object.assign({}, state, _server_item.attributes));
+            // create new item
+            if (state === null) {
+                return new Project(Object.assign({}, action.resource.attributes, {
+                    server_id: parseInt(action.resource.id),
+                    uuid: StorageUtils.makeUUID(),
+                    user_uuid: action.related.user.uuid
+                }));
             }
 
-            // create new item
-            return new Project(Object.assign({}, action.resource.attributes, {
-                server_id: parseInt(action.resource.id),
-                uuid: StorageUtils.makeUUID(),
-                user_uuid: action.related.user.uuid
-            }));
+            // update existing item
+            const _server_item = action.resources.reduce((result, item) => {
+                return parseInt(item.id) === state.server_id ? item : result;
+            }, {});
+
+            return new Project(Object.assign({}, state, _server_item.attributes));
     }
 }
 
@@ -154,20 +155,35 @@ export function projects (state = project_constants.DEFAULT_PROJECT_LIST_STATE, 
 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
 
-            console.log("ACTION_STORAGE_SERVER_INDEXED ::: projects");
-            console.log(action);
+            if (action.resource_type !== 'projects') {
+                return state;
+            }
 
             // update existing items
-            const _existing_items = state.map((item) => project(item, action));
-            const _existing_storage_server_item_ids = _existing_items.map((item) => item.server_id);
+            const _existing_items = state.map(item => project(item, {
+                type: action.type,
+                resources: action.resources
+            }));
+            const _existing_storage_server_item_ids = _existing_items.map(item => item.server_id);
 
             // add new items
             const _new_items = action.resources.reduce((result, item) => {
-                return _existing_storage_server_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, project(null, Object.assign({}, action, { resource: item })) ];
+
+                if (_existing_storage_server_item_ids.indexOf(parseInt(item.id)) > -1) {
+                    return result;
+                }
+
+                return [
+                    ...result,
+                    project(null, Object.assign({}, action, {
+                        type: action.type,
+                        resource: item
+                    }))
+                ];
             }, []);
 
             // merge & sort by server_id
-            return [ ..._existing_items, ... _new_items ].sort(function(a, b) {
+            return [ ..._existing_items, ..._new_items ].sort(function(a, b) {
                 return parseInt(a.server_id) - parseInt(b.server_id);
             });
 

@@ -66,11 +66,11 @@ function task (state, action) {
             }
 
             // create new item
-            return new Task(Object.assign({}, action.data.attributes, {
-                server_id: parseInt(action.data.id),
+            return new Task(Object.assign({}, action.resource.attributes, {
+                server_id: parseInt(action.resource.id),
                 uuid: StorageUtils.makeUUID(),
-                user_uuid: action.user.uuid,
-                project_uuid: action.project.uuid
+                user_uuid: action.related.user.uuid,
+                project_uuid: action.related.project.uuid
             }));
 
     }
@@ -170,13 +170,17 @@ export function tasks (state = task_constants.DEFAULT_TASK_LIST_STATE, action) {
 
         case storage_constants.ACTION_STORAGE_SERVER_INDEXED:
 
+            if (action.resource_type !== 'tasks') {
+                return state;
+            }
+            
             // update existing items
             const _existing_items = state.map((item) => task(item, action));
             const _existing_STORAGE_SERVER_item_ids = _existing_items.map((item) => item.server_id);
 
             // add new items
-            const _new_items = action.data.reduce((result, item) => {
-                return _existing_STORAGE_SERVER_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, task(null, Object.assign({}, action, { data: item })) ];
+            const _new_items = action.resources.reduce((result, item) => {
+                return _existing_STORAGE_SERVER_item_ids.indexOf(parseInt(item.id)) > -1 ? result : [ ...result, task(null, Object.assign({}, action, { resource: item })) ];
             }, []);
 
             // merge & sort by server_id

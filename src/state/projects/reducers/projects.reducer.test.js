@@ -150,46 +150,49 @@ describe("projects.reducer", () => {
 
     describe("projects.reducer.storage.server", () => {
 
-        // describe("ACTION_STORAGE_SERVER_INDEXED", () => {
-        //
-        //     it("should return a list of projects, merging action data into state, updating local items with server data and assign uuids server items not already in state", () => {
-        //
-        //         const _state_before = [
-        //             new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
-        //             new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
-        //         ];
-        //         const _action = {
-        //             type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
-        //             data: [
-        //                 { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
-        //                 { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
-        //             ],
-        //             user: {
-        //                 uuid: 123
-        //             }
-        //         };
-        //
-        //         deepFreeze(_state_before);
-        //         deepFreeze(_action);
-        //
-        //         const _result = Reducer.projects(_state_before, _action);
-        //
-        //         expect(_result).to.have.length(3);
-        //
-        //         expect(_result[2]).to.have.property('server_id', 3);
-        //         expect(_result[2]).to.have.property('uuid', 111);
-        //         expect(_result[2]).to.have.property('name', 'AAAA');
-        //
-        //         expect(_result[1]).to.have.property('server_id', 2);
-        //         expect(_result[1]).to.have.property('uuid', 222);
-        //         expect(_result[1]).to.have.property('name', 'BBBB2222');
-        //
-        //         expect(_result[0]).to.have.property('server_id', 1);
-        //         expect(_result[0]).to.have.property('uuid', '123456');
-        //         expect(_result[0]).to.have.property('name', 'CCCC');
-        //         expect(_result[0]).to.have.property('user_uuid', 123);
-        //     });
-        // });
+        describe("ACTION_STORAGE_SERVER_INDEXED", () => {
+
+            it("should return a list of projects, merging action data into state, updating local items with server data and assigning uuids to server items not already in state", () => {
+
+                const _state_before = [
+                    new Project({ server_id: 3, uuid: 111, name: 'AAAA' }),
+                    new Project({ server_id: 2, uuid: 222, name: 'BBBB' })
+                ];
+                const _action = {
+                    type: storage_constants.ACTION_STORAGE_SERVER_INDEXED,
+                    resource_type: 'projects',
+                    resources: [
+                        { id: 2, attributes: { name: 'BBBB2222' }, type: 'projects'},
+                        { id: 1, attributes: { name: 'CCCC' }, type: 'projects'}
+                    ],
+                    related: {
+                        user: {
+                            uuid: 123
+                        }
+                    }
+                };
+
+                deepFreeze(_state_before);
+                deepFreeze(_action);
+
+                const _result = Reducer.projects(_state_before, _action);
+
+                expect(_result).to.have.length(3);
+
+                expect(_result[2]).to.have.property('server_id', 3);
+                expect(_result[2]).to.have.property('uuid', 111);
+                expect(_result[2]).to.have.property('name', 'AAAA');
+
+                expect(_result[1]).to.have.property('server_id', 2);
+                expect(_result[1]).to.have.property('uuid', 222);
+                expect(_result[1]).to.have.property('name', 'BBBB2222');
+
+                expect(_result[0]).to.have.property('server_id', 1);
+                expect(_result[0]).to.have.property('uuid', '123456');
+                expect(_result[0]).to.have.property('name', 'CCCC');
+                expect(_result[0]).to.have.property('user_uuid', 123);
+            });
+        });
     });
 
     // ---------------------------
