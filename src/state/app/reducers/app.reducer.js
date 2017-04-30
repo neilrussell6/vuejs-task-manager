@@ -65,7 +65,7 @@ export function app (state = app_constants.DEFAULT_STATE, action) {
         // user
         // ---------------------------
 
-        case user_constants.ACTION_LOGGED_IN_USER:
+        case user_constants.ACTION_USER_AUTHENTICATED:
             return Object.assign({}, state, { show_login: false });
 
         case user_constants.ACTION_TOKEN_EXPIRED:

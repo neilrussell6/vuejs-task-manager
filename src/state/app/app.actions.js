@@ -3,6 +3,7 @@ import {
 } from 'redux-json-api';
 
 // state
+import * as request_queue_actions from 'state/server-request-queue/server-request-queue.actions';
 import * as storage_actions from 'state/storage/storage.actions';
 
 // store
@@ -40,24 +41,18 @@ export function workOffline () {
 export function connect () {
     return function(dispatch) {
 
-        let _state = store.getState();
+        const _state = store.getState();
 
         dispatch({ type: constants.ACTION_WILL_CONNECT });
 
-        window.setTimeout(() => {
+        // get auth user
+        return dispatch(readEndpoint(`users/${_state.user.server_id}`)).then((response) => {
 
-            // get auth user
-            dispatch(readEndpoint(`users/${_state.user.server_id}`)).then((response) => {
+            dispatch({ type: constants.ACTION_CONNECTED });
 
-                dispatch({ type: constants.ACTION_CONNECTED });
+            // process request queue
+            return dispatch(request_queue_actions.processQueue());
 
-                window.setTimeout(() => {
-
-                    // sync api
-                    dispatch(storage_actions.serverSync());
-
-                }, 500);
-            }).catch((error) => dispatch(storage_actions.serverError(error)));
-        }, 500);
+        }).catch(error => dispatch(storage_actions.serverError(error)));
     };
 }

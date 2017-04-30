@@ -40,137 +40,23 @@ import * as constants from './storage.constants';
 export function destroy (resource) {
     return function (dispatch) {
 
-        console.log('destroy');
-
-        const _state = _store.getState();
-
         // destroy in local storage
         return dispatch(destroyLocal(resource)).then((response) => {
 
-            dispatch({
-                type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
-                resource_type: resource.type,
-                resource
-            });
-            console.log('destroyed local');
+            const _state = _store.getState();
 
             // if user is not authenticated
             if (!_state.user.is_authenticated) {
                 return Promise.resolve();
             }
 
-            // ... if app is offline
-            if (_state.app.is_offline) {
-
-                const _request = new Request({
-                    key: REQUEST_KEY.REQUEST_DESTROY,
-                    args: [ resource ]
-                });
-
-                console.log('enqueued destroyed');
-                // enqueue destroy request
-                dispatch(request_queue_actions.enqueueRequest(_request));
-
-                return Promise.resolve();
-            }
-
             // destroy on server
             return dispatch(destroyServer(resource));
-
         });
     };
 }
 
 export function storeOrUpdate (resource, relationships = {}) {
-    return function (dispatch) {
-
-        const _state = _store.getState();
-
-        // store or update in local storage
-        return dispatch(storeOrUpdateLocal(resource, relationships)).then((response) => {
-
-            // if user is not authenticated
-            // ... or if app is offline
-            if (!_state.user.is_authenticated || _state.app.is_offline) {
-                return Promise.resolve();
-            }
-
-            // store or update on server
-            return dispatch(storeOrUpdateServer(resource, relationships));
-
-        });
-    };
-}
-
-export function store (resource, relationships = {}) {
-    return function (dispatch) {
-
-        const _state = _store.getState();
-
-        // update in local storage
-        return dispatch(storeLocal(resource, relationships)).then((response) => {
-
-            // if user is not authenticated
-            // ... or if app is offline
-            if (!_state.user.is_authenticated || _state.app.is_offline) {
-                return Promise.resolve();
-            }
-
-            // store on server
-            return dispatch(storeServer(resource, relationships));
-
-        });
-    };
-}
-
-export function update (resource, data = {}) {
-    return function (dispatch) {
-
-        const _state = _store.getState();
-
-        // update in local storage
-        return dispatch(updateLocal(resource, data)).then((response) => {
-
-            // if user is not authenticated
-            // ... or if app is offline
-            if (!_state.user.is_authenticated || _state.app.is_offline) {
-                return Promise.resolve();
-            }
-
-            // update on server
-            return dispatch(updateServer(resource, data));
-
-        });
-    };
-}
-
-// ==============================================
-// CRUD : local storage
-// ==============================================
-
-// --------------------------
-// item
-// --------------------------
-
-export function destroyLocal (resource) {
-    return function (dispatch) {
-
-        // destroy on local storage
-        return StorageUtils.destroy(resource.type, resource.uuid).then(() => {
-
-            dispatch({
-                type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
-                resource_type: resource.type,
-                resource
-            });
-
-            return Promise.resolve();
-
-        });
-    };
-}
-
-export function storeOrUpdateLocal (resource, relationships = {}) {
     return function (dispatch) {
 
         // if indexedDB is not supported
@@ -186,13 +72,113 @@ export function storeOrUpdateLocal (resource, relationships = {}) {
         return StorageUtils.view(resource.type, resource.uuid).then((response) => {
 
             // is not in storage
+            // .. so store
             if (typeof response === 'undefined') {
-                return dispatch(storeLocal(resource, relationships));
+                return dispatch(store(resource, relationships));
             }
 
             // is in storage
-            return dispatch(updateLocal(resource));
+            // .. so update
+            return dispatch(update(resource));
+        });
+    };
+}
 
+export function store (resource, relationships = {}) {
+    return function (dispatch) {
+
+        // store in local storage
+        return dispatch(storeLocal(resource, relationships)).then((response) => {
+
+            const _state = _store.getState();
+
+            // if user is not authenticated
+            if (!_state.user.is_authenticated) {
+                return Promise.resolve();
+            }
+
+            // if app is offline
+            if (_state.app.is_offline) {
+
+                // enqueue request
+                const _request = new Request({
+                    key: REQUEST_KEY.REQUEST_STORE,
+                    args: [ resource, relationships ]
+                });
+                dispatch(request_queue_actions.enqueueRequest(_request));
+
+                return Promise.resolve();
+            }
+
+            // store on server
+            return dispatch(storeServer(resource, relationships));
+        });
+    };
+}
+
+export function update (resource, data = {}) {
+    return function (dispatch) {
+
+        // update in local storage
+        return dispatch(updateLocal(resource, data)).then((response) => {
+
+            const _state = _store.getState();
+
+            // if user is not authenticated
+            if (!_state.user.is_authenticated) {
+                return Promise.resolve();
+            }
+
+            // if app is offline
+            if (_state.app.is_offline) {
+
+                // enqueue request
+                const _request = new Request({
+                    key: REQUEST_KEY.REQUEST_STORE,
+                    args: [ resource, relationships ]
+                });
+                dispatch(request_queue_actions.enqueueRequest(_request));
+
+                return Promise.resolve();
+            }
+
+            // update on server
+            return dispatch(updateServer(resource, data));
+        });
+    };
+}
+
+// ==============================================
+// CRUD : local storage
+// ==============================================
+
+// --------------------------
+// item
+// --------------------------
+
+export function destroyLocal (resource) {
+    return function (dispatch) {
+
+        // if indexedDB is not supported
+        if (!indexedDB) {
+            return Promise.reject(StorageUtils.ERROR_MESSAGE_UNSUPPORTED_INDEXED_DB);
+        }
+
+        // validate resource
+        if (!StorageUtils.isResourceValid(resource)) {
+            return Promise.reject(StorageUtils.ERROR_MESSAGE_INVALID_MODEL);
+        }
+
+        // destroy on local storage
+        return StorageUtils.destroy(resource.type, resource.uuid).then(() => {
+
+            dispatch({
+                type: constants.ACTION_STORAGE_LOCAL_DESTROYED,
+                resource_type: resource.type,
+                resource
+            });
+
+            return Promise.resolve();
         });
     };
 }
@@ -224,7 +210,6 @@ export function storeLocal (resource, relationships = {}) {
             });
 
             return Promise.resolve();
-
         });
     };
 }
@@ -255,7 +240,6 @@ export function updateLocal (resource, data = {}) {
             });
 
             return Promise.resolve();
-
         });
     };
 }
@@ -271,11 +255,24 @@ export function updateLocal (resource, data = {}) {
 export function destroyServer (resource) {
    return function (dispatch) {
 
-       console.log('destroy server');
-       console.log(JsonApiUtils.makeResourceIdentifierObject(resource));
+       const _resource_identifier_object = JsonApiUtils.makeResourceIdentifierObject(resource);
+       const _state = _store.getState();
+       const _request = new Request({
+           key: REQUEST_KEY.REQUEST_DESTROY,
+           args: [ _resource_identifier_object ]
+       });
+
+       if (_state.app.is_offline) {
+
+           // enqueue request
+           dispatch(request_queue_actions.enqueueRequest(_request));
+
+           return Promise.resolve();
+       }
 
        // destroy on server
-       return dispatch(deleteResource(JsonApiUtils.makeResourceIdentifierObject(resource))).then(() => {
+
+       return dispatch(deleteResource(_resource_identifier_object)).then(() => {
 
            dispatch({
                type: constants.ACTION_STORAGE_SERVER_DESTROYED,
@@ -283,43 +280,48 @@ export function destroyServer (resource) {
                resource
            });
 
-           console.log('destroyed server');
            return Promise.resolve();
 
-       }).catch((error) => dispatch(serverError(error)));
+       }).catch((error) => {
+
+           // enqueue request
+           dispatch(request_queue_actions.enqueueRequest(_request));
+
+           dispatch(serverError(error));
+       });
    };
-}
-
-export function storeOrUpdateServer (resource, relationships = {}) {
-    return function (dispatch) {
-
-        // validate resource
-        if (!StorageUtils.isResourceValid(resource)) {
-            return Promise.reject(StorageUtils.ERROR_MESSAGE_INVALID_MODEL);
-        }
-
-        // store
-        if (resource.server_id === null) {
-            console.log("storage.actions.storeOrUpdateServer ::: STORE", resource);
-            return dispatch(storeServer(resource, relationships));
-        }
-
-        // update
-        console.log("storage.actions.storeOrUpdateServer ::: UPDATE", resource);
-        return dispatch(updateServer(resource));
-    };
 }
 
 export function storeServer (resource, relationships = {}) {
     return function (dispatch) {
 
-        const _state = _store.getState();
+        // TODO: temp to check if this is an issue
+        if (resource.server_id !== null) {
+            console.error("Attempted to store a resource that is already stored");
+            return Promise.resolve();
+        }
+
         const _resource_object = JsonApiUtils.makeResourceObject(resource, relationships);
+        const _state = _store.getState();
+        const _request = new Request({
+            key: REQUEST_KEY.REQUEST_STORE,
+            args: [ _resource_object ]
+        });
+
+        if (_state.app.is_offline) {
+
+            // enqueue request
+            dispatch(request_queue_actions.enqueueRequest(_request));
+
+            return Promise.resolve();
+        }
 
         // store on server
+
         return dispatch(createResource(_resource_object)).then((response) => {
 
-            // update in local storage with server id
+            // update in local storage (with server id)
+
             return dispatch(updateLocal(resource, { server_id: parseInt(response.data.id) }, _state.user, true)).then((response) => {
 
                 dispatch({
@@ -329,20 +331,45 @@ export function storeServer (resource, relationships = {}) {
                 });
 
                 return Promise.resolve();
-
             });
 
-        }).catch((error) => dispatch(serverError(error)));
+        }).catch((error) => {
+
+            // enqueue request
+            dispatch(request_queue_actions.enqueueRequest(_request));
+
+            dispatch(serverError(error));
+        });
     };
 }
 
 export function updateServer (resource, data = {}) {
     return function (dispatch) {
 
+        // TODO: temp to check if this is an issue
+        if (resource.server_id === null) {
+            console.error("Attempted to update a resource that is not yet stored");
+            return Promise.resolve();
+        }
+
         const _resource = new resource.constructor(Object.assign({}, resource, data));
         const _resource_object = JsonApiUtils.makeResourceObject(_resource);
+        const _state = _store.getState();
+        const _request = new Request({
+            key: REQUEST_KEY.REQUEST_UPDATE,
+            args: [ _resource_object ]
+        });
+
+        if (_state.app.is_offline) {
+
+            // enqueue request
+            dispatch(request_queue_actions.enqueueRequest(_request));
+
+            return Promise.resolve();
+        }
 
         // update on server
+
         return dispatch(updateResource(_resource_object)).then((response) => {
 
             dispatch({
@@ -354,7 +381,13 @@ export function updateServer (resource, data = {}) {
 
             return Promise.resolve();
 
-        }).catch((error) => dispatch(serverError(error)));
+        }).catch((error) => {
+
+            // enqueue request
+            dispatch(request_queue_actions.enqueueRequest(_request));
+
+            dispatch(serverError(error));
+        });
     };
 }
 
@@ -424,67 +457,67 @@ export function serverError (error) {
 // SYNC : server
 // ==============================================
 
-export function serverSync () {
-    return function (dispatch) {
-        return new Promise((resolve, reject) => {
-
-            console.log("storage.actions.serverSync");
-
-            // process request queue
-            dispatch(request_queue_actions.processQueue()).then((response) => {
-
-                const _state = _store.getState();
-
-                dispatch({ type: constants.ACTION_STORAGE_WILL_SYNC });
-
-                // projects
-                // ... index from local storage
-                StorageUtils.index('projects').then((local_projects) => {
-
-                    console.log("storage.actions.serverSync ::: get local projects");
-                    console.log(local_projects);
-
-                    // projects
-                    // ... store or update
-                    Promise.all([
-                        ...local_projects.map((item) => {
-                            const _relationships = { 'owner': _state.user };
-                            return dispatch(storeOrUpdateServer(new Project(item), _relationships));
-                        }),
-                        dispatch(project_actions.indexProjects())
-                    ]).then((responses) => {
-
-                        const _state = _store.getState();
-
-                        // tasks
-                        // ... index from local storage
-                        StorageUtils.index('tasks').then((local_tasks) => {
-
-                            const _project_uuid_map = _state.projects.reduce((result, item) => {
-                                return Object.assign({}, result, { [ item.uuid ]: item });
-                            }, {});
-
-                            // tasks
-                            // ... store or update
-                            Promise.all(
-                                local_tasks.map((item) => {
-                                    const _relationships = {
-                                        'project': _project_uuid_map[ item.project_uuid ],
-                                        'owner': _state.user
-                                    };
-                                    return dispatch(storeOrUpdateServer(new Task(item), _relationships));
-                                })
-
-                            ).then((responses) => {
-
-                                dispatch({ type: constants.ACTION_STORAGE_SYNCED });
-                                resolve();
-
-                            }).catch((message) => reject(message));
-                        }).catch((message) => reject(message));
-                    }).catch((message) => reject(message));
-                });
-            }).catch((message) => reject(message));
-        });
-    };
-}
+// export function serverSync () {
+//     return function (dispatch) {
+//         return new Promise((resolve, reject) => {
+//
+//             console.log("storage.actions.serverSync");
+//
+//             // process request queue
+//             dispatch(request_queue_actions.processQueue()).then((response) => {
+//
+//                 const _state = _store.getState();
+//
+//                 dispatch({ type: constants.ACTION_STORAGE_WILL_SYNC });
+//
+//                 // projects
+//                 // ... index from local storage
+//                 StorageUtils.index('projects').then((local_projects) => {
+//
+//                     console.log("storage.actions.serverSync ::: get local projects");
+//                     console.log(local_projects);
+//
+//                     // projects
+//                     // ... store or update
+//                     Promise.all([
+//                         ...local_projects.map((item) => {
+//                             const _relationships = { 'owner': _state.user };
+//                             return dispatch(storeOrUpdateServer(new Project(item), _relationships));
+//                         }),
+//                         dispatch(project_actions.indexProjects())
+//                     ]).then((responses) => {
+//
+//                         const _state = _store.getState();
+//
+//                         // tasks
+//                         // ... index from local storage
+//                         StorageUtils.index('tasks').then((local_tasks) => {
+//
+//                             const _project_uuid_map = _state.projects.reduce((result, item) => {
+//                                 return Object.assign({}, result, { [ item.uuid ]: item });
+//                             }, {});
+//
+//                             // tasks
+//                             // ... store or update
+//                             Promise.all(
+//                                 local_tasks.map((item) => {
+//                                     const _relationships = {
+//                                         'project': _project_uuid_map[ item.project_uuid ],
+//                                         'owner': _state.user
+//                                     };
+//                                     return dispatch(storeOrUpdateServer(new Task(item), _relationships));
+//                                 })
+//
+//                             ).then((responses) => {
+//
+//                                 dispatch({ type: constants.ACTION_STORAGE_SYNCED });
+//                                 resolve();
+//
+//                             }).catch(message => reject(message));
+//                         }).catch(message => reject(message));
+//                     }).catch(message => reject(message));
+//                 });
+//             }).catch(message => reject(message));
+//         });
+//     };
+// }

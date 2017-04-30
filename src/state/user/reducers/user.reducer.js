@@ -22,6 +22,7 @@ export function user (state = user_constants.DEFAULT_STATE, action) {
         case user_constants.ACTION_USER_AUTHENTICATED:
             return new User(Object.assign({}, state, {
                 access_token: action.access_token,
+                server_id: action.user_id,
                 is_authenticated: true
             }));
 

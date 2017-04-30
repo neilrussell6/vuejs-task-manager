@@ -89,11 +89,11 @@ export function processQueue () {
                             console.log(qry);
                             return dispatch(deleteResource(qry)).then((response) => {
                                 console.log("XXXXXXXXXXXXXXXXXXXXXXXXXX");
-                            }).catch((message) => console.error(message));
+                            }).catch(message => console.error(message));
                             //
                             // return dispatch(storage_actions.destroyServer(..._args))
                             //     .then((response) => dispatch(dequeueRequest(request)))
-                            //     .catch((message) => {
+                            //     .catch(message => {
                             //         console.log("REQUEST_DESTROY ERROR", message);
                             //         Promise.resolve()
                             //     });
@@ -109,7 +109,7 @@ export function processQueue () {
 
                     return Promise.resolve();
                 });
-            }).catch((message) => Promise.resolve());
+            }).catch(message => Promise.resolve());
         });
     };
 }

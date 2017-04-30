@@ -102,7 +102,7 @@ export function indexTasks (project) {
                 StorageUtils.updateOrStoreMany(_state.tasks);
 
             }).catch((error) => dispatch(storage_actions.serverError(error)));
-        }).catch((message) => console.error(message));
+        }).catch(message => console.error(message));
     };
 }
 

@@ -29,11 +29,13 @@ Local & Server data sync
 All CRUD operations are processed as follows:
 
  1. actioned locally (in browser storage)
- 2. then a request is sent to server,
-    and if the request fails then the it is added to a queue.
+ 2. then a request is sent to server, 
+    and if the request fails or the app is in offline mode,
+    then the request is added to a request queue.
 
-Whenever the app sucessfully connects to the server, the app is frozen while the request queue is processed.
+Whenever the app successfully connects to the server, the app is frozen while the request queue is processed.
 This is done before the server request is executed, so local data take preference over server data.
+
 eg.
  * you are offline
  * you create a project called AAA
@@ -62,7 +64,7 @@ Make commands
 TODO
 ----
 
- * Consolodate multiple enqueued requests on the same resource.
+ * Consolidate multiple enqueued requests on the same resource.
  * Check local and server modified dates when processing data and prioritise most recent (currently all local data gets priority).
 
 Roadmap

@@ -38,6 +38,7 @@ export function isStored (resource) {
     });
 }
 
+// TODO: remove
 export function isResourceValid (resource) {
     return resource !== null && resource.type !== null;
 }

@@ -37,7 +37,7 @@ if (!USE_SERVICE_WORKER) {
 
     store.dispatch(user_actions.viewOrStoreUser()).then(() => {
         store.dispatch(project_actions.indexProjects());
-    }).catch((message) => console.error(message));
+    }).catch(message => console.error(message));
 
 } else {
 
@@ -49,7 +49,7 @@ if (!USE_SERVICE_WORKER) {
     //     navigator.serviceWorker
     //         .register('./service-worker.js')
     //         .then(() => console.log('[Service Worker] Registered'))
-    //         .catch((message) => console.error(message));
+    //         .catch(message => console.error(message));
     // }
 
     // ----------------------------------------------------------------
@@ -68,6 +68,6 @@ if (!USE_SERVICE_WORKER) {
             // index projects
             store.dispatch(project_actions.indexProjects());
         })
-        .catch((message) => console.error(message));
+        .catch(message => console.error(message));
     }
 }

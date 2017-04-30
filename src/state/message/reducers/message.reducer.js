@@ -76,7 +76,8 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
             case app_constants.ACTION_CONNECTED:
             _data = {
                 label: "connection successful",
-                style: MESSAGE_STYLE.SUCCESS
+                style: MESSAGE_STYLE.SUCCESS,
+                expire: message_settings.MESSAGE_DEFAULT_EXPIRE
             };
             break;
 
@@ -85,7 +86,7 @@ export function message (state = DEFAULT_MESSAGE_STATE, action) {
         // ---------------------------
 
         case storage_constants.ACTION_STORAGE_WILL_SYNC:
-            _data = {   
+            _data = {
                 label: "syncing data",
                 style: MESSAGE_STYLE.INFO,
                 icon: {

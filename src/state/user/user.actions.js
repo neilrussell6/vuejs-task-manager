@@ -57,7 +57,7 @@ export function updateUser (user, data = {}) {
             //
             //     resolve();
             //
-            // }).catch((message) => console.error(message));
+            // }).catch(message => console.error(message));
         });
     };
 }
@@ -135,7 +135,7 @@ export function viewOrStoreUser () {
                             console.log("USER ACTIONS ::: access token is expired");
                             resolve(_state.user);
 
-                        }).catch((message) => console.error(message));
+                        }).catch(message => console.error(message));
                     }
 
                     // ... if access token is not expired
@@ -165,8 +165,8 @@ export function viewOrStoreUser () {
                         console.log(_state.user);
                         resolve(_state.user);
                     });
-                }).catch((message) => console.error(message));
-            }).catch((message) => console.error(message));
+                }).catch(message => console.error(message));
+            }).catch(message => console.error(message));
         });
     };
 }
@@ -187,37 +187,10 @@ export function loginUser (user, credentials) {
 
                 const _access_token = response.data.attributes.access_token;
 
-                dispatch(userAuthenticated(_access_token)).then((response) => {
+                dispatch(userAuthenticated(_access_token))
+                    .then(resolve)
+                    .catch(message => console.error(message));
 
-                    let _state = store.getState();
-
-                    dispatch({
-                        type: constants.ACTION_LOGGED_IN_USER,
-                        user: _state.user
-                    });
-
-                    // index user's projects
-                    dispatch(project_actions.indexProjects())
-                        .then((response) => {
-
-                            // index user's projects
-                            dispatch(project_actions.indexProjects()).then((response) => {
-
-                                window.setTimeout(() => {
-
-                                    dispatch(storage_actions.serverSync())
-                                        .then((response) => resolve())
-                                        .catch((message) => {
-                                            reject();
-                                            console.error(message);
-                                        });
-                                }, 1000);
-
-                            }).catch((message) => console.error(message));
-                        })
-                        .catch((message) => console.error(message));
-
-                }).catch((message) => console.error(message));
             }).catch((error) => dispatch(storage_actions.serverError(error)));
         });
     };
@@ -233,45 +206,24 @@ export function userAuthenticated (access_token) {
             }));
 
             // get auth user
-            dispatch(readEndpoint('access_tokens/owner')).then((response) => {
+            dispatch(readEndpoint('access_tokens/owner')).then(response => {
 
                 dispatch({
                     type: constants.ACTION_USER_AUTHENTICATED,
+                    user_id: response.data.id,
                     access_token
-                });
-
-                dispatch({
-                    type: storage_constants.ACTION_STORAGE_SERVER_VIEWED,
-                    resource_type: 'users',
-                    resource: response.data
                 });
 
                 const _state = store.getState();
 
                 // update local user
-                dispatch(storage_actions.updateLocal(_state.user)).then((response) => {
-
-                    resolve();
-
-                    // // index user's projects
-                    // dispatch(project_actions.indexProjects()).then((response) => {
-                    //
-                    //     console.log(_state);
-                    //     console.log("~~~~~ serverSync ~~~~~");
-                    //
-                    //     window.setTimeout(() => {
-                    //
-                    //         dispatch(storage_actions.serverSync())
-                    //             .then((response) => resolve())
-                    //             .catch((message) => {
-                    //                 reject();
-                    //                 console.error(message);
-                    //             });
-                    //     }, 1000);
-                    //
-                    // }).catch((message) => console.error(message));
-
-                }).catch((message) => console.error(message));
+                dispatch(storage_actions.updateLocal(_state.user))
+                    .then(response => {
+                        dispatch(app_actions.connect())
+                            .then(resolve)
+                            .catch(message => console.error(message));
+                    })
+                    .catch(message => console.error(message));
 
             }).catch((error) => {
 
